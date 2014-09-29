@@ -7,7 +7,6 @@ import java.util.ArrayList;
  * @author Matthew
  */
 public class BoardingController {
-    
     // Plane dimentions
     int columns = 6;
     int rows = 10;

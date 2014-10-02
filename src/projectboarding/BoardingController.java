@@ -104,9 +104,11 @@ public class BoardingController implements ActionListener{
     }
     
     /**
+     * Based on the seating method, this allocates a seat based on the currently
+     * available seats.
      * 
-     * @param type
-     * @return 
+     * @param type the seating method
+     * @return a seat for the passenger
      */
     public Seat decideSeat(DecisionType type) {
         Seat seat = null;

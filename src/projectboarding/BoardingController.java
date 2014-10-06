@@ -18,6 +18,9 @@ public class BoardingController implements ActionListener{
         RANDOM //Add more types here
     }
     
+    // Descision type
+    private DecisionType decisionType;
+    
     // Plane dimentions
     private int columns = 6;
     private int rows = 10;
@@ -40,6 +43,7 @@ public class BoardingController implements ActionListener{
         this.planeSeating = new boolean[this.rows][this.columns];
         this.boardingPassengers = new ArrayList<>();
         this.numberOfBoardedPassengers = 0;
+        this.decisionType = DecisionType.RANDOM;
         
         this.availableSeats = new ArrayList<>();
         // Create the seats
@@ -73,8 +77,8 @@ public class BoardingController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         // Get a seat that the user can sit on
-        Seat seat = this.decideSeat(DecisionType.RANDOM);
-        
+        Seat seat = this.decideSeat(this.decisionType);
+       
         // Create a new passenger object
         Passenger passenger = new Passenger(seat);
         
@@ -139,6 +143,9 @@ public class BoardingController implements ActionListener{
                 // Call the finished boarding method
                 this.finishedBoarding();
             }
+            
+            // Print out the updated plane
+            this.displayPlaneSimple();
             
             // Successful
             return true;

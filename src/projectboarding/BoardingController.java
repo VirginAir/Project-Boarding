@@ -13,11 +13,11 @@ import org.joda.time.Seconds;
  */
 public class BoardingController implements ActionListener{
     // Plane information
-    private PlaneDimension planeDimension;
-    private SeatingMethod seatingMethod;
-    private ArrayList<Seat> seatingOrder;
-    private ArrayList<Passenger> boardingPassengers;
-    private int totalSeatsNotTaken;
+    private final PlaneDimension planeDimension;
+    private final SeatingMethod seatingMethod;
+    private final ArrayList<Seat> seatingOrder;
+    private final ArrayList<Passenger> boardingPassengers;
+    private final ArrayList<Seat> seatsTaken;
     
     // Timing information
     private Timer timer;
@@ -30,7 +30,7 @@ public class BoardingController implements ActionListener{
         this.seatingMethod = seatingMethod;
         this.seatingOrder = this.seatingMethod.getSeatingOrder();
         this.boardingPassengers = new ArrayList<>();
-        this.totalSeatsNotTaken = this.planeDimension.totalNumberOfSeats();
+        this.seatsTaken = new ArrayList<>();
     }        
     
     /**
@@ -86,11 +86,13 @@ public class BoardingController implements ActionListener{
     
     /**
      * The passenger has taken their seat so update the number of seats remaining.
+     * 
+     * @param seat the seat the passenger has taken.
      */
-    public void takeSeat() {
-        this.totalSeatsNotTaken =- 1;
+    public void takeSeat(Seat seat) {
+        this.seatsTaken.add(seat);
         
-        if (this.totalSeatsNotTaken == 0) {
+        if (this.seatsTaken.size() == this.planeDimension.totalNumberOfSeats()) {
             this.finishedBoarding();
         }
     }

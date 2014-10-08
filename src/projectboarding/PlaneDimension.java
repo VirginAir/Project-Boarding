@@ -14,12 +14,12 @@ public class PlaneDimension {
     
     // The dimentions are based on the priority rows being at the front
     
-    public PlaneDimension(int numberOfRows, int[] columnSplit, int numberOfPriorityRows, int[] priorityColumnSplit) {
-        this.numberOfRows = numberOfRows;
-        this.columnSplit = columnSplit;
-        
+    public PlaneDimension(int numberOfPriorityRows, int[] priorityColumnSplit, int numberOfRows, int[] columnSplit) {
         this.numberOfPriorityRows = numberOfPriorityRows;
         this.priorityColumnSplit = priorityColumnSplit;
+        
+        this.numberOfRows = numberOfRows;
+        this.columnSplit = columnSplit;
     }
     
     public int getNumberOfRows() {

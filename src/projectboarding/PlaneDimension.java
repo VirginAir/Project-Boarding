@@ -22,6 +22,24 @@ public class PlaneDimension {
         this.columnSplit = columnSplit;
     }
     
+    public int getNumberOfPriorityRows() {
+        return this.numberOfPriorityRows;
+    }
+    
+    public int[] getPriorityColumnSplit() {
+        return this.priorityColumnSplit;
+    }
+    
+    public int getNumberOfPriorityColumns() {
+        int numberOfColumns = 0;
+        
+        for (int column: this.priorityColumnSplit) {
+            numberOfColumns += column;
+        }
+        
+        return numberOfColumns;
+    }
+    
     public int getNumberOfRows() {
         return this.numberOfRows;
     }
@@ -38,14 +56,6 @@ public class PlaneDimension {
         }
         
         return numberOfColumns;
-    }
-    
-    public int getNumberOfPriorityRows() {
-        return this.numberOfPriorityRows;
-    }
-    
-    public int[] getPriorityColumnSplit() {
-        return this.priorityColumnSplit;
     }
     
     public int totalNumberOfSeats() {        

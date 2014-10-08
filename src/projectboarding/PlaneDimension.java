@@ -7,7 +7,7 @@ package projectboarding;
 public class PlaneDimension {
     
     private final int numberOfRows;
-    private final int[] columnSplit;
+    private final int[] columnSplit; // i.e. 3-3-3 or 3-2-3 or 3-3 etc...
     
     public PlaneDimension(int numberOfRows, int[] columnSplit) {
         this.numberOfRows = numberOfRows;

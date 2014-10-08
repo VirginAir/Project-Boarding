@@ -9,9 +9,17 @@ public class PlaneDimension {
     private final int numberOfRows;
     private final int[] columnSplit; // i.e. 3-3-3 or 3-2-3 or 3-3 etc...
     
-    public PlaneDimension(int numberOfRows, int[] columnSplit) {
+    private final int numberOfPriorityRows;
+    private final int[] priorityColumnSplit; //i.e 2-2-2 or 1-2-1 or 2-2 etc..
+    
+    // The dimentions are based on the priority rows being at the front
+    
+    public PlaneDimension(int numberOfRows, int[] columnSplit, int numberOfPriorityRows, int[] priorityColumnSplit) {
         this.numberOfRows = numberOfRows;
         this.columnSplit = columnSplit;
+        
+        this.numberOfPriorityRows = numberOfPriorityRows;
+        this.priorityColumnSplit = priorityColumnSplit;
     }
     
     public int getNumberOfRows() {
@@ -30,6 +38,14 @@ public class PlaneDimension {
         }
         
         return numberOfColumns;
+    }
+    
+    public int getNumberOfPriorityRows() {
+        return this.numberOfPriorityRows;
+    }
+    
+    public int[] getPriorityColumnSplit() {
+        return this.priorityColumnSplit;
     }
     
     public int totalNumberOfSeats() {        

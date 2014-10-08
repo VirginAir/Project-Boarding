@@ -7,10 +7,12 @@ package projectboarding;
 public class Seat {
     private final int seatRow;
     private final int seatColumn;
+    private final boolean isPrioritySeat;
     
-    public Seat(int row, int column) {
+    public Seat(int row, int column, boolean isPrioritySeat) {
         this.seatRow = row;
         this.seatColumn = column;
+        this.isPrioritySeat = isPrioritySeat;
     }
     
     public int getSeatRow() {
@@ -19,5 +21,9 @@ public class Seat {
     
     public int getSeatColumn() {
         return this.seatColumn;
+    }
+    
+    public boolean isPrioritySeat() {
+        return this.isPrioritySeat;
     }
 }

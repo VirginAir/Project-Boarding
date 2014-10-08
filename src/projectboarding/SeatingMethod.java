@@ -9,12 +9,18 @@ import java.util.Random;
  */
 public class SeatingMethod {
     public enum DefaultSeatingMethod {
-        BACK_TO_FRONT, RANDOM, OUTSIDE_IN_BY_COLUMN, BLOCK_BOARDING, REVERSE_PYRAMID, ROTATING_ZONE
+        BACK_TO_FRONT, BLOCK_BOARDING, OUTSIDE_IN_BY_COLUMN, RANDOM, REVERSE_PYRAMID, ROTATING_ZONE
     }
     
     private final DefaultSeatingMethod defaultMethod;
     private final PlaneDimension planeDimension;
     
+    /**
+     * Initialize the seating method class with a default method.
+     * 
+     * @param defaultMethod the default seating method.
+     * @param planeDimension the dimensions of the plane to order the seats from.
+     */
     public SeatingMethod(DefaultSeatingMethod defaultMethod, PlaneDimension planeDimension) {
         this.defaultMethod = defaultMethod;
         this.planeDimension = planeDimension;

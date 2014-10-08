@@ -3,7 +3,6 @@ package projectboarding;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Random;
 import javax.swing.Timer;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -13,46 +12,25 @@ import org.joda.time.Seconds;
  * @author Matthew Kempson
  */
 public class BoardingController implements ActionListener{
-    // Decision type enum
-    public enum DecisionType{
-        RANDOM //Add more types here
-    }
-    
-    // Descision type
-    private DecisionType decisionType;
-    
-    // Plane dimentions
-    private int columns = 6;
-    private int rows = 10;
-    
-    // Passenger information
-    private int numberOfPassengers = 60;
+    // Plane information
+    private PlaneDimension planeDimension;
+    private SeatingMethod seatingMethod;
+    private ArrayList<Seat> seatingOrder;
     private ArrayList<Passenger> boardingPassengers;
-    
-    // Plane seating information
-    private boolean[][] planeSeating;
-    private ArrayList<Seat> availableSeats;
-    private int numberOfBoardedPassengers;
+    private int totalSeatsNotTaken;
     
     // Timing information
+    private Timer timer;
     private DateTime beginningBoardingTime;
     private DateTime endBoardingTime;
            
-    public BoardingController() {
+    public BoardingController(PlaneDimension planeDimension, SeatingMethod seatingMethod) {
         // Initalise variables
-        this.planeSeating = new boolean[this.rows][this.columns];
+        this.planeDimension = planeDimension;
+        this.seatingMethod = seatingMethod;
+        this.seatingOrder = this.seatingMethod.getSeatingOrder();
         this.boardingPassengers = new ArrayList<>();
-        this.numberOfBoardedPassengers = 0;
-        this.decisionType = DecisionType.RANDOM;
-        
-        this.availableSeats = new ArrayList<>();
-        // Create the seats
-        for (int row = 0; row < this.rows; row++) {
-            for (int column = 0; column < this.columns; column++) {
-                Seat seat = new Seat(row, column);
-                this.availableSeats.add(seat);
-            }
-        }
+        this.totalSeatsNotTaken = this.planeDimension.totalNumberOfSeats();
     }        
     
     /**
@@ -63,10 +41,8 @@ public class BoardingController implements ActionListener{
         this.beginningBoardingTime = new DateTime();
         
         // Start a timer which creates a new passenger every second
-        Timer timer = new Timer(1000, this);
+        timer = new Timer(1000, this);
         timer.start();
-        
-        this.displayPlaneSimple();
     }
     
     /**
@@ -77,13 +53,18 @@ public class BoardingController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         // Get a seat that the user can sit on
-        Seat seat = this.decideSeat(this.decisionType);
+        Seat seat = this.seatingOrder.remove(0);
        
         // Create a new passenger object
         Passenger passenger = new Passenger(seat, false);
         
         // Add the passenger object to the list of boarding passengers
         this.boardingPassengers.add(passenger);
+        
+        if (this.seatingOrder.isEmpty()) {
+            // End the timer
+            this.timer.stop();
+        }
     }
     
     /**
@@ -104,98 +85,25 @@ public class BoardingController implements ActionListener{
     }
     
     /**
-     * Based on the seating method, this allocates a seat based on the currently
-     * available seats.
-     * 
-     * @param type the seating method
-     * @return a seat for the passenger
+     * The passenger has taken their seat so update the number of seats remaining.
      */
-    public Seat decideSeat(DecisionType type) {
-        Seat seat = null;
+    public void takeSeat() {
+        this.totalSeatsNotTaken =- 1;
         
-        if (type == DecisionType.RANDOM) {
-            // Choose a random seat
-            Random randomGenerator = new Random();
-            int seatNumber = randomGenerator.nextInt(this.availableSeats.size());
-            
-            // Get the seat and remove from the list of available seats
-            seat = this.availableSeats.remove(seatNumber);
+        if (this.totalSeatsNotTaken == 0) {
+            this.finishedBoarding();
         }
-        
-        // Return the seat for the passenger
-        return seat;
-    }
-    
-    /**
-     * The passenger has taken their seat so update the seating plan
-     * 
-     * @param seat the seat assigned to the passenger
-     * @return true if correct seat number, false otherwise
-     */
-    public boolean takeSeat(Seat seat) {
-        // Check seating numbers given are vaild
-        if ((seat.getSeatRow() >= 0 || seat.getSeatRow() < this.rows) 
-                && (seat.getSeatColumn() >= 0 || seat.getSeatColumn() < this.columns)) {
-            // Update the plane seating to true and the number of boarded passengers
-            this.planeSeating[seat.getSeatRow()][seat.getSeatColumn()] = true;
-            this.numberOfBoardedPassengers++;
-            
-            // Check if we have boarded everybody
-            if (this.numberOfBoardedPassengers == this.numberOfPassengers) {
-                // Call the finished boarding method
-                this.finishedBoarding();
-            }
-            
-            // Print out the updated plane
-            this.displayPlaneSimple();
-            
-            // Successful
-            return true;
-        }
-        
-        // Unsuccessful
-        return false;
-    }
-    
-    /**
-     * Displays the plane seating with indicating if the seats are taken.
-     */
-    public void displayPlaneSimple() {
-        String outputString = "";
-        
-        // Loop through all of the rows and the columns of the plane
-        for (int currentRow = 0; currentRow < this.rows; currentRow++) {
-            for (int currentColumn = 0; currentColumn < this.columns; currentColumn++) {
-                // Insert a tab to show the aisle // Change this to be non-hardcoded
-                if (currentColumn == 3) {
-                    outputString += "\t";
-                }
-                
-                // Check which output to print
-                if (this.planeSeating[currentRow][currentColumn]) {
-                    outputString += "1 ";
-                } else {
-                    outputString += "0 ";
-                }
-            }
-            
-            // Insert a new line for the next row
-            if (currentRow != this.rows - 1) {
-                outputString += "\n";
-            }
-        }
-        
-        // Display the plane
-        System.out.println(outputString);
     }
     
     public class Passenger {
-    private Seat seat;
-    private boolean hasBaggage;
+        private Seat seat;
+        private boolean hasBaggage;
+        private boolean hasTakenSeat;
     
-    public Passenger(Seat seat, boolean hasBaggage) {
-        this.seat = seat;
-        this.hasBaggage = hasBaggage;
+        public Passenger(Seat seat, boolean hasBaggage) {
+            this.seat = seat;
+            this.hasBaggage = hasBaggage;
+            this.hasTakenSeat = false;
+        }
     }
-}
 }

@@ -59,7 +59,7 @@ public class PlaneDimension {
     }
     
     public int totalNumberOfSeats() {        
-        return this.getNumberOfColumns() * this.numberOfRows;
+        return (this.getNumberOfColumns() * this.numberOfRows) + (this.getNumberOfPriorityColumns() * this.numberOfPriorityRows);
     }
     
 }

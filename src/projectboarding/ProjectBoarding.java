@@ -11,7 +11,10 @@ public class ProjectBoarding {
      */
     public static void main(String[] args) {
         // Create and run the boarding
-        BoardingController controller = new BoardingController();
+        PlaneDimension planeDimension = new PlaneDimension(2, new int[]{2,2}, 23, new int[]{3,3});
+        SeatingMethod seatingMethod = new SeatingMethod(SeatingMethod.DefaultSeatingMethod.RANDOM, planeDimension);
+        
+        BoardingController controller = new BoardingController(planeDimension, seatingMethod);
         controller.startBoarding();
         
     }

@@ -80,7 +80,7 @@ public class BoardingController implements ActionListener{
         Seat seat = this.decideSeat(this.decisionType);
        
         // Create a new passenger object
-        Passenger passenger = new Passenger(seat);
+        Passenger passenger = new Passenger(seat, false);
         
         // Add the passenger object to the list of boarding passengers
         this.boardingPassengers.add(passenger);
@@ -188,4 +188,14 @@ public class BoardingController implements ActionListener{
         // Display the plane
         System.out.println(outputString);
     }
+    
+    public class Passenger {
+    private Seat seat;
+    private boolean hasBaggage;
+    
+    public Passenger(Seat seat, boolean hasBaggage) {
+        this.seat = seat;
+        this.hasBaggage = hasBaggage;
+    }
+}
 }

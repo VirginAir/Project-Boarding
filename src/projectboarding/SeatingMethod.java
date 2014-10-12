@@ -119,8 +119,8 @@ public class SeatingMethod {
         }
         
         // Create the columns
-        int[] columns = new int[this.planeDimension.getNumberOfRows()];
-        for (int column = 0; column < this.planeDimension.getNumberOfRows(); column++) {
+        int[] columns = new int[this.planeDimension.getNumberOfColumns()];
+        for (int column = 0; column < this.planeDimension.getNumberOfColumns(); column++) {
             columns[column] = column;
         }
         

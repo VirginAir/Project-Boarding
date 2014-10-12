@@ -3,6 +3,7 @@ package projectboarding;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.Timer;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -23,6 +24,10 @@ public class BoardingController implements ActionListener{
     private Timer timer;
     private DateTime beginningBoardingTime;
     private DateTime endBoardingTime;
+    
+    public enum SeatInterference {
+        MIDDLE, AISLE, MIDDLE_AISLE, NONE
+    }
            
     public BoardingController(PlaneDimension planeDimension, SeatingMethod seatingMethod) {
         // Initalise variables
@@ -56,7 +61,7 @@ public class BoardingController implements ActionListener{
         Seat seat = this.seatingOrder.remove(0);
        
         // Create a new passenger object
-        Passenger passenger = new Passenger(seat, false);
+        Passenger passenger = new Passenger(seat, 0.8);
         
         // Add the passenger object to the list of boarding passengers
         this.boardingPassengers.add(passenger);
@@ -101,11 +106,29 @@ public class BoardingController implements ActionListener{
         private Seat seat;
         private boolean hasBaggage;
         private boolean hasTakenSeat;
+        private int baggageTime;
+        private int timePerRow;
+        private SeatInterference seatInterference;
+        
+        
     
-        public Passenger(Seat seat, boolean hasBaggage) {
+        public Passenger(Seat seat, double hasBaggageWeight) {
+            Random r = new Random();
             this.seat = seat;
-            this.hasBaggage = hasBaggage;
+            if (r.nextDouble() < hasBaggageWeight){
+                this.hasBaggage = true;
+            } else { 
+                this.hasBaggage = false;
+            }
             this.hasTakenSeat = false;
+            if (this.hasBaggage) {
+                baggageTime = r.nextInt(16)+4;
+            } else {
+                baggageTime = 0;
+            }
+            timePerRow = r.nextInt(3)+2;
+            seatInterference = SeatInterference.NONE;
+                
         }
     }
 }

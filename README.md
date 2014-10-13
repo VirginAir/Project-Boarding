@@ -1,5 +1,4 @@
-# Project Boarding
-## Weekly Plan (to be completed for...)
+### Weekly Plan (to be completed for...)
 #### Week 5
 - [ ] **Working example of the project**
 - [ ] Create a Gannt Chart to plan weekly objectives
@@ -14,6 +13,6 @@
 ###### Ben
 - [ ] Finish the simple visulisation of the simulation
 
-## Changelog
-### (10/08, 10:10) - Matthew
+### Changelog
+#### (10/08, 10:10) - Matthew
 * This is an example changelog, use this to describe in full what work has been done and what you have changed/added to the program

@@ -31,13 +31,7 @@ public class PlaneDimension {
     }
     
     public int getNumberOfPriorityColumns() {
-        int numberOfColumns = 0;
-        
-        for (int column: this.priorityColumnSplit) {
-            numberOfColumns += column;
-        }
-        
-        return numberOfColumns;
+        return this.calculateNumberOfColumns(this.priorityColumnSplit);
     }
     
     public int getNumberOfRows() {
@@ -49,9 +43,13 @@ public class PlaneDimension {
     } 
     
     public int getNumberOfColumns() {
+        return this.calculateNumberOfColumns(this.columnSplit);
+    }
+    
+    private int calculateNumberOfColumns(int[] split) {
         int numberOfColumns = 0;
         
-        for (int column: this.columnSplit) {
+        for (int column: split) {
             numberOfColumns += column;
         }
         
@@ -74,6 +72,7 @@ public class PlaneDimension {
     public int totalNumberOfSeats() {        
         return (this.getNumberOfColumns() * this.getNumberOfRows()) + (this.getNumberOfPriorityColumns() * this.getNumberOfPriorityRows());
     }
+    
     public Cell[][] getSeatVisualisation(){
         int totalRows = this.getNumberOfRows() + this.getNumberOfPriorityRows();
         int totalColumns = this.getNumberOfColumns() + this.getNumberOfLanes();

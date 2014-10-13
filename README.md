@@ -1,17 +1,17 @@
 # Project Boarding
 ## Weekly Plan (to be completed for...)
-### Week 5
+#### Week 5
 - [ ] **Working example of the project**
 - [ ] Create a Gannt Chart to plan weekly objectives
 
-#### Matthew
+###### Matthew
 - [ ] Finish programming the pre-defined boarding methods
 - [ ] Begin work on user defined boarding methods
 
-#### Matt
+###### Matt
 - [ ] Complete the passenger class with simple maths to work out the timings
 
-#### Ben
+###### Ben
 - [ ] Finish the simple visulisation of the simulation
 
 ## Changelog

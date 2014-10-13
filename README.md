@@ -15,5 +15,5 @@
 - [ ] Finish the simple visulisation of the simulation
 
 ## Changelog
-### (10/08, 10.10) - Matthew
+### (10/08, 10:10) - Matthew
 * This is an example changelog, use this to describe in full what work has been done and what you have changed/added to the program

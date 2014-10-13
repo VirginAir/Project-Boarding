@@ -8,6 +8,7 @@ public class Cell {
     private final int cellRow;
     private final int cellColumn;
     private CellType cellType;
+    private Boolean hasPassenger;
     public enum CellType {
         SEAT, PRIORITY_SEAT, LANE, NONE
     }

@@ -73,42 +73,6 @@ public class PlaneDimension {
         return (this.getNumberOfColumns() * this.getNumberOfRows()) + (this.getNumberOfPriorityColumns() * this.getNumberOfPriorityRows());
     }
     
-    public Cell[][] getSeatVisualisation(){
-        int totalRows = this.getNumberOfRows() + this.getNumberOfPriorityRows();
-        int totalColumns = this.getNumberOfColumns() + this.getNumberOfLanes();
-        
-        Cell[][] seatVisualisation = new Cell[totalRows][totalColumns];
-        
-        int rowLocation = 0;
-        for(int i = 0; i < totalRows; i++)
-        {
-            for(int j = 0; j < totalColumns; j++)
-            {
-                seatVisualisation[i][j] = new Cell(i, j, Cell.CellType.SEAT);
-            }
-        }
-        for (int column : this.getColumnSplit()) {
-            
-            if(column > 0){
-                rowLocation += column;
-            } else {
-                for (int i=0; i < totalRows; i++){
-                    seatVisualisation[i][rowLocation].setCellType(Cell.CellType.LANE);
-                }
-            }
-        }
-        int emptySpaces = this.getNumberOfColumns() - this.getNumberOfPriorityColumns();
-        for (int i = 0; i < this.getNumberOfPriorityRows(); i++) {
-            for (int j = 0; j < totalColumns; j++) {
-                if(seatVisualisation[i][j].getCellType().equals(Cell.CellType.SEAT)){
-                    if (((emptySpaces/2)-1) < j && j < (totalColumns-(emptySpaces/2))){
-                        seatVisualisation[i][j].setCellType(Cell.CellType.PRIORITY_SEAT);
-                    }
-                }
-            }
-            
-        }
-        return seatVisualisation;
-    }
+    
     
 }

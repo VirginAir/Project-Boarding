@@ -16,9 +16,9 @@ public class BoardingController implements ActionListener{
     // Plane information
     private final PlaneDimension planeDimension;
     private final SeatingMethod seatingMethod;
-    private final ArrayList<Seat> seatingOrder;
+    private final ArrayList<Cell> seatingOrder;
     private final ArrayList<Passenger> boardingPassengers;
-    private final ArrayList<Seat> seatsTaken;
+    private final ArrayList<Cell> seatsTaken;
     
     // Timing information
     private Timer timer;
@@ -58,7 +58,7 @@ public class BoardingController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         // Get a seat that the user can sit on
-        Seat seat = this.seatingOrder.remove(0);
+        Cell seat = this.seatingOrder.remove(0);
        
         // Create a new passenger object
         Passenger passenger = new Passenger(seat, 0.8);
@@ -94,7 +94,7 @@ public class BoardingController implements ActionListener{
      * 
      * @param seat the seat the passenger has taken.
      */
-    public void takeSeat(Seat seat) {
+    public void takeSeat(Cell seat) {
         this.seatsTaken.add(seat);
         
         if (this.seatsTaken.size() == this.planeDimension.totalNumberOfSeats()) {
@@ -103,7 +103,7 @@ public class BoardingController implements ActionListener{
     }
     
     public class Passenger {
-        private Seat seat;
+        private Cell seat;
         private boolean hasBaggage;
         private boolean hasTakenSeat;
         private int baggageTime;
@@ -112,7 +112,7 @@ public class BoardingController implements ActionListener{
         
         
     
-        public Passenger(Seat seat, double hasBaggageWeight) {
+        public Passenger(Cell seat, double hasBaggageWeight) {
             Random r = new Random();
             this.seat = seat;
             if (r.nextDouble() < hasBaggageWeight){

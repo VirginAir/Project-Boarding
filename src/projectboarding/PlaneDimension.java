@@ -56,16 +56,16 @@ public class PlaneDimension {
         return numberOfColumns;
     }
     
-    public int getNumberOfLanes(){
-        int numberOfLanes = 0;
+    public int getNumberOfAisles(){
+        int numberOfAisles = 0;
         
         for (int column : this.columnSplit) {
             if (column== 0) {
-                numberOfLanes += 1;
+                numberOfAisles += 1;
             }
             
         }
-        return numberOfLanes;
+        return numberOfAisles;
     }
     
     

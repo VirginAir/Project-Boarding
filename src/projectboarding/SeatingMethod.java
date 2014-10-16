@@ -26,6 +26,10 @@ public class SeatingMethod {
         this.planeDimension = planeDimension;
     }
     
+    /**
+     *
+     * @return
+     */
     public ArrayList<Cell> getSeatingOrder() {
         if (defaultMethod != null) {
             switch (this.defaultMethod) {

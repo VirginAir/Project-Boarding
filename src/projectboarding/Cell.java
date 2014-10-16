@@ -11,7 +11,7 @@ public class Cell {
     private Boolean hasPassenger;
     private int numPassengers;
     public enum CellType {
-        SEAT, PRIORITY_SEAT, LANE, NONE
+        SEAT, PRIORITY_SEAT, AISLE, NONE
     }
     
     public Cell(int row, int column, CellType type) {
@@ -61,8 +61,4 @@ public class Cell {
     public void setNumPassengers(int numPassengers) {
         this.numPassengers = numPassengers;
     }
-    
-    
-    
-    
 }

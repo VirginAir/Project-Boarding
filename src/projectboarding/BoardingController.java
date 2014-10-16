@@ -19,11 +19,15 @@ public class BoardingController implements ActionListener{
     private final ArrayList<Cell> seatingOrder;
     private final ArrayList<Passenger> boardingPassengers;
     private final ArrayList<Cell> seatsTaken;
+    private Cell[][] seatVisualisation;
     
     // Timing information
     private Timer timer;
     private DateTime beginningBoardingTime;
     private DateTime endBoardingTime;
+    
+    //Ticks for moving and checking passengers
+    private int newPassenger=0;
     
     public enum SeatInterference {
         MIDDLE, AISLE, MIDDLE_AISLE, NONE
@@ -35,7 +39,7 @@ public class BoardingController implements ActionListener{
         this.seatingMethod = seatingMethod;
         this.seatingOrder = this.seatingMethod.getSeatingOrder();
         this.boardingPassengers = new ArrayList<>();
-        this.seatsTaken = new ArrayList<>();
+        this.seatsTaken = new ArrayList<>();        
     }        
     
     /**
@@ -57,15 +61,20 @@ public class BoardingController implements ActionListener{
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (newPassenger == 0){
         // Get a seat that the user can sit on
         Cell seat = this.seatingOrder.remove(0);
        
         // Create a new passenger object
         Passenger passenger = new Passenger(seat, 0.8);
-        
+        passenger.setAisle(closestAisle(passenger.getSeat()));
+                    
         // Add the passenger object to the list of boarding passengers
         this.boardingPassengers.add(passenger);
-        
+            newPassenger = 5;
+        } else {
+            newPassenger--;
+        }
         if (this.seatingOrder.isEmpty()) {
             // End the timer
             this.timer.stop();
@@ -102,11 +111,30 @@ public class BoardingController implements ActionListener{
         }
     }
     
+    public int closestAisle(Cell c){
+        ArrayList<Integer> aisleList = new ArrayList<>();
+        int smallestDifference = 10;
+        int closestAisle = 0;
+        for (int i = 0; i < seatVisualisation[0].length;i++) {
+            if (seatVisualisation[0][i].getCellType().equals(Cell.CellType.AISLE)) {
+                aisleList.add(i);
+            }
+        }
+        
+        for (Integer aisle : aisleList) {
+            if (Math.abs(c.getCellColumn()-aisle) <= smallestDifference){
+                closestAisle = aisle;
+            }
+        }
+        
+        return closestAisle;
+    }
+    
     public Cell[][] getSeatVisualisation(){
         int totalRows = this.planeDimension.getNumberOfRows() + this.planeDimension.getNumberOfPriorityRows();
-        int totalColumns = this.planeDimension.getNumberOfColumns() + this.planeDimension.getNumberOfLanes();
+        int totalColumns = this.planeDimension.getNumberOfColumns() + this.planeDimension.getNumberOfAisles();
         
-        Cell[][] seatVisualisation = new Cell[totalRows][totalColumns];
+        seatVisualisation = new Cell[totalRows][totalColumns];
         
         int rowLocation = 0;
         for(int i = 0; i < totalRows; i++)
@@ -122,7 +150,7 @@ public class BoardingController implements ActionListener{
                 rowLocation += column;
             } else {
                 for (int i=0; i < totalRows; i++){
-                    seatVisualisation[i][rowLocation].setCellType(Cell.CellType.LANE);
+                    seatVisualisation[i][rowLocation].setCellType(Cell.CellType.AISLE);
                 }
             }
         }
@@ -149,6 +177,8 @@ public class BoardingController implements ActionListener{
         private int baggageTime;
         private int timePerRow;
         private SeatInterference seatInterference;
+        private int seatInterferenceTime;
+        private int aisle;
         
         
     
@@ -168,7 +198,82 @@ public class BoardingController implements ActionListener{
             }
             timePerRow = r.nextInt(3)+2;
             seatInterference = SeatInterference.NONE;
-                
+        }
+
+        public int getTimePerRow() {
+            return timePerRow;
+        }
+
+        public SeatInterference getSeatInterference() {
+            return seatInterference;
+        }
+
+        public Cell getSeat() {
+            return seat;
+        }
+
+        public int getBaggageTime() {
+            return baggageTime;
+        }
+
+        public int getAisle() {
+            return aisle;
+        }
+
+        public int getSeatInterferenceTime() {
+            return seatInterferenceTime;
+        }
+
+        public boolean isHasBaggage() {
+            return hasBaggage;
+        }
+
+        public boolean isHasTakenSeat() {
+            return hasTakenSeat;
+        }
+
+        public void setAisle(int aisle) {
+            this.aisle = aisle;
+        }
+
+        public void setBaggageTime(int baggageTime) {
+            this.baggageTime = baggageTime;
+        }
+
+        public void setHasBaggage(boolean hasBaggage) {
+            this.hasBaggage = hasBaggage;
+        }
+
+        public void setHasTakenSeat(boolean hasTakenSeat) {
+            this.hasTakenSeat = hasTakenSeat;
+        }
+
+        public void setSeat(Cell seat) {
+            this.seat = seat;
+        }
+
+        public void setSeatInterference(SeatInterference seatInterference) {
+            this.seatInterference = seatInterference;
+        }
+
+        public void setTimePerRow(int timePerRow) {
+            this.timePerRow = timePerRow;
+        }
+
+        public void setSeatInterferenceTime(int seatInterferenceTime) {
+            this.seatInterferenceTime = seatInterferenceTime;
+        }
+        
+        public void decreaseTimePerRow(){
+            this.timePerRow--;
+        }
+        
+        public void decreaseBaggageTime(){
+            this.baggageTime--;
+        }
+        
+        public void decreaseSeatInterferenceTime(){
+            this.seatInterferenceTime--;
         }
     }
 }

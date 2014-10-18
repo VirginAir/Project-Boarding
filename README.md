@@ -1,9 +1,13 @@
 ## Weekly Plan (to be completed for...)
+#### Week 6
+###### Matthew
+- [ ] Complete the programmed seating methods.
+
 #### Week 5
 - [ ] **Working example of the project**
 
 ###### Matthew
-- [x] Changed the way the plane dimension works. Any plane size can be created now
+- [x] Change the plane dementions class to allow any plane with any dimentions to be inputted into the system.
 
 ###### Matt
 - [ ] Complete the passenger class with simple maths to work out the timings

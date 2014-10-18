@@ -1,11 +1,9 @@
 ## Weekly Plan (to be completed for...)
 #### Week 5
 - [ ] **Working example of the project**
-- [ ] Create a Gannt Chart to plan weekly objectives
 
 ###### Matthew
-- [ ] Finish programming the pre-defined boarding methods
-- [ ] Begin work on user defined boarding methods
+- [x] Changed the way the plane dimension works. Any plane size can be created now
 
 ###### Matt
 - [ ] Complete the passenger class with simple maths to work out the timings
@@ -14,5 +12,7 @@
 - [ ] Finish the simple visulisation of the simulation
 
 ## Changelog
-#### (10/08, 10:10) - Matthew
-* This is an example changelog, use this to describe in full what work has been done and what you have changed/added to the program
+#### (18/08, 17:00) - Matthew
+* The plane dimension class has had a complete change. You can now create any size plane required, including any position of the seats and number of columns per row. The piority seats can also be spread inbetween the normal seats as nessessary.
+* It is initialized from a Cell[][] array containing each of the rows of the plane and in each row theCell[] array contains all of the seats (cells), including aisles or non-seats.
+* This array can EASILY be created programmatically and siginificantly eases the process of working out the seating order.

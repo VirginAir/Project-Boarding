@@ -1,6 +1,7 @@
 package projectboarding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -44,28 +45,6 @@ public class SeatingMethod {
     }
     
     /**
-     * Creates a set of available seats for the row and columns provided.
-     * 
-     * @param rows set of row numbers.
-     * @param columns set of column numbers.
-     * @param isPriority boolean whether the seat is a priority seat.
-     * @return set of available seats.
-     */
-    private ArrayList<Cell> createAvailableSeats(int[] rows, int[] columns, Cell.CellType cellType) {
-        // Create an arrayList of seats that can be taken
-        ArrayList<Cell> availableSeats = new ArrayList<>();
-        
-        for (int row: rows) {
-            for (int column: columns) {
-                Cell seat = new Cell(row, column, cellType);
-                availableSeats.add(seat);
-            }
-        }
-        
-        return availableSeats;
-    }
-    
-    /**
      * Creates a random order for the set of seats provided.
      * 
      * @param seats set of seats to be randomized.
@@ -91,19 +70,17 @@ public class SeatingMethod {
      * @return a randomized set of priority seats.
      */
     private ArrayList<Cell> calculateRandomSeatingOrderForPrioritySeats() {
-        // Create the rows
-        int[] rows = new int[this.planeDimension.getNumberOfPriorityRows()];
-        for (int row = 0; row < this.planeDimension.getNumberOfPriorityRows(); row++) {
-            rows[row] = row;
+        return this.createRandomSeatingOrderFromSeats(this.convertArrayListToArray(this.planeDimension.getPrioritySeats()));
+    }
+    
+    private ArrayList<Cell> convertArrayListToArray(Cell[][] array) {
+        ArrayList<Cell> seats = new ArrayList<>();
+ 
+        for (Cell[] row: array) {
+            seats.addAll(Arrays.asList(row));
         }
         
-        // Create the columns
-        int[] columns = new int[this.planeDimension.getNumberOfPriorityRows()];
-        for (int column = 0; column < this.planeDimension.getNumberOfPriorityRows(); column++) {
-            columns[column] = column;
-        }
-        
-        return this.createRandomSeatingOrderFromSeats(this.createAvailableSeats(rows, columns, Cell.CellType.PRIORITY_SEAT));
+        return seats;
     }
     
     /**
@@ -113,28 +90,16 @@ public class SeatingMethod {
      */
     private ArrayList<Cell> calculateRandomSeatingOrder() {
         // Get the random order of the priority seats
-        ArrayList<Cell> priorityOrderSeats = this.calculateRandomSeatingOrderForPrioritySeats();
+        ArrayList<Cell> randomPrioritySeats = this.calculateRandomSeatingOrderForPrioritySeats();
         
-        // Get the random order of the standard seats
-        // Create the rows
-        int[] rows = new int[this.planeDimension.getNumberOfRows()];
-        for (int row = 0; row < this.planeDimension.getNumberOfRows(); row++) {
-            rows[row] = row;
-        }
-        
-        // Create the columns
-        int[] columns = new int[this.planeDimension.getNumberOfColumns()];
-        for (int column = 0; column < this.planeDimension.getNumberOfColumns(); column++) {
-            columns[column] = column;
-        }
-        
-        ArrayList<Cell> availableSeats = this.createAvailableSeats(rows, columns, Cell.CellType.SEAT);
-        ArrayList<Cell> randomOrder = this.createRandomSeatingOrderFromSeats(availableSeats);
+        // Get the random order of the normal seats
+        ArrayList<Cell> randomNormalSeats = 
+                this.createRandomSeatingOrderFromSeats(this.convertArrayListToArray(this.planeDimension.getNormalSeats()));
         
         // Join the two arrayLists together
         ArrayList<Cell> seatingOrder = new ArrayList<>();
-        seatingOrder.addAll(priorityOrderSeats);
-        seatingOrder.addAll(randomOrder);
+        seatingOrder.addAll(randomPrioritySeats);
+        seatingOrder.addAll(randomNormalSeats);
         
         return seatingOrder;
     }

@@ -131,43 +131,7 @@ public class BoardingController implements ActionListener{
     }
     
     public Cell[][] getSeatVisualisation(){
-        int totalRows = this.planeDimension.getNumberOfRows() + this.planeDimension.getNumberOfPriorityRows();
-        int totalColumns = this.planeDimension.getNumberOfColumns() + this.planeDimension.getNumberOfAisles();
-        
-        seatVisualisation = new Cell[totalRows][totalColumns];
-        
-        int rowLocation = 0;
-        for(int i = 0; i < totalRows; i++)
-        {
-            for(int j = 0; j < totalColumns; j++)
-            {
-                seatVisualisation[i][j] = new Cell(i, j, Cell.CellType.SEAT);
-            }
-        }
-        for (int column : this.planeDimension.getColumnSplit()) {
-            
-            if(column > 0){
-                rowLocation += column;
-            } else {
-                for (int i=0; i < totalRows; i++){
-                    seatVisualisation[i][rowLocation].setCellType(Cell.CellType.AISLE);
-                }
-            }
-        }
-        int emptySpaces = this.planeDimension.getNumberOfColumns() - this.planeDimension.getNumberOfPriorityColumns();
-        for (int i = 0; i < this.planeDimension.getNumberOfPriorityRows(); i++) {
-            for (int j = 0; j < totalColumns; j++) {
-                if(seatVisualisation[i][j].getCellType().equals(Cell.CellType.SEAT)){
-                    if (((emptySpaces/2)-1) < j && j < (totalColumns-(emptySpaces/2))){
-                        seatVisualisation[i][j].setCellType(Cell.CellType.PRIORITY_SEAT);
-                    } else {
-                        seatVisualisation[i][j].setCellType(Cell.CellType.NONE);
-                    }
-                }
-            }
-            
-        }
-        return seatVisualisation;
+        return this.planeDimension.getAllSeats();
     }
     
     public class Passenger {

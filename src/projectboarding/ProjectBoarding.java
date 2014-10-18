@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
+import projectboarding.Cell.CellType;
 
 /**
  *
@@ -39,7 +40,46 @@ public class ProjectBoarding {
         window.setVisibility(true);
         
         // Create and run the boarding
-        PlaneDimension planeDimension = new PlaneDimension(2, new int[]{2,0,2}, 23, new int[]{3,0,3});
+        // DONT WORRY THIS WILL ALL BE REMOVED, IT SHOULD BE CREATED PROGRAMMATICALLY
+        // JUST HERE TO BE USED AS A TEST
+        Cell[] priorityRow = new Cell[]{new Cell(0,0,CellType.PRIORITY_SEAT),
+            new Cell(0,1,CellType.PRIORITY_SEAT), 
+            new Cell(0,2,CellType.NONE), 
+            new Cell(0,3,CellType.AISLE), 
+            new Cell(0,4,CellType.NONE), 
+            new Cell(0,5,CellType.PRIORITY_SEAT), 
+            new Cell(0,6,CellType.PRIORITY_SEAT)};
+        Cell[] priorityRow1 = new Cell[]{new Cell(1,0,CellType.PRIORITY_SEAT),
+            new Cell(1,1,CellType.PRIORITY_SEAT), 
+            new Cell(1,2,CellType.NONE), 
+            new Cell(1,3,CellType.AISLE), 
+            new Cell(1,4,CellType.NONE), 
+            new Cell(1,5,CellType.PRIORITY_SEAT), 
+            new Cell(1,6,CellType.PRIORITY_SEAT)};
+        Cell[] normalRow = new Cell[]{new Cell(2,0,CellType.SEAT),
+            new Cell(2,1,CellType.SEAT), 
+            new Cell(2,2,CellType.SEAT), 
+            new Cell(2,3,CellType.AISLE), 
+            new Cell(2,4,CellType.SEAT), 
+            new Cell(2,5,CellType.SEAT), 
+            new Cell(2,6,CellType.SEAT)};
+        Cell[] normalRow1 = new Cell[]{new Cell(3,0,CellType.SEAT),
+            new Cell(3,1,CellType.SEAT), 
+            new Cell(3,2,CellType.SEAT), 
+            new Cell(3,3,CellType.AISLE), 
+            new Cell(3,4,CellType.SEAT), 
+            new Cell(3,5,CellType.SEAT), 
+            new Cell(3,6,CellType.SEAT)};
+        Cell[] normalRow2 = new Cell[]{new Cell(4,0,CellType.SEAT),
+            new Cell(4,1,CellType.SEAT), 
+            new Cell(4,2,CellType.SEAT), 
+            new Cell(4,3,CellType.AISLE), 
+            new Cell(4,4,CellType.SEAT), 
+            new Cell(4,5,CellType.SEAT), 
+            new Cell(4,6,CellType.SEAT)};
+        
+        PlaneDimension planeDimension = new PlaneDimension(
+                new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2});
         SeatingMethod seatingMethod = new SeatingMethod(SeatingMethod.DefaultSeatingMethod.RANDOM, planeDimension);
         
         

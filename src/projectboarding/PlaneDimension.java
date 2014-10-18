@@ -50,7 +50,13 @@ public class PlaneDimension {
             }
         }
        
-        return (Cell[][]) seats.toArray();
+        Cell[][] array = new Cell[seats.size()][];
+        for (int i = 0; i < seats.size(); i++) {
+            ArrayList<Cell> row = seats.get(i);
+            array[i] = row.toArray(new Cell[row.size()]);
+        }
+        
+        return array;
     }
     
     public int getNumberOfPriorityRows() {

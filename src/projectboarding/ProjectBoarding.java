@@ -2,6 +2,7 @@ package projectboarding;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
@@ -81,7 +82,7 @@ public class ProjectBoarding {
         PlaneDimension planeDimension = new PlaneDimension(
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2});
         SeatingMethod seatingMethod = new SeatingMethod(SeatingMethod.DefaultSeatingMethod.RANDOM, planeDimension);
-        
+        ArrayList<Cell> seats = seatingMethod.getSeatingOrder();
         
         BoardingController controller = new BoardingController(planeDimension, seatingMethod);
         Cell[][] seatVisualisation = controller.getSeatVisualisation();

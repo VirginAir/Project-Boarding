@@ -30,6 +30,7 @@ public class BoardingController implements ActionListener {
     private int newPassenger = 0;
     private Random r;
     private int seatedPassengers;
+    private int totalTicks;
 
     public enum SeatInterference {
 
@@ -46,6 +47,8 @@ public class BoardingController implements ActionListener {
         this.planePassengers = new ArrayList<>();
         this.seatVisualisation = this.planeDimension.getAllSeats();
         this.seatedPassengers = 0;
+        this.r = new Random();
+        this.totalTicks = 0;
         
     }
 
@@ -68,8 +71,8 @@ public class BoardingController implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        seatedPassengers = 0;
-        if (newPassenger == 0 && !this.seatingOrder.isEmpty()) {
+        this.seatedPassengers = 0;
+        if (this.newPassenger == 0 && !this.seatingOrder.isEmpty()) {
             // Get a seat that the user can sit on
             Cell seat = this.seatingOrder.remove(0);
 
@@ -87,8 +90,9 @@ public class BoardingController implements ActionListener {
             }
 
             newPassenger = 5;
-        } else {
+        } else if (this.newPassenger > 0 && !this.seatingOrder.isEmpty()) {
             newPassenger--;
+        } else {
         }
 
         for (Passenger passenger : planePassengers) {
@@ -110,7 +114,7 @@ public class BoardingController implements ActionListener {
                         if (passenger.getSeatInterferenceTime() == 0 && !passenger.isHasTakenSeat()) {
                             for (Passenger p1 : planePassengers) {
                                 if (passenger.getCurrentCell().getCellRow() == p1.getCurrentCell().getCellRow()) {
-                                    if (((passenger.getSeat().getCellColumn() < p1.getSeat().getCellRow()) && (p1.getSeat().getCellRow() < passenger.getAisle())) || ((passenger.getSeat().getCellColumn() > p1.getSeat().getCellRow()) && (p1.getSeat().getCellRow() > passenger.getAisle()))) {
+                                    if (((passenger.getSeat().getCellColumn() < p1.getSeat().getCellColumn()) && (p1.getSeat().getCellColumn()< passenger.getAisle())) || ((passenger.getSeat().getCellColumn() > p1.getSeat().getCellColumn()) && (p1.getSeat().getCellColumn() > passenger.getAisle()))) {
                                         passenger.addInteferingPassengers();
                                     }
                                 }
@@ -126,13 +130,28 @@ public class BoardingController implements ActionListener {
                                             passenger.setSeatInterferenceTime(r.nextInt(8) + 2);
                                         }
                                     }
+                                } else if (passenger.getAisle() < passenger.getSeat().getCellColumn()) {
+                                    for (Passenger p1 : planePassengers) {
+                                        if (p1.getCurrentCell().getCellRow() == passenger.getCurrentCell().getCellRow() && p1.getCurrentCell().getCellColumn() == passenger.getCurrentCell().getCellColumn() + 1) {
+                                            passenger.setSeatInterferenceTime(r.nextInt(6) + 2);
+                                        } else if (p1.getCurrentCell().getCellRow() == passenger.getCurrentCell().getCellRow() && p1.getCurrentCell().getCellColumn() == passenger.getCurrentCell().getCellColumn() + 2) {
+                                            passenger.setSeatInterferenceTime(r.nextInt(8) + 2);
+                                        }
+                                    }
                                 }
                             } else if (passenger.getInterferingPassengers() == 2) {
-                                passenger.setSeatInterferenceTime(r.nextInt(15) + 5);
+                                try{
+                                    passenger.setSeatInterferenceTime(r.nextInt(15) + 5);
+                                } catch (Exception ex) {
+                                    System.out.println("");
+                                }
                             }
                             passenger.setCurrentCell(passenger.getSeat());
                         }
                         passenger.decreaseSeatInterferenceTime();
+                        if (passenger.getSeatInterferenceTime() < 0){
+                            System.out.println("");
+                        }
                         if (passenger.getSeatInterferenceTime() == 0) {
                             passenger.setHasTakenSeat(true);
                         }
@@ -155,12 +174,13 @@ public class BoardingController implements ActionListener {
 
 
 
-
+        this.totalTicks ++;
         if (this.seatedPassengers == this.planeDimension.getNumberOfPrioritySeats()+this.planeDimension.getNumberOfNormalSeats()) {
             // End the timer
             this.timer.stop();
             this.endBoardingTime = new DateTime();
-            System.out.println(this.totalBoardingTime().multipliedBy(20));
+            System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
+            System.out.println(this.totalTicks + "s (calculated)");//calculated using one triggered action as a second time frame
         }
     }
 
@@ -247,6 +267,7 @@ public class BoardingController implements ActionListener {
             timePerRow = r.nextInt(3) + 2;
             permTimePerRow = timePerRow;
             seatInterference = SeatInterference.NONE;
+            seatInterferenceTime = 0;
             interferingPassengers = 0;
         }
 

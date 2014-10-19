@@ -23,5 +23,5 @@
 * This array can EASILY be created programmatically and siginificantly eases the process of working out the seating order.
 
 #### (19/10, 00:16) - Matt
-* Finished logic for passengers to hendle how they enter plane
+* Finished logic for passengers to handle how they enter plane
 * Once on plane, logic written to determine getting to the seat. This handles people putting up bags, in the way in the aisle, and people in the way of seats too.

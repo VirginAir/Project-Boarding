@@ -39,4 +39,5 @@
 * Finally pushed basic visualisation
 * Green squares represent passenger placement, Red are empty seats
 * Need to make it so the sizing is dynamic and adjusts based on seating dimensions (currently it just adds a new row which can go off screen...)
+* Also added libraries for Mac support but have yet to test these.
 

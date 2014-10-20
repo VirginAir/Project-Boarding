@@ -10,8 +10,16 @@ import java.util.Random;
  */
 public class SeatingMethod {
     public enum DefaultSeatingMethod {
-        BACK_TO_FRONT, BLOCK_BOARDING, OUTSIDE_IN_BY_COLUMN, RANDOM, REVERSE_PYRAMID, ROTATING_ZONE
+        BACK_TO_FRONT, BLOCK_BOARDING, BY_SEAT, OUTSIDE_IN, RANDOM, REVERSE_PYRAMID, ROTATING_ZONE
     }
+    
+    // back-to-front - block boarding from back to front
+    // block-boarding - block boarding with outside in ordering per block
+    // by-seat - non-randmised, outside in from front to back
+    // outside-in - outside in without blocks
+    // random - randmise all the seats
+    // rotating-zone - block boarding with alternating back/front/back/front/etc...
+    // reverse-pyramid - back to front with outside-in
     
     private final DefaultSeatingMethod defaultMethod;
     private final PlaneDimension planeDimension;
@@ -157,4 +165,20 @@ public class SeatingMethod {
         
         return this.createFinalOrder(backToFrontRandomisedSeats);
     }
+
+    @Override
+    public String toString() {
+        String seatingMethod; 
+        switch(this.defaultMethod){
+            case RANDOM:
+                seatingMethod = "random";
+                break;
+            default:
+                seatingMethod = "NULL";
+                break;
+        }
+        return seatingMethod;
+    }
+    
+    
 }

@@ -23,23 +23,7 @@ public class ProjectBoarding {
      */
     public static void main(String[] args) {
         
-        final GLProfile profile = GLProfile.get(GLProfile.GL4);
-        GLCapabilities capabilities = new GLCapabilities(profile);
-        capabilities.setDoubleBuffered(true);
-        capabilities.setHardwareAccelerated(true);
-        
-        GLCanvas canvas = new GLCanvas(capabilities);
-        FPSAnimator animator = new FPSAnimator(canvas, FPS);
-        GLRender renderer = new GLRender();
-        
-        GLWindow window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
-        
-        canvas.addGLEventListener(renderer);
-        
-        window.setGLCanvas(canvas, BorderLayout.CENTER);
-        animator.start();
-        window.setVisibility(true);
-        
+              
         // Create and run the boarding
         // DONT WORRY THIS WILL ALL BE REMOVED, IT SHOULD BE CREATED PROGRAMMATICALLY
         // JUST HERE TO BE USED AS A TEST
@@ -78,9 +62,23 @@ public class ProjectBoarding {
             new Cell(4,4,CellType.SEAT), 
             new Cell(4,5,CellType.SEAT), 
             new Cell(4,6,CellType.SEAT)};
+        Cell[] normalRow3 = new Cell[]{new Cell(5,0,CellType.SEAT),
+            new Cell(5,1,CellType.SEAT), 
+            new Cell(5,2,CellType.SEAT), 
+            new Cell(5,3,CellType.AISLE), 
+            new Cell(5,4,CellType.SEAT), 
+            new Cell(5,5,CellType.SEAT), 
+            new Cell(5,6,CellType.SEAT)};
+        Cell[] normalRow4 = new Cell[]{new Cell(6,0,CellType.SEAT),
+            new Cell(6,1,CellType.SEAT), 
+            new Cell(6,2,CellType.SEAT), 
+            new Cell(6,3,CellType.AISLE), 
+            new Cell(6,4,CellType.SEAT), 
+            new Cell(6,5,CellType.SEAT), 
+            new Cell(6,6,CellType.SEAT)};
         
         PlaneDimension planeDimension = new PlaneDimension(
-                new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2});
+                new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4});
         SeatingMethod seatingMethod = new SeatingMethod(SeatingMethod.DefaultSeatingMethod.RANDOM, planeDimension);
         ArrayList<Cell> seats = seatingMethod.getSeatingOrder();
         
@@ -88,6 +86,22 @@ public class ProjectBoarding {
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
         controller.startBoarding();
         
+        final GLProfile profile = GLProfile.get(GLProfile.GL4);
+        GLCapabilities capabilities = new GLCapabilities(profile);
+        capabilities.setDoubleBuffered(true);
+        capabilities.setHardwareAccelerated(true);
+        
+        GLCanvas canvas = new GLCanvas(capabilities);
+        FPSAnimator animator = new FPSAnimator(canvas, FPS);
+        GLRender renderer = new GLRender(seatVisualisation, controller.getPassengers());
+        
+        GLWindow window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
+        
+        canvas.addGLEventListener(renderer);
+        
+        window.setGLCanvas(canvas, BorderLayout.CENTER);
+        animator.start();
+        window.setVisibility(true);
+        
     }
-    
 }

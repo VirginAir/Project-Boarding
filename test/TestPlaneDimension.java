@@ -20,7 +20,12 @@ import projectboarding.PlaneDimension;
  */
 public class TestPlaneDimension {
     
+    private final PlaneDimension planeDimension;
+    private Cell[][] planeSeatingLayout;
+    
     public TestPlaneDimension() {
+        // Create the plane
+        this.planeDimension = new PlaneDimension(this.planeSeatingLayout);
     }
     
     @BeforeClass
@@ -38,19 +43,10 @@ public class TestPlaneDimension {
     @After
     public void tearDown() {
     }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
     
     @Test
     public void testCreatePlaneDimension() {
-        Cell[][] plane = new Cell[][]{};
-       
-        PlaneDimension planeDimension = new PlaneDimension(plane);
-        Assert.assertArrayEquals(planeDimension.getAllSeats(), plane);
+        Assert.assertArrayEquals(this.planeDimension.getAllSeats(), this.planeSeatingLayout);
     }
 
 }

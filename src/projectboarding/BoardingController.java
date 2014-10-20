@@ -60,7 +60,7 @@ public class BoardingController implements ActionListener {
         this.beginningBoardingTime = new DateTime();
 
         // Start a timer which creates a new passenger every second
-        timer = new Timer(50, this);
+        timer = new Timer(1000, this);
         timer.start();
     }
 
@@ -177,9 +177,9 @@ public class BoardingController implements ActionListener {
         this.totalTicks ++;
         if (this.seatedPassengers == this.planeDimension.getNumberOfPrioritySeats()+this.planeDimension.getNumberOfNormalSeats()) {
             // End the timer
-            this.timer.stop();
             this.endBoardingTime = new DateTime();
-            System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
+            this.timer.stop();
+            System.out.println(this.totalBoardingTime().getSeconds()+"s (\"real time\")"); // calculated real time
             System.out.println(this.totalTicks + "s (calculated)");//calculated using one triggered action as a second time frame
         }
     }

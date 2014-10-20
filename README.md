@@ -1,7 +1,15 @@
 ## Weekly Plan (to be completed for...)
+#### Week 7
+- [ ] Add smoother animation
+- [ ] Add textures
+
 #### Week 6
 ###### Matthew
 - [ ] Complete the programmed seating methods.
+
+##### Ben
+- [ ] Add dynamic sizing for screen elements
+- [ ] Add basic user control functions
 
 #### Week 5
 - [ ] **Working example of the project**
@@ -16,10 +24,6 @@
 ###### Ben
 - [X] Finish the simple visulisation of the simulation
 - [ ] Fix up dirty code
-- [ ] Add dynamic sizing for screen elements
-- [ ] Add basic user control functions
-- [ ] Add smoother animation
-- [ ] Add textures
 
 ## Changelog
 #### (18/10, 17:00) - Matthew

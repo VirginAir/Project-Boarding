@@ -183,8 +183,8 @@ public class BoardingController implements ActionListener {
             // End the timer
             this.endBoardingTime = new DateTime();
             this.timer.stop();
-            System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
-            System.out.println(this.totalTicks + "s (calculated)");//calculated using one triggered action as a second time frame
+            //System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
+            System.out.println("Time taken: " + this.totalTicks + "s using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
         }
     }
 

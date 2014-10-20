@@ -165,4 +165,20 @@ public class SeatingMethod {
         
         return this.createFinalOrder(backToFrontRandomisedSeats);
     }
+
+    @Override
+    public String toString() {
+        String seatingMethod; 
+        switch(this.defaultMethod){
+            case RANDOM:
+                seatingMethod = "random";
+                break;
+            default:
+                seatingMethod = "NULL";
+                break;
+        }
+        return seatingMethod;
+    }
+    
+    
 }

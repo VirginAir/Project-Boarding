@@ -14,7 +14,12 @@
 - [ ] Wait for Ben to finish visualisation to work out bugs in timings.
 
 ###### Ben
-- [ ] Finish the simple visulisation of the simulation
+- [X] Finish the simple visulisation of the simulation
+- [ ] Fix up dirty code
+- [ ] Add dynamic sizing for screen elements
+- [ ] Add basic user control functions
+- [ ] Add smoother animation
+- [ ] Add textures
 
 ## Changelog
 #### (18/10, 17:00) - Matthew
@@ -25,3 +30,9 @@
 #### (19/10, 00:16) - Matt
 * Finished logic for passengers to handle how they enter plane
 * Once on plane, logic written to determine getting to the seat. This handles people putting up bags, in the way in the aisle, and people in the way of seats too.
+
+#### (20/10, 17:36) - Ben
+* Finally pushed basic visualisation
+* Green squares represent passenger placement, Red are empty seats
+* Need to make it so the sizing is dynamic and adjusts based on seating dimensions (currently it just adds a new row which can go off screen...)
+

@@ -128,10 +128,12 @@ public class SeatingMethod {
     }
     
     private ArrayList<Cell> calculateBackToFrontSeatingOrder() {
+        int numberOfRowsPerBlock = 1;
+        
         // Calculate how many blocks to split the plane into
-        int numberOfRows = this.planeDimension.totalNumberOfRows();
-        int numberOfBlocks = numberOfRows / 5;
-        float remainder = numberOfRows % 5;
+        int numberOfRows = this.planeDimension.getNumberOfNormalRows();
+        int numberOfBlocks = numberOfRows / numberOfRowsPerBlock;
+        float remainder = numberOfRows % numberOfRowsPerBlock;
         
         // Get the normal seats for the plane and get the last index in the array
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
@@ -143,7 +145,7 @@ public class SeatingMethod {
         // Loop over each block the seats have been split into
         for (int x = 0; x < numberOfBlocks; x++) {
             // Calculate the number of rows to get for this block
-            int numberOfRowsToGet = 5;
+            int numberOfRowsToGet = numberOfRowsPerBlock;
             if (remainder > 0) {
                 numberOfRowsToGet++;
                 remainder--;
@@ -173,8 +175,11 @@ public class SeatingMethod {
             case RANDOM:
                 seatingMethod = "random";
                 break;
+            case BACK_TO_FRONT:
+                seatingMethod = "back-to-front";
+                break;
             default:
-                seatingMethod = "NULL";
+                seatingMethod = "unrecognised method";
                 break;
         }
         return seatingMethod;

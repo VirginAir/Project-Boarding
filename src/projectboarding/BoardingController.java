@@ -241,6 +241,10 @@ public class BoardingController implements ActionListener {
     public Cell[][] getSeatVisualisation() {
         return this.seatVisualisation;
     }
+    
+    public ArrayList<Passenger> getPassengers() {
+        return planePassengers;
+    }
 
     public class Passenger {
 

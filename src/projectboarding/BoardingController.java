@@ -96,14 +96,16 @@ public class BoardingController implements ActionListener {
         }
 
         for (Passenger passenger : planePassengers) {
-            seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(false);
+            //seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(false);
             if (!passenger.isHasTakenSeat()) {
                 if (passenger.getCurrentCell().getCellRow() != passenger.getSeat().getCellRow()) {
                     if (passenger.timePerRow > 0) {
                         passenger.decreaseTimePerRow();
                     } else {
                         if (!seatVisualisation[passenger.getCurrentCell().getCellRow() + 1][passenger.getCurrentCell().getCellColumn()].getHasPassenger() & passenger.getTimePerRow() == 0) {
+                            seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(false);
                             passenger.setCurrentCell(seatVisualisation[passenger.getCurrentCell().getCellRow() + 1][passenger.getCurrentCell().getCellColumn()]);
+                            seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(true);
                             passenger.resetTimePerRow();
                         }
                     }
@@ -146,7 +148,9 @@ public class BoardingController implements ActionListener {
                                     System.out.println("");
                                 }
                             }
+                            seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(false);
                             passenger.setCurrentCell(passenger.getSeat());
+                            seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(true);
                         }
                         passenger.decreaseSeatInterferenceTime();
                         if (passenger.getSeatInterferenceTime() < 0){
@@ -160,7 +164,7 @@ public class BoardingController implements ActionListener {
             } else {
                 this.seatedPassengers +=1;
             }
-            seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(true);
+            
         }
         
         if(!boardingPassengers.isEmpty() && !this.seatVisualisation[0][boardingPassengers.get(0).getAisle()].getHasPassenger()){

@@ -7,23 +7,25 @@
 ###### Matthew
 - [ ] Complete the programmed seating methods.
 
+###### Matt
+- [ ] Wait for Ben to finish visualisation to work out bugs in timings.
+
 ##### Ben
 - [ ] Add dynamic sizing for screen elements
 - [ ] Add basic user control functions
+- [ ] Fix up dirty code
 
 #### Week 5
-- [ ] **Working example of the project**
+- [x] **Working example of the project**
 
 ###### Matthew
 - [x] Change the plane dementions class to allow any plane with any dimentions to be inputted into the system.
 
 ###### Matt
 - [X] Complete the passenger class with simple maths to work out the timings
-- [ ] Wait for Ben to finish visualisation to work out bugs in timings.
 
 ###### Ben
 - [X] Finish the simple visulisation of the simulation
-- [ ] Fix up dirty code
 
 ## Changelog
 #### (18/10, 17:00) - Matthew
@@ -41,3 +43,5 @@
 * Need to make it so the sizing is dynamic and adjusts based on seating dimensions (currently it just adds a new row which can go off screen...)
 * Also added libraries for Mac support but have yet to test these.
 
+#### (22/10, 13:30) - Matthew
+* Completed the following seating methods: back-to-front, block-boarding, outside-in, random and rotating-zone.

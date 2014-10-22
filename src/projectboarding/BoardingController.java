@@ -7,28 +7,29 @@ import java.util.Random;
 import javax.swing.Timer;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
+import projectboarding.SeatingMethod.DefaultSeatingMethod;
 
 /**
  *
  * @author Matthew Kempson
  */
 public class BoardingController implements ActionListener {
+    
     // Plane information
-
     private final PlaneDimension planeDimension;
     private final SeatingMethod seatingMethod;
     private final ArrayList<Cell> seatingOrder;
     private final ArrayList<Passenger> boardingPassengers;
     private final ArrayList<Passenger> planePassengers;
     private final ArrayList<Cell> seatsTaken;
-    private Cell[][] seatVisualisation;
+    private final Cell[][] seatVisualisation;
     // Timing information
     private Timer timer;
     private DateTime beginningBoardingTime;
     private DateTime endBoardingTime;
     //Ticks for moving and checking passengers
     private int newPassenger = 0;
-    private Random r;
+    private final Random r;
     private int seatedPassengers;
     private int totalTicks;
 
@@ -37,11 +38,11 @@ public class BoardingController implements ActionListener {
         MIDDLE, AISLE, MIDDLE_AISLE, NONE
     }
 
-    public BoardingController(PlaneDimension planeDimension, SeatingMethod seatingMethod) {
+    public BoardingController(PlaneDimension planeDimension, SeatingMethod seatingMethod, DefaultSeatingMethod defaultMethod) {
         // Initalise variables
         this.planeDimension = planeDimension;
         this.seatingMethod = seatingMethod;
-        this.seatingOrder = this.seatingMethod.getSeatingOrder();
+        this.seatingOrder = this.seatingMethod.getSeatingOrder(defaultMethod);
         this.boardingPassengers = new ArrayList<>();
         this.seatsTaken = new ArrayList<>();
         this.planePassengers = new ArrayList<>();
@@ -49,7 +50,6 @@ public class BoardingController implements ActionListener {
         this.seatedPassengers = 0;
         this.r = new Random();
         this.totalTicks = 0;
-        
     }
 
     /**

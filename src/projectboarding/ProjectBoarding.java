@@ -7,6 +7,7 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import projectboarding.Cell.CellType;
+import projectboarding.SeatingMethod.DefaultSeatingMethod;
 
 /**
  *
@@ -79,10 +80,9 @@ public class ProjectBoarding {
         
         PlaneDimension planeDimension = new PlaneDimension(
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4});
-        SeatingMethod seatingMethod = new SeatingMethod(SeatingMethod.DefaultSeatingMethod.ROTATING_ZONE, planeDimension);
-        ArrayList<Cell> seats = seatingMethod.getSeatingOrder();
+        SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
         
-        BoardingController controller = new BoardingController(planeDimension, seatingMethod);
+        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.ROTATING_ZONE);
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
         controller.startBoarding();
         

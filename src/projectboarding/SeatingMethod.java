@@ -9,120 +9,70 @@ import java.util.Random;
  * @author Matthew
  */
 public class SeatingMethod {
+    /**
+     * A pre-defined seating method.
+     */
     public enum DefaultSeatingMethod {
         BACK_TO_FRONT, BLOCK_BOARDING, BY_SEAT, OUTSIDE_IN, RANDOM, REVERSE_PYRAMID, ROTATING_ZONE
     }
-    
-    // back-to-front - block boarding, random ordering, from back to front
-    // block-boarding - block boarding, outside in ordering
     // by-seat - non-randmised, outside in, from front to back
-    // outside-in - outside in without blocks
-    // random - randmise all the seats
-    // rotating-zone - block boarding with alternating back/front/back/front/etc...
     // reverse-pyramid - back to front with outside-in
     
-    private final DefaultSeatingMethod defaultMethod;
     private final PlaneDimension planeDimension;
-    
-    // Can create this immediatly since it wont change for any of the seating methods
     private final ArrayList<Cell> randomisedPrioritySeats;
     
     /**
      * Initialize the seating method class with a default method.
-     * 
-     * @param defaultMethod the default seating method.
      * @param planeDimension the dimensions of the plane to order the seats from.
      */
-    public SeatingMethod(DefaultSeatingMethod defaultMethod, PlaneDimension planeDimension) {
-        this.defaultMethod = defaultMethod;
+    public SeatingMethod(PlaneDimension planeDimension) {
         this.planeDimension = planeDimension;
         
         this.randomisedPrioritySeats = this.calculateRandomSeatingOrderForPrioritySeats();
     }
     
     /**
-     *
-     * @return
+     * Get the seating order for a default seating method.
+     * @param seatingMethod the seating method to use.
+     * @return an arrayList containing the seating order.
      */
-    public ArrayList<Cell> getSeatingOrder() {
-        if (defaultMethod != null) {
-            switch (this.defaultMethod) {
-                case BACK_TO_FRONT:
-                    return this.calculateBackToFrontSeatingOrder();
-                case BLOCK_BOARDING:
-                    return this.calculateBlockBoardingSeatingOrder();
-                case OUTSIDE_IN:
-                    return this.calculateOutsideInSeatingOrder();
-                case RANDOM:
-                    return this.calculateRandomSeatingOrder();
-                case ROTATING_ZONE:
-                    return this.calculateRotatingZoneSeatingOrder();
-                default:
-                    break;
-            }
+    public ArrayList<Cell> getSeatingOrder(DefaultSeatingMethod seatingMethod) {
+        switch (seatingMethod) {
+            case BACK_TO_FRONT:
+                return this.calculateBackToFrontSeatingOrder();
+            case BLOCK_BOARDING:
+                return this.calculateBlockBoardingSeatingOrder();
+            case OUTSIDE_IN:
+                return this.calculateOutsideInSeatingOrder();
+            case RANDOM:
+                return this.calculateRandomSeatingOrder();
+            case ROTATING_ZONE:
+                return this.calculateRotatingZoneSeatingOrder();
+            default:
+                return null;
         }
-        
+    }
+    
+    /**
+     * Get the seating order for a user created seating method.
+     * @param userSeatingMethod the order for the seats to be taken.
+     * @return an arrayList containing the seating order.
+     */
+    public ArrayList<Cell> getSeatingOrder(Cell[][] userSeatingMethod) {
         return null;
     }
     
     /**
-     * Creates a random order for the set of seats provided.
-     * 
-     * @param seats set of seats to be randomized.
-     * @return a randomized set of seats.
-     */
-    private ArrayList<Cell> createRandomSeatingOrderFromSeats(ArrayList<Cell> seats) {
-        // Create the arrayList containing the seating order
-        ArrayList<Cell> seatingOrder = new ArrayList<>();
-        
-        while (!seats.isEmpty()) {
-            Random randomGenerator = new Random();
-            int seatNumber = randomGenerator.nextInt(seats.size());
-            
-            seatingOrder.add(seats.remove(seatNumber));
-        }
-        
-        return seatingOrder;
-    }
-    
-    /**
      * Creates a set of randomly ordered seats for the priority seats in the plane.
-     * 
-     * @return a randomized set of priority seats.
+     * @return an arrayList containing randomly ordered priority seats.
      */
     private ArrayList<Cell> calculateRandomSeatingOrderForPrioritySeats() {
         return this.createRandomSeatingOrderFromSeats(this.convertArrayToArrayList(this.planeDimension.getPrioritySeats()));
     }
     
     /**
-     * Converts a given 2D array into an arrayList.
-     * 
-     * @param array the 2D array to be transformed
-     * @return an arrayList containing the 2D array
-     */
-    private ArrayList<Cell> convertArrayToArrayList(Cell[][] array) {
-        ArrayList<Cell> seats = new ArrayList<>();
- 
-        for (Cell[] row: array) {
-            seats.addAll(Arrays.asList(row));
-        }
-        
-        return seats;
-    }
-    
-    private ArrayList<Cell> createFinalOrder(ArrayList<Cell> normalSeats) {
-        // Join the two arrayLists together
-        ArrayList<Cell> seatingOrder = new ArrayList<>();
-        seatingOrder.addAll(this.randomisedPrioritySeats);
-        seatingOrder.addAll(normalSeats);
-        
-        return seatingOrder;
-    }
-    
-    /**
-     * Create the seating order for the random seating method.
-     * 
-     * @return a randomly ordered set of seats.
+     * Create the seating order for the default random seating method.
+     * @return an arrayList containing the seating order.
      */
     private ArrayList<Cell> calculateRandomSeatingOrder() {        
         // Get the random order of the normal seats
@@ -134,8 +84,12 @@ public class SeatingMethod {
         return this.createFinalOrder(randomNormalSeats);
     }
     
+    /**
+     * Create the seating order for the back to front seating method.
+     * @return an arrayList containing the seating order.
+     */
     private ArrayList<Cell> calculateBackToFrontSeatingOrder() {
-        ArrayList<ArrayList<Cell>> blocks = this.splitNormalRowsIntoBlocks();
+        ArrayList<ArrayList<Cell>> blocks = this.splitNormalSeatsIntoBlocks();
         
         ArrayList<ArrayList<Cell>> randomisedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block: blocks) {
@@ -145,6 +99,10 @@ public class SeatingMethod {
         return this.createFinalOrder(this.joinBlocksTogetherBackToFront(randomisedBlocks));
     }
     
+    /**
+     * Create the seating order for the outside in seating method.
+     * @return an arrayList containing the seating order.
+     */
     private ArrayList<Cell> calculateOutsideInSeatingOrder() {
         // Get the normal seats and place into an arraylist
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
@@ -155,8 +113,12 @@ public class SeatingMethod {
         return this.createFinalOrder(outsideInOrder);
     }
         
+    /**
+     * Create the seating order for the block boarding seating method.
+     * @return an arrayList containing the seating order.
+     */
     private ArrayList<Cell> calculateBlockBoardingSeatingOrder() {
-        ArrayList<ArrayList<Cell>> blocks = this.splitNormalRowsIntoBlocks();
+        ArrayList<ArrayList<Cell>> blocks = this.splitNormalSeatsIntoBlocks();
         
         ArrayList<ArrayList<Cell>> orderedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block: blocks) {
@@ -166,8 +128,12 @@ public class SeatingMethod {
         return this.createFinalOrder(this.joinBlocksTogetherBackToFront(orderedBlocks));
     }
     
+    /**
+     * Create the seating order for the rotating zone seating method.
+     * @return an arrayList containing the seating order.
+     */
     private ArrayList<Cell> calculateRotatingZoneSeatingOrder() {
-        ArrayList<ArrayList<Cell>> blocks = this.splitNormalRowsIntoBlocks();
+        ArrayList<ArrayList<Cell>> blocks = this.splitNormalSeatsIntoBlocks();
         
         ArrayList<ArrayList<Cell>> randomisedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block: blocks) {
@@ -186,9 +152,61 @@ public class SeatingMethod {
         return this.createFinalOrder(jointBlocks);
     }
     
-    private ArrayList<ArrayList<Cell>> splitNormalRowsIntoBlocks() {
+    /**
+     * Convert a 2D array into an arrayList.
+     * @param array a 2D array to be converted.
+     * @return an arrayList containing the objects in the original array.
+     */
+    private ArrayList<Cell> convertArrayToArrayList(Cell[][] array) {
+        ArrayList<Cell> seats = new ArrayList<>();
+ 
+        for (Cell[] row: array) {
+            seats.addAll(Arrays.asList(row));
+        }
+        
+        return seats;
+    }
+    
+    /**
+     * Randomize the order of the seats.
+     * @param seats an arrayList of seats to be randomized.
+     * @return an arrayList containing the randomized seating order.
+     */
+    private ArrayList<Cell> createRandomSeatingOrderFromSeats(ArrayList<Cell> seats) {
+        // Create the arrayList containing the seating order
+        ArrayList<Cell> seatingOrder = new ArrayList<>();
+        
+        while (!seats.isEmpty()) {
+            Random randomGenerator = new Random();
+            int seatNumber = randomGenerator.nextInt(seats.size());
+            
+            seatingOrder.add(seats.remove(seatNumber));
+        }
+        
+        return seatingOrder;
+    }
+    
+    /**
+     * Join the ordered seats with the priority seats.
+     * @param orderedSeats an arrayList containing the ordered seats.
+     * @return an arrayList containing the priority seats and ordered seats.
+     */
+    private ArrayList<Cell> createFinalOrder(ArrayList<Cell> orderedSeats) {
+        // Join the two arrayLists together
+        ArrayList<Cell> seatingOrder = new ArrayList<>();
+        seatingOrder.addAll(this.randomisedPrioritySeats);
+        seatingOrder.addAll(orderedSeats);
+        
+        return seatingOrder;
+    }
+    
+    /**
+     * Split the normal seats into blocks.
+     * @return an arrayList containing the blocks.
+     */
+    private ArrayList<ArrayList<Cell>> splitNormalSeatsIntoBlocks() {
         // Calculate how many blocks to split the plane into
-        int numberOfRowsPerBlock = 1;
+        int numberOfRowsPerBlock = 2;
         int numberOfRows = this.planeDimension.getNumberOfNormalRows();
         int numberOfBlocks = numberOfRows / numberOfRowsPerBlock;
         int remainder = numberOfRows % numberOfRowsPerBlock;
@@ -231,6 +249,11 @@ public class SeatingMethod {
         return blocks;
     }
     
+    /**
+     * Creates an outside in order for the given block of cells.
+     * @param block an arrayList containing the block of cells.
+     * @return an arrayList containing the ordered block of cells.
+     */
     private ArrayList<Cell> createOutsideInOrderForBlock(ArrayList<Cell> block) {
         // Get the number of columns the plane holds
         int numberOfColumns = this.planeDimension.getNumberOfColumns();
@@ -274,6 +297,11 @@ public class SeatingMethod {
         return finalRandomisedOrder;
     }
     
+    /**
+     * Join the given blocks together in a back to front order.
+     * @param blocks an arrayList containing the blocks.
+     * @return an arrayList containing the ordered blocks.
+     */
     private ArrayList<Cell> joinBlocksTogetherBackToFront(ArrayList<ArrayList<Cell>> blocks) {
         ArrayList<Cell> jointBlocks = new ArrayList<>();
         
@@ -283,26 +311,5 @@ public class SeatingMethod {
         
         return jointBlocks;
     }
-
-    @Override
-    public String toString() {
-        String seatingMethod; 
-        switch(this.defaultMethod){
-            case BACK_TO_FRONT:
-                seatingMethod = "back-to-front";
-                break;
-            case OUTSIDE_IN:
-                seatingMethod = "outside-in";
-                break;
-            case RANDOM:
-                seatingMethod = "random";
-                break;
-            default:
-                seatingMethod = "unrecognised method";
-                break;
-        }
-        return seatingMethod;
-    }
-    
     
 }

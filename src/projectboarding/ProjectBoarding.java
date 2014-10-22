@@ -79,7 +79,7 @@ public class ProjectBoarding {
         
         PlaneDimension planeDimension = new PlaneDimension(
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4});
-        SeatingMethod seatingMethod = new SeatingMethod(SeatingMethod.DefaultSeatingMethod.OUTSIDE_IN, planeDimension);
+        SeatingMethod seatingMethod = new SeatingMethod(SeatingMethod.DefaultSeatingMethod.ROTATING_ZONE, planeDimension);
         ArrayList<Cell> seats = seatingMethod.getSeatingOrder();
         
         BoardingController controller = new BoardingController(planeDimension, seatingMethod);

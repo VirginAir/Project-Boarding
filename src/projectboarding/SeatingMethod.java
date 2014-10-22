@@ -49,6 +49,8 @@ public class SeatingMethod {
             switch (this.defaultMethod) {
                 case BACK_TO_FRONT:
                     return this.calculateBackToFrontSeatingOrder();
+                case OUTSIDE_IN:
+                    return this.calculateOutsideInSeatingOrder();
                 case RANDOM:
                     return this.calculateRandomSeatingOrder();
                 default:
@@ -167,16 +169,61 @@ public class SeatingMethod {
         
         return this.createFinalOrder(backToFrontRandomisedSeats);
     }
+    
+    private ArrayList<Cell> calculateOutsideInSeatingOrder() {
+        // Get the normal seats and place into an arraylist
+        Cell[][] normalSeats = this.planeDimension.getNormalSeats();
+        ArrayList<Cell> normalSeatsList = this.convertArrayToArrayList(normalSeats);
+        
+        // Get the number of columns the plane holds
+        int numberOfColumns = this.planeDimension.getNumberOfColumns();
+        
+        // Create the container to hold the column lists
+        ArrayList<ArrayList<Cell>> columnNormalSeats = new ArrayList<>();
+        
+        // Create the array list containers for each column
+        for (int x = 0; x < numberOfColumns; x++) {
+            ArrayList<Cell> list = new ArrayList<>();
+            columnNormalSeats.add(list);
+        }
+        
+        // Place each of the cells into the correct list
+        for (Cell cell: normalSeatsList) {
+            int cellColumn = cell.getCellColumn();
+            columnNormalSeats.get(cellColumn).add(cell);
+        }
+        
+        ArrayList<ArrayList<Cell>> randomisedColumnOrder = new ArrayList<>();
+        
+        // Randomise each of the lists in the container
+        for (int x = 0; x < numberOfColumns; x++) {
+            randomisedColumnOrder.add(this.createRandomSeatingOrderFromSeats(columnNormalSeats.remove(0)));
+        }
+        
+        // Create the final seating order
+        ArrayList<Cell> finalNormalSeatOrder = new ArrayList<>();
+        while (!randomisedColumnOrder.isEmpty()) {
+            finalNormalSeatOrder.addAll(randomisedColumnOrder.remove(0));
+            if (!randomisedColumnOrder.isEmpty()) {
+                finalNormalSeatOrder.addAll(randomisedColumnOrder.remove(randomisedColumnOrder.size() - 1));
+            }
+        }
+        
+        return this.createFinalOrder(finalNormalSeatOrder);
+    }
 
     @Override
     public String toString() {
         String seatingMethod; 
         switch(this.defaultMethod){
-            case RANDOM:
-                seatingMethod = "random";
-                break;
             case BACK_TO_FRONT:
                 seatingMethod = "back-to-front";
+                break;
+            case OUTSIDE_IN:
+                seatingMethod = "outside-in";
+                break;
+            case RANDOM:
+                seatingMethod = "random";
                 break;
             default:
                 seatingMethod = "unrecognised method";

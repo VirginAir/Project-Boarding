@@ -2,6 +2,8 @@ package projectboarding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -42,6 +44,8 @@ public class SeatingMethod {
                 return this.calculateBackToFrontSeatingOrder();
             case BLOCK_BOARDING:
                 return this.calculateBlockBoardingSeatingOrder();
+            case BY_SEAT:
+                return this.calculateBySeatSeatingOrder();
             case OUTSIDE_IN:
                 return this.calculateOutsideInSeatingOrder();
             case RANDOM:
@@ -108,7 +112,8 @@ public class SeatingMethod {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
         ArrayList<Cell> normalSeatsList = this.convertArrayToArrayList(normalSeats);
         
-        ArrayList<Cell> outsideInOrder = this.createOutsideInOrderForBlock(normalSeatsList);
+        ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.createOutsideInOrderForBlock(normalSeatsList));
+        ArrayList<Cell> outsideInOrder = this.randomiseOutsideInOrder(jointOrder);
         
         return this.createFinalOrder(outsideInOrder);
     }
@@ -122,7 +127,9 @@ public class SeatingMethod {
         
         ArrayList<ArrayList<Cell>> orderedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block: blocks) {
-            orderedBlocks.add(this.createOutsideInOrderForBlock(block));
+            ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.createOutsideInOrderForBlock(block));
+            ArrayList<Cell> seats = this.randomiseOutsideInOrder(jointOrder);
+            orderedBlocks.add(seats);
         }
         
         return this.createFinalOrder(this.joinBlocksTogetherBackToFront(orderedBlocks));
@@ -150,6 +157,40 @@ public class SeatingMethod {
         }
         
         return this.createFinalOrder(jointBlocks);
+    }
+    
+    /**
+     * Create the seating order for the by seat seating method.
+     * @return an arrayList containing the seating order.
+     */
+    private ArrayList<Cell> calculateBySeatSeatingOrder() {
+        Cell[][] normalSeats = this.planeDimension.getNormalSeats();
+        ArrayList<ArrayList<Cell>> outsideInOrder = this.createOutsideInOrderForBlock(this.convertArrayToArrayList(normalSeats));
+        
+        // Order each list of cells
+        ArrayList<ArrayList<Cell>> orderedSeats = new ArrayList<>();
+        for (ArrayList<Cell> seats: outsideInOrder) {
+            // Order the seats from back to front
+            Collections.sort(seats, new Comparator<Cell>(){
+                @Override
+                public int compare(Cell cell1, Cell cell2) {
+                    Integer cell1Row = cell1.getCellRow();
+                    Integer cell2Row = cell2.getCellRow();
+                    
+                    return cell2Row.compareTo(cell1Row);
+                }
+            });
+            orderedSeats.add(seats);
+        }
+       
+        ArrayList<ArrayList<Cell>> jointSeats = this.joinOutsideSeatsTogether(orderedSeats);
+        ArrayList<Cell> finalOrder = new ArrayList<>();
+        
+        for (ArrayList<Cell> list: jointSeats) {
+            finalOrder.addAll(list);
+        }
+        
+        return this.createFinalOrder(finalOrder);
     }
     
     /**
@@ -254,7 +295,7 @@ public class SeatingMethod {
      * @param block an arrayList containing the block of cells.
      * @return an arrayList containing the ordered block of cells.
      */
-    private ArrayList<Cell> createOutsideInOrderForBlock(ArrayList<Cell> block) {
+    private ArrayList<ArrayList<Cell>> createOutsideInOrderForBlock(ArrayList<Cell> block) {
         // Get the number of columns the plane holds
         int numberOfColumns = this.planeDimension.getNumberOfColumns();
         
@@ -273,24 +314,42 @@ public class SeatingMethod {
             columnNormalSeats.get(cellColumn).add(cell);
         }
         
+        return columnNormalSeats;
+    }
+    
+    /**
+     * Joins seats together in an outside in direction.
+     * @param seats the seats to join together.
+     * @return an arrayList containing the joint seats.
+     */
+    private ArrayList<ArrayList<Cell>> joinOutsideSeatsTogether(ArrayList<ArrayList<Cell>> seats) {
         // Create a container to hold the joint columns
         ArrayList<ArrayList<Cell>> jointColumnNormalSeats = new ArrayList<>();
         
         // Loop until all columns have been added
-        while (!columnNormalSeats.isEmpty()) {
+        while (!seats.isEmpty()) {
             ArrayList<Cell> jointList = new ArrayList<>();
             
-            jointList.addAll(columnNormalSeats.remove(0));
-            if (!columnNormalSeats.isEmpty()) {
-                jointList.addAll(columnNormalSeats.remove(columnNormalSeats.size() - 1));
+            jointList.addAll(seats.remove(0));
+            if (!seats.isEmpty()) {
+                jointList.addAll(seats.remove(seats.size() - 1));
             }
             
             jointColumnNormalSeats.add(jointList);
         }
-        
+
+        return jointColumnNormalSeats;
+    }
+    
+    /**
+     * Randomize seats from an outside in arrayList.
+     * @param seats the seats to randomize.
+     * @return an arrayList containing the randomized seats.
+     */
+    private ArrayList<Cell> randomiseOutsideInOrder(ArrayList<ArrayList<Cell>> seats) {
         ArrayList<Cell> finalRandomisedOrder = new ArrayList<>();
         
-        for (ArrayList<Cell> list: jointColumnNormalSeats) {
+        for (ArrayList<Cell> list: seats) {
             finalRandomisedOrder.addAll(this.createRandomSeatingOrderFromSeats(list));
         }
         

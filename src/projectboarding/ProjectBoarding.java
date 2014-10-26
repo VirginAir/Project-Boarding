@@ -82,7 +82,7 @@ public class ProjectBoarding {
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4});
         SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
         
-        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.ROTATING_ZONE);
+        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BY_SEAT);
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
         controller.startBoarding();
         

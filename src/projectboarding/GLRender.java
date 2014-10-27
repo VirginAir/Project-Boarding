@@ -59,10 +59,10 @@ public class GLRender implements GLEventListener{
         };
         float[] colDataHull = 
         {
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f
         };
         Square square = new Square(posDataHull, colDataHull);
         GLBufferHandler.setupBuffers(squareVaoHandle[0], square.getPositionData(), square.getColourData(), VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
@@ -86,10 +86,10 @@ public class GLRender implements GLEventListener{
                 
                 float[] colDataChairTaken = 
                     {
-                        0.0f, 1.0f, 0.0f,
-                        0.0f, 1.0f, 0.0f,
-                        0.0f, 1.0f, 0.0f,
-                        0.0f, 1.0f, 0.0f
+                        135/255f, 206/255f, 1.0f,
+                        135/255f, 206/255f, 1.0f,
+                        135/255f, 206/255f, 1.0f,
+                        135/255f, 206/255f, 1.0f
                     };
                 s++;
                 Square takenChair = new Square(posDataChairTaken, colDataChairTaken);
@@ -109,10 +109,10 @@ public class GLRender implements GLEventListener{
                 if(cells[j][i].getCellType() == Cell.CellType.PRIORITY_SEAT){
                     float[] colDataChair = 
                     {
-                        1.0f, 1.0f, 0.0f,
-                        1.0f, 1.0f, 0.0f,
-                        1.0f, 1.0f, 0.0f,
-                        1.0f, 1.0f, 0.0f
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f
                     };
                     Square squareChair = new Square(posDataChair, colDataChair);
                     GLBufferHandler.setupBuffers(squareVaoHandle[k+1], squareChair.getPositionData(), squareChair.getColourData(), VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);

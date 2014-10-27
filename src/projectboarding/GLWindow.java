@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -32,6 +33,9 @@ public class GLWindow extends JFrame{
         this.setLayout(new BorderLayout());
         this.setSize(new Dimension(width, height));
         this.setLocationRelativeTo(null);
+        
+        ImageIcon img = new ImageIcon("airplane.jpg");
+        this.setIconImage(img.getImage());
         
         this.addWindowListener(new WindowAdapter(){
             @Override

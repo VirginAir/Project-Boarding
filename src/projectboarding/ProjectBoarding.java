@@ -82,10 +82,15 @@ public class ProjectBoarding {
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4});
         SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
         
-        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.RANDOM);
+        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.RANDOM);
+        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BACK_TO_FRONT);
+        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BLOCK_BOARDING);
+        //oardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BY_SEAT);
+        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.OUTSIDE_IN);
+        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.ROTATING_ZONE);
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
         
-        
+        //Setup Window
         final GLProfile profile = GLProfile.get(GLProfile.GL3);
         GLCapabilities capabilities = new GLCapabilities(profile);
         capabilities.setDoubleBuffered(true);
@@ -103,6 +108,7 @@ public class ProjectBoarding {
         animator.start();
         window.setVisibility(true);
         
+        //Start Simulation
         controller.startBoarding();
     }
 }

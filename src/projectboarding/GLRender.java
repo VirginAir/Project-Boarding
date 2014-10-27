@@ -68,10 +68,10 @@ public class GLRender implements GLEventListener{
         GLBufferHandler.setupBuffers(squareVaoHandle[0], square.getPositionData(), square.getColourData(), VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
         int k = 0;
         int s = 0;
-        for(int j = 0; j < numRows; j++){
+        for(int j = 0; j < cellsInRow; j++){
             float jump = 2.0f/7.0f;
              float xpos = -1.0f + jump*(float)j + 0.1f;
-            for(int i = 0; i < cellsInRow; i++){
+            for(int i = 0; i < numRows; i++){
                 
                 
                 float ypos = -0.55f + (float)i*0.16f;

@@ -28,20 +28,20 @@ public class ProjectBoarding {
         // Create and run the boarding
         // DONT WORRY THIS WILL ALL BE REMOVED, IT SHOULD BE CREATED PROGRAMMATICALLY
         // JUST HERE TO BE USED AS A TEST
-        Cell[] priorityRow = new Cell[]{new Cell(0,0,CellType.SEAT),
-            new Cell(0,1,CellType.SEAT), 
-            new Cell(0,2,CellType.SEAT), 
+        Cell[] priorityRow = new Cell[]{new Cell(0,0,CellType.NONE),
+            new Cell(0,1,CellType.PRIORITY_SEAT), 
+            new Cell(0,2,CellType.PRIORITY_SEAT), 
             new Cell(0,3,CellType.AISLE), 
-            new Cell(0,4,CellType.SEAT), 
-            new Cell(0,5,CellType.SEAT), 
-            new Cell(0,6,CellType.SEAT)};
-        Cell[] priorityRow1 = new Cell[]{new Cell(1,0,CellType.SEAT),
-            new Cell(1,1,CellType.SEAT), 
-            new Cell(1,2,CellType.SEAT), 
+            new Cell(0,4,CellType.PRIORITY_SEAT), 
+            new Cell(0,5,CellType.PRIORITY_SEAT), 
+            new Cell(0,6,CellType.NONE)};
+        Cell[] priorityRow1 = new Cell[]{new Cell(1,0,CellType.NONE),
+            new Cell(1,1,CellType.PRIORITY_SEAT), 
+            new Cell(1,2,CellType.PRIORITY_SEAT), 
             new Cell(1,3,CellType.AISLE), 
-            new Cell(1,4,CellType.SEAT), 
-            new Cell(1,5,CellType.SEAT), 
-            new Cell(1,6,CellType.SEAT)};
+            new Cell(1,4,CellType.PRIORITY_SEAT), 
+            new Cell(1,5,CellType.PRIORITY_SEAT), 
+            new Cell(1,6,CellType.NONE)};
         Cell[] normalRow = new Cell[]{new Cell(2,0,CellType.SEAT),
             new Cell(2,1,CellType.SEAT), 
             new Cell(2,2,CellType.SEAT), 
@@ -82,9 +82,9 @@ public class ProjectBoarding {
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4});
         SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
         
-        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BY_SEAT);
+        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.RANDOM);
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
-        controller.startBoarding();
+        
         
         final GLProfile profile = GLProfile.get(GLProfile.GL3);
         GLCapabilities capabilities = new GLCapabilities(profile);
@@ -103,5 +103,6 @@ public class ProjectBoarding {
         animator.start();
         window.setVisibility(true);
         
+        controller.startBoarding();
     }
 }

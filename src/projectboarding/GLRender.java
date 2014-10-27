@@ -3,7 +3,7 @@ package projectboarding;
 
 import glhandler.ShaderHandler;
 import glshapes.Triangle;
-import javax.media.opengl.GL4;
+import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
@@ -37,11 +37,11 @@ public class GLRender implements GLEventListener{
 
     @Override
     public void init(GLAutoDrawable drawable) {
-        final GL4 gl = drawable.getGL().getGL4();
+        final GL3 gl = drawable.getGL().getGL3();
         gl.glClearColor(0.5f, 0.8f, 0.5f, 0.0f);
         
-        int vertexShader = ShaderHandler.createShader("shaders/vertex_shader.glsl", GL4.GL_VERTEX_SHADER, gl);
-        int fragmentShader = ShaderHandler.createShader("shaders/fragment_shader.glsl", GL4.GL_FRAGMENT_SHADER, gl);
+        int vertexShader = ShaderHandler.createShader("shaders/vertex_shader.glsl", GL3.GL_VERTEX_SHADER, gl);
+        int fragmentShader = ShaderHandler.createShader("shaders/fragment_shader.glsl", GL3.GL_FRAGMENT_SHADER, gl);
         
         int shaderList[] = {vertexShader, fragmentShader};
         
@@ -138,18 +138,18 @@ public class GLRender implements GLEventListener{
 
     @Override
     public void dispose(GLAutoDrawable drawable) {
-        final GL4 gl = drawable.getGL().getGL4();
+        final GL3 gl = drawable.getGL().getGL3();
     }
 
     @Override
     public void display(GLAutoDrawable drawable) {
-        final GL4 gl = drawable.getGL().getGL4();
+        final GL3 gl = drawable.getGL().getGL3();
         
-        gl.glClear(GL4.GL_COLOR_BUFFER_BIT);
+        gl.glClear(GL3.GL_COLOR_BUFFER_BIT);
         
         for(int i = 0; i < 49; i++){
             gl.glBindVertexArray(squareVaoHandle[i][0]);
-            gl.glDrawArrays(GL4.GL_TRIANGLE_FAN, 0, 4);
+            gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
         }
         
         pCount = passengers.size();
@@ -160,7 +160,7 @@ public class GLRender implements GLEventListener{
            int column = pCell.getCellColumn();
            int place = row*cellsInRow + column;
            gl.glBindVertexArray(squareTakenVaoHandle[place][0]);
-           gl.glDrawArrays(GL4.GL_TRIANGLE_FAN, 0, 4);
+           gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
         }
         
         gl.glFlush();
@@ -168,7 +168,7 @@ public class GLRender implements GLEventListener{
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        final GL4 gl = drawable.getGL().getGL4();
+        final GL3 gl = drawable.getGL().getGL3();
     }
     
 }

@@ -86,7 +86,7 @@ public class ProjectBoarding {
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
         controller.startBoarding();
         
-        final GLProfile profile = GLProfile.get(GLProfile.GL4);
+        final GLProfile profile = GLProfile.get(GLProfile.GL3);
         GLCapabilities capabilities = new GLCapabilities(profile);
         capabilities.setDoubleBuffered(true);
         capabilities.setHardwareAccelerated(true);

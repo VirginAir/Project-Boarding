@@ -370,5 +370,37 @@ public class SeatingMethod {
         
         return jointBlocks;
     }
+ 
+//     @Override
+//    public String toString() {
+//        String seatingMethod; 
+//        switch(this.defaultMethod){
+//            case BACK_TO_FRONT:
+//                seatingMethod = "back-to-front";
+//                break;
+//            case OUTSIDE_IN:
+//                seatingMethod = "outside-in";
+//                break;
+//            case RANDOM:
+//                seatingMethod = "random";
+//                break;
+//            case BLOCK_BOARDING:
+//                seatingMethod = "block boarding";
+//                break;
+//            case BY_SEAT:
+//                seatingMethod = "by seat";
+//                break;
+//            case REVERSE_PYRAMID:
+//                seatingMethod = "reverse pyramid";
+//                break;
+//            case ROTATING_ZONE:
+//                seatingMethod = "rotating zone";
+//                break;
+//            default:
+//                seatingMethod = "unrecognised method";
+//                break;
+//        }
+//        return seatingMethod;
+//    }
     
 }

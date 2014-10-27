@@ -8,7 +8,7 @@
 - [ ] Complete the programmed seating methods.
 
 ###### Matt
-- [ ] Wait for Ben to finish visualisation to work out bugs in timings.
+- [x] Wait for Ben to finish visualisation to work out bugs in timings.
 
 ##### Ben
 - [ ] Add dynamic sizing for screen elements

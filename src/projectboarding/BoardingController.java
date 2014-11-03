@@ -246,6 +246,12 @@ public class BoardingController implements ActionListener {
         return planePassengers;
     }
 
+    public SeatingMethod getSeatingMethod() {
+        return seatingMethod;
+    }
+    
+    
+
     public class Passenger {
 
         private Cell seat;
@@ -386,5 +392,7 @@ public class BoardingController implements ActionListener {
         public void addInteferingPassengers() {
             this.interferingPassengers++;
         }
+        
+        
     }
 }

@@ -10,7 +10,9 @@ import javax.media.opengl.GLEventListener;
 import glhandler.GLBufferHandler;
 import glshapes.Square;
 import java.util.ArrayList;
+import jml.mat3;
 import projectboarding.BoardingController.Passenger;
+import sceneobjects.Scene;
 
 /**
  *
@@ -26,6 +28,25 @@ public class GLRender implements GLEventListener{
     private int cellsInRow;
     private ArrayList<Passenger> passengers;
     private int pCount;
+    private int programHandle;
+    
+    private Scene scene;
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+
+    public void setCells(Cell[][] cells) {
+        this.cells = cells;
+    }
+
+    public ArrayList<Passenger> getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(ArrayList<Passenger> passengers) {
+        this.passengers = passengers;
+    }
     
     public GLRender(Cell[][] cells, ArrayList<Passenger> passengers){
         this.cells = cells;
@@ -33,11 +54,13 @@ public class GLRender implements GLEventListener{
         this.cellsInRow = this.cells[0].length;
         this.passengers = passengers;
         this.pCount = passengers.size();
+        this.scene = new Scene();
     }
 
     @Override
     public void init(GLAutoDrawable drawable) {
         final GL3 gl = drawable.getGL().getGL3();
+        this.scene.createScene(600, 800, drawable, this.cells, this.passengers);
         gl.glClearColor(0.5f, 0.8f, 0.5f, 0.0f);
         
         int vertexShader = ShaderHandler.createShader("shaders/vertex_shader.glsl", GL3.GL_VERTEX_SHADER, gl);
@@ -45,93 +68,8 @@ public class GLRender implements GLEventListener{
         
         int shaderList[] = {vertexShader, fragmentShader};
         
-        int programHandle = ShaderHandler.createProgram(shaderList, gl);
-        
-        final int VERTEX_POSITION_INDEX = 0;
-        final int VERTEX_COLOUR_INDEX = 1;
-        
-        float[] posDataHull = 
-        {
-            -1.0f, 0.6f, 0.0f,
-            -1.0f, -0.6f, 0.0f,
-            1.0f, -0.6f, 0.0f,
-            1.0f, 0.6f, 0.0f
-        };
-        float[] colDataHull = 
-        {
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f
-        };
-        Square square = new Square(posDataHull, colDataHull);
-        GLBufferHandler.setupBuffers(squareVaoHandle[0], square.getPositionData(), square.getColourData(), VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
-        int k = 0;
-        int s = 0;
-        for(int j = 0; j < cellsInRow; j++){
-            float jump = 2.0f/7.0f;
-             float xpos = -1.0f + jump*(float)j + 0.1f;
-            for(int i = 0; i < numRows; i++){
-                
-                
-                float ypos = -0.55f + (float)i*0.16f;
-                
-                float[] posDataChairTaken = 
-                {
-                    xpos, ypos+0.15f, 0.0f,
-                    xpos, ypos, 0.0f,
-                    xpos+jump-0.16f, ypos, 0.0f,
-                    xpos+jump-0.16f, ypos+0.15f, 0.0f
-                };
-                
-                float[] colDataChairTaken = 
-                    {
-                        135/255f, 206/255f, 1.0f,
-                        135/255f, 206/255f, 1.0f,
-                        135/255f, 206/255f, 1.0f,
-                        135/255f, 206/255f, 1.0f
-                    };
-                s++;
-                Square takenChair = new Square(posDataChairTaken, colDataChairTaken);
-                GLBufferHandler.setupBuffers(squareTakenVaoHandle[j*cellsInRow + i], takenChair.getPositionData(), takenChair.getColourData(), VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
-                
-                if(cells[j][i].getCellType() == Cell.CellType.NONE || cells[j][i].getCellType() == Cell.CellType.AISLE){
-                    continue;
-                }
-                
-                float[] posDataChair = 
-                {
-                    xpos, ypos+0.15f, 0.0f,
-                    xpos, ypos, 0.0f,
-                    xpos+jump-0.16f, ypos, 0.0f,
-                    xpos+jump-0.16f, ypos+0.15f, 0.0f
-                };
-                if(cells[j][i].getCellType() == Cell.CellType.PRIORITY_SEAT){
-                    float[] colDataChair = 
-                    {
-                        0.0f, 0.0f, 1.0f,
-                        0.0f, 0.0f, 1.0f,
-                        0.0f, 0.0f, 1.0f,
-                        0.0f, 0.0f, 1.0f
-                    };
-                    Square squareChair = new Square(posDataChair, colDataChair);
-                    GLBufferHandler.setupBuffers(squareVaoHandle[k+1], squareChair.getPositionData(), squareChair.getColourData(), VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
-                } else { 
-                    float[] colDataChair = 
-                    {
-                        1.0f, 0.0f, 0.0f,
-                        1.0f, 0.0f, 0.0f,
-                        1.0f, 0.0f, 0.0f,
-                        1.0f, 0.0f, 0.0f
-                    };
-                    Square squareChair = new Square(posDataChair, colDataChair);
-                    GLBufferHandler.setupBuffers(squareVaoHandle[k+1], squareChair.getPositionData(), squareChair.getColourData(), VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
-                } 
-                
-                k++;
-            }
-        }
-
+        programHandle = ShaderHandler.createProgram(shaderList, gl);
+     
         ShaderHandler.linkProgram(programHandle, gl);
         gl.glUseProgram(programHandle);
     }
@@ -147,20 +85,36 @@ public class GLRender implements GLEventListener{
         
         gl.glClear(GL3.GL_COLOR_BUFFER_BIT);
         
-        for(int i = 0; i < 49; i++){
-            gl.glBindVertexArray(squareVaoHandle[i][0]);
-            gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
+        mat3 modelMatrix = new mat3();
+        int modelviewMatrixLocation = gl.glGetUniformLocation(programHandle, "modelViewMatrix");
+        gl.glUniformMatrix4fv(modelviewMatrixLocation, 1, false, modelMatrix.getMatrixGLForm(), 0);
+            
+        gl.glBindVertexArray(scene.getHullID());
+        gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
+        
+        for(int i = 0; i < scene.getChairList().size(); i++){
+            if(scene.getChairList().get(i).isVisible()){
+                modelMatrix.setIdentity();
+                modelMatrix.translate(scene.getChairList().get(i).getPosition().getX(), scene.getChairList().get(i).getPosition().getY());
+
+
+                gl.glUniformMatrix4fv(modelviewMatrixLocation, 1, false, modelMatrix.getMatrixGLForm(), 0);
+
+                gl.glBindVertexArray(scene.getChairList().get(i).getObject());
+                gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
+            }
         }
         
-        pCount = passengers.size();
+        scene.updatePassengers(passengers);
         
-        for(int k = 0; k < pCount; k++){
-           Cell pCell = passengers.get(k).getCurrentCell();
-           int row = pCell.getCellRow();
-           int column = pCell.getCellColumn();
-           int place = row*cellsInRow + column;
-           gl.glBindVertexArray(squareTakenVaoHandle[place][0]);
-           gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
+        for(int i = 0; i < scene.getPassengerList().size(); i++){
+            modelMatrix.setIdentity();
+            modelMatrix.translate(scene.getPassengerList().get(i).getPosition().getX(), scene.getPassengerList().get(i).getPosition().getY());
+            
+            gl.glUniformMatrix4fv(modelviewMatrixLocation, 1, false, modelMatrix.getMatrixGLForm(), 0);
+            
+            gl.glBindVertexArray(scene.getPassengerList().get(i).getHandle());
+            gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
         }
         
         gl.glFlush();

@@ -11,9 +11,9 @@
 - [x] Wait for Ben to finish visualisation to work out bugs in timings.
 
 ##### Ben
-- [ ] Add dynamic sizing for screen elements
+- [X] Add dynamic sizing for screen elements
 - [ ] Add basic user control functions
-- [ ] Fix up dirty code
+- [X] Fix up dirty code
 
 #### Week 5
 - [x] **Working example of the project**

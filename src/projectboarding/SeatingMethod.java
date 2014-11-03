@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
+import projectboarding.Cell.CellType;
 
 /**
  *
@@ -17,7 +18,6 @@ public class SeatingMethod {
     public enum DefaultSeatingMethod {
         BACK_TO_FRONT, BLOCK_BOARDING, BY_SEAT, OUTSIDE_IN, RANDOM, REVERSE_PYRAMID, ROTATING_ZONE
     }
-    // by-seat - non-randmised, outside in, from front to back
     // reverse-pyramid - back to front with outside-in
     
     private final PlaneDimension planeDimension;
@@ -54,6 +54,8 @@ public class SeatingMethod {
                 return this.calculateOutsideInSeatingOrder();
             case RANDOM:
                 return this.calculateRandomSeatingOrder();
+            case REVERSE_PYRAMID:
+                return this.calculateReversePyramidSeatingOrder();
             case ROTATING_ZONE:
                 return this.calculateRotatingZoneSeatingOrder();
             default:
@@ -198,6 +200,59 @@ public class SeatingMethod {
     }
     
     /**
+     * 
+     * @return 
+     */
+    private ArrayList<Cell> calculateReversePyramidSeatingOrder() {
+        Cell[][] normalSeats = this.planeDimension.getNormalSeats();
+        ArrayList<ArrayList<Cell>> blocks = this.createOutsideInOrderForBlock(this.convertArrayToArrayList(normalSeats));
+        
+        // Get the number of splits rounded down
+        int differentSplits = (int) (blocks.size() / 2.0) + 2;
+        int fortyPercent = (int) ((this.planeDimension.getNumberOfNormalRows() / 100.0) * 40) ;
+        int twentyPercent = this.planeDimension.getNumberOfNormalRows() - (fortyPercent * 2);
+        
+        ArrayList<ArrayList<Cell>> splitSeating = new ArrayList<>();
+        
+        for (int x = 0; x < differentSplits; x++) {
+            ArrayList<Cell> split = new ArrayList<>();
+            splitSeating.add(split);
+        }
+        
+        int x = 0;
+        
+        while (!blocks.isEmpty()) {
+            ArrayList<Cell> cells1 = blocks.remove(0);
+            ArrayList<Cell> cells2 = blocks.remove(blocks.size() - 1);
+
+            for (int t = 0; t < twentyPercent; t++) {
+                splitSeating.get(x+2).add(cells1.remove(0));
+                splitSeating.get(x+2).add(cells2.remove(0));
+            }
+            
+            for (int f = 0; f < fortyPercent; f++) {
+                splitSeating.get(x+1).add(cells1.remove(0));
+                splitSeating.get(x+1).add(cells2.remove(0));
+            }
+            
+            for (int f = 0; f < fortyPercent; f++) {
+                splitSeating.get(x).add(cells1.remove(0));
+                splitSeating.get(x).add(cells2.remove(0));
+            }
+            
+            x++;
+        }
+        
+        ArrayList<Cell> seatingOrder = new ArrayList<>();
+        
+        for (ArrayList<Cell> list: splitSeating) {
+            seatingOrder.addAll(this.createRandomSeatingOrderFromSeats(list));
+        }
+        
+        return this.createFinalOrder(seatingOrder);
+    }
+    
+    /**
      * Convert a 2D array into an arrayList.
      * @param array a 2D array to be converted.
      * @return an arrayList containing the objects in the original array.
@@ -251,7 +306,7 @@ public class SeatingMethod {
      */
     private ArrayList<ArrayList<Cell>> splitNormalSeatsIntoBlocks() {
         // Calculate how many blocks to split the plane into
-        int numberOfRowsPerBlock = 2;
+        int numberOfRowsPerBlock = 3;
         int numberOfRows = this.planeDimension.getNumberOfNormalRows();
         int numberOfBlocks = numberOfRows / numberOfRowsPerBlock;
         int remainder = numberOfRows % numberOfRowsPerBlock;
@@ -318,7 +373,14 @@ public class SeatingMethod {
             columnNormalSeats.get(cellColumn).add(cell);
         }
         
-        return columnNormalSeats;
+        ArrayList<ArrayList<Cell>> finalNormalSeats = new ArrayList<>();
+        for (ArrayList<Cell> list: columnNormalSeats) {
+            if (!list.isEmpty()) {
+                finalNormalSeats.add(list);
+            }
+        }
+        
+        return finalNormalSeats;
     }
     
     /**

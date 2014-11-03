@@ -22,6 +22,7 @@ public class SeatingMethod {
     
     private final PlaneDimension planeDimension;
     private final ArrayList<Cell> randomisedPrioritySeats;
+    private DefaultSeatingMethod defaultMethod;
     
     /**
      * Initialize the seating method class with a default method.
@@ -39,6 +40,9 @@ public class SeatingMethod {
      * @return an arrayList containing the seating order.
      */
     public ArrayList<Cell> getSeatingOrder(DefaultSeatingMethod seatingMethod) {
+        
+        defaultMethod = seatingMethod;
+        
         switch (seatingMethod) {
             case BACK_TO_FRONT:
                 return this.calculateBackToFrontSeatingOrder();
@@ -371,36 +375,36 @@ public class SeatingMethod {
         return jointBlocks;
     }
  
-//     @Override
-//    public String toString() {
-//        String seatingMethod; 
-//        switch(this.defaultMethod){
-//            case BACK_TO_FRONT:
-//                seatingMethod = "back-to-front";
-//                break;
-//            case OUTSIDE_IN:
-//                seatingMethod = "outside-in";
-//                break;
-//            case RANDOM:
-//                seatingMethod = "random";
-//                break;
-//            case BLOCK_BOARDING:
-//                seatingMethod = "block boarding";
-//                break;
-//            case BY_SEAT:
-//                seatingMethod = "by seat";
-//                break;
-//            case REVERSE_PYRAMID:
-//                seatingMethod = "reverse pyramid";
-//                break;
-//            case ROTATING_ZONE:
-//                seatingMethod = "rotating zone";
-//                break;
-//            default:
-//                seatingMethod = "unrecognised method";
-//                break;
-//        }
-//        return seatingMethod;
-//    }
+     @Override
+    public String toString() {
+        String seatingMethod; 
+        switch(this.defaultMethod){
+            case BACK_TO_FRONT:
+                seatingMethod = "back-to-front";
+                break;
+            case OUTSIDE_IN:
+                seatingMethod = "outside-in";
+                break;
+            case RANDOM:
+                seatingMethod = "random";
+                break;
+            case BLOCK_BOARDING:
+                seatingMethod = "block boarding";
+                break;
+            case BY_SEAT:
+                seatingMethod = "by seat";
+                break;
+            case REVERSE_PYRAMID:
+                seatingMethod = "reverse pyramid";
+                break;
+            case ROTATING_ZONE:
+                seatingMethod = "rotating zone";
+                break;
+            default:
+                seatingMethod = "unrecognised method";
+                break;
+        }
+        return seatingMethod;
+    }
     
 }

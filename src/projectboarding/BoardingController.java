@@ -231,6 +231,7 @@ public class BoardingController implements ActionListener {
 
         for (Integer aisle : aisleList) {
             if (Math.abs(c.getCellColumn() - aisle) <= smallestDifference) {
+                smallestDifference = Math.abs(c.getCellColumn() - aisle);
                 closestAisle = aisle;
             }
         }

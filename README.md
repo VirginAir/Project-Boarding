@@ -6,6 +6,7 @@
 
 ###### Ben
 - [ ] Add smoother animation
+- [ ] Add basic user control functions
 - [ ] Add textures
 
 ## Changelog
@@ -41,7 +42,6 @@
 
 ##### Ben
 - [X] Add dynamic sizing for screen elements
-- [ ] Add basic user control functions
 - [X] Fix up dirty code
 
 #### Week 5

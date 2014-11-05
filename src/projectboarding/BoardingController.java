@@ -19,22 +19,21 @@ public class BoardingController implements ActionListener {
     private final PlaneDimension planeDimension;
     private final SeatingMethod seatingMethod;
     private final ArrayList<Cell> seatingOrder;
-    private final ArrayList<Passenger> boardingPassengers;
-    private final ArrayList<Passenger> planePassengers;
-    private final ArrayList<Cell> seatsTaken;
-    private final Cell[][] seatVisualisation;
+    private ArrayList<Passenger> boardingPassengers;
+    private ArrayList<Passenger> planePassengers;
+    private ArrayList<Cell> seatsTaken;
+    private Cell[][] seatVisualisation;
     // Timing information
     private Timer timer;
     private DateTime beginningBoardingTime;
     private DateTime endBoardingTime;
     //Ticks for moving and checking passengers
     private int newPassenger = 0;
-    private final Random r;
+    private Random r;
     private int seatedPassengers;
     private int totalTicks;
 
     public enum SeatInterference {
-
         MIDDLE, AISLE, MIDDLE_AISLE, NONE
     }
 
@@ -43,6 +42,17 @@ public class BoardingController implements ActionListener {
         this.planeDimension = planeDimension;
         this.seatingMethod = seatingMethod;
         this.seatingOrder = this.seatingMethod.getSeatingOrder(defaultMethod);
+        this.createClass();
+    }
+    
+    public BoardingController(PlaneDimension planeDimension, SeatingMethod seatingMethod, int[][] customSeatingMethod) {
+        this.planeDimension = planeDimension;
+        this.seatingMethod = seatingMethod;
+        this.seatingOrder = this.seatingMethod.getCustomSeatingOrder(customSeatingMethod);
+        this.createClass();
+    }
+    
+    private void createClass() {
         this.boardingPassengers = new ArrayList<>();
         this.seatsTaken = new ArrayList<>();
         this.planePassengers = new ArrayList<>();

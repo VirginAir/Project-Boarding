@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
-import projectboarding.Cell.CellType;
 
 /**
  *
@@ -18,11 +17,11 @@ public class SeatingMethod {
     public enum DefaultSeatingMethod {
         BACK_TO_FRONT, BLOCK_BOARDING, BY_SEAT, OUTSIDE_IN, RANDOM, REVERSE_PYRAMID, ROTATING_ZONE
     }
-    // reverse-pyramid - back to front with outside-in
     
     private final PlaneDimension planeDimension;
     private final ArrayList<Cell> randomisedPrioritySeats;
     private DefaultSeatingMethod defaultMethod;
+    private int[][] customMethod;
     
     /**
      * Initialize the seating method class with a default method.
@@ -61,6 +60,12 @@ public class SeatingMethod {
             default:
                 return null;
         }
+    }
+    
+    public ArrayList<Cell> getCustomSeatingOrder(int[][] customSeatingMethod) {
+        this.customMethod = customSeatingMethod;
+        
+        return this.calculateCustomSeatingOrder();
     }
     
     /**
@@ -252,6 +257,42 @@ public class SeatingMethod {
         return this.createFinalOrder(seatingOrder);
     }
     
+    private ArrayList<Cell> calculateCustomSeatingOrder() {
+        // Find the maximum number
+        int maximumNumber = 0;
+        for (int[] array: this.customMethod) {
+            for (int y = 0; y < array.length; y++) {
+                if (array[y] > maximumNumber) {
+                    maximumNumber = array[y];
+                }
+            }
+        }
+        
+        // Create the container
+        ArrayList<ArrayList<Cell>> container = new ArrayList<>();
+        for (int x = 0; x <= maximumNumber; x++) {
+            ArrayList<Cell> list = new ArrayList<>();
+            container.add(list);
+        }
+        
+        Cell[][] normalSeats = this.planeDimension.getNormalSeats();
+        
+        // Place all of the seats into the container
+        for (int x = 0; x < this.customMethod.length; x++) {
+            for (int y = 0; y < this.customMethod[x].length; y++) {
+                container.get(this.customMethod[x][y]).add(normalSeats[x][y]);
+            }
+        }
+        
+        ArrayList<Cell> finalOrder = new ArrayList<>();
+        
+        for (ArrayList<Cell> list: container) {
+            finalOrder.addAll(this.createRandomSeatingOrderFromSeats(list));
+        }
+        
+        return this.createFinalOrder(finalOrder);
+    }
+    
     /**
      * Convert a 2D array into an arrayList.
      * @param array a 2D array to be converted.
@@ -440,31 +481,35 @@ public class SeatingMethod {
      @Override
     public String toString() {
         String seatingMethod; 
-        switch(this.defaultMethod){
-            case BACK_TO_FRONT:
-                seatingMethod = "back-to-front";
-                break;
-            case OUTSIDE_IN:
-                seatingMethod = "outside-in";
-                break;
-            case RANDOM:
-                seatingMethod = "random";
-                break;
-            case BLOCK_BOARDING:
-                seatingMethod = "block boarding";
-                break;
-            case BY_SEAT:
-                seatingMethod = "by seat";
-                break;
-            case REVERSE_PYRAMID:
-                seatingMethod = "reverse pyramid";
-                break;
-            case ROTATING_ZONE:
-                seatingMethod = "rotating zone";
-                break;
-            default:
-                seatingMethod = "unrecognised method";
-                break;
+        if (this.defaultMethod != null) {
+            switch(this.defaultMethod){
+                case BACK_TO_FRONT:
+                    seatingMethod = "back-to-front";
+                    break;
+                case OUTSIDE_IN:
+                    seatingMethod = "outside-in";
+                    break;
+                case RANDOM:
+                    seatingMethod = "random";
+                    break;
+                case BLOCK_BOARDING:
+                    seatingMethod = "block boarding";
+                    break;
+                case BY_SEAT:
+                    seatingMethod = "by seat";
+                    break;
+                case REVERSE_PYRAMID:
+                    seatingMethod = "reverse pyramid";
+                    break;
+                case ROTATING_ZONE:
+                    seatingMethod = "rotating zone";
+                    break;
+                default:
+                    seatingMethod = "unrecognised method";
+                    break;
+            }
+        } else {
+            seatingMethod = "custom method";
         }
         return seatingMethod;
     }

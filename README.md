@@ -1,11 +1,16 @@
 ## Weekly Plan (to be completed for...)
 #### Week 7
+###### Matthew
+- [ ] Look into using .dll's for the seating method maths
+- [ ] Look at multithreading the boarding controllers
+
+###### Ben
 - [ ] Add smoother animation
 - [ ] Add textures
 
 #### Week 6
 ###### Matthew
-- [ ] Complete the programmed seating methods.
+- [x] Complete the programmed seating methods.
 
 ###### Matt
 - [x] Wait for Ben to finish visualisation to work out bugs in timings.
@@ -45,3 +50,6 @@
 
 #### (22/10, 13:30) - Matthew
 * Completed the following seating methods: back-to-front, block-boarding, outside-in, random and rotating-zone.
+
+#### (05/11, 11:00) - Matthew
+* Completed all defualt seating methods and added custom seating method support

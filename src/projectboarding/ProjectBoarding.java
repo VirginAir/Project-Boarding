@@ -209,13 +209,14 @@ public class ProjectBoarding {
 
         //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.RANDOM);
         //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BACK_TO_FRONT);
-        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BLOCK_BOARDING);
+        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BLOCK_BOARDING);
         //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BY_SEAT);
         //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.OUTSIDE_IN);
         //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.ROTATING_ZONE);
         //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.REVERSE_PYRAMID);
-        BoardingController controller = new BoardingController(planeDimension, seatingMethod, 
+        /*BoardingController controller = new BoardingController(planeDimension, seatingMethod, 
                 new int[][]{
+<<<<<<< HEAD
                     { 1, 31, 61, 91, 99, 69, 39, 9},
                     { 17, 47, 77, 107, 114, 84, 54, 24},
                     { 2, 32, 62, 92, 100, 70, 40, 10},
@@ -231,6 +232,23 @@ public class ProjectBoarding {
                     { 7, 37, 67, 97, 105, 75, 45, 15},
                     { 23, 53, 83, 113, 120, 90, 60, 30},
                     { 8, 38, 68, 98, 106, 76, 46, 16}});
+=======
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 1, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 1, 4, 3, 2},
+                    { 2, 3, 4, 4, 1, 4, 3, 2},
+                    { 2, 3, 1, 1, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 1, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 4, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 4, 1, 4, 1, 3, 2},
+                    { 2, 3, 1, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 4, 4, 4, 3, 2},
+                    { 2, 3, 4, 1, 4, 1, 3, 2}});*/
+>>>>>>> dlltesting
         
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
         

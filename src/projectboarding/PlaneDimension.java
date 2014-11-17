@@ -8,6 +8,9 @@ import static projectboarding.Cell.CellType;
  * @author Matthew
  */
 public class PlaneDimension {
+    static {
+        System.loadLibrary("PlaneDimensionLibrary");
+    }
     
     private final Cell[][] planeSeats;
     private final Cell[][] prioritySeats;
@@ -20,17 +23,11 @@ public class PlaneDimension {
         this.normalSeats = this.getSeats(false);
     }
     
-    public Cell[][] getAllSeats() {
-        return this.planeSeats;
-    }
+    public native Cell[][] getAllSeats();
     
-    public Cell[][] getPrioritySeats() {
-        return this.prioritySeats;
-    }
+    public native Cell[][] getPrioritySeats();
     
-    public Cell[][] getNormalSeats() {
-        return this.normalSeats;
-    }
+    public native Cell[][] getNormalSeats();
     
     private Cell[][] getSeats(boolean priority) {
         ArrayList<ArrayList<Cell>> seats = new ArrayList<>();
@@ -59,17 +56,11 @@ public class PlaneDimension {
         return array;
     }
     
-    public int getNumberOfPriorityRows() {
-        return this.prioritySeats.length;
-    }
+    public native int getNumberOfPriorityRows();
     
-    public int getNumberOfNormalRows() {
-        return this.normalSeats.length;
-    }
+    public native int getNumberOfNormalRows();
     
-    public int totalNumberOfRows() {
-        return this.planeSeats.length;
-    }
+    public native int totalNumberOfRows();
     
     public int getNumberOfColumns() {
         return this.planeSeats[0].length;

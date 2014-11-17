@@ -183,7 +183,7 @@ public class GLWindow extends JFrame{
         this.setVisible(isVisible);
     }
     
-    public void setGLCanvas(GLJPanel canvas, String position){
+    public void setGLCanvas(GLCanvas canvas, String position){
         canvas.addKeyListener(new CustomKeyListener());
         mainPanel.add(canvas, position);
     }

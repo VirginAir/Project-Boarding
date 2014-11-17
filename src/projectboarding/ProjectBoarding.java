@@ -257,9 +257,9 @@ public class ProjectBoarding {
         GLCapabilities capabilities = new GLCapabilities(profile);
         capabilities.setDoubleBuffered(true);
         capabilities.setHardwareAccelerated(true);
-        capabilities.setPBuffer(true);
         
-        GLJPanel canvas = new GLJPanel(capabilities);
+        
+        GLCanvas canvas = new GLCanvas(capabilities);
         FPSAnimator animator = new FPSAnimator(canvas, FPS);
         
         GLRender renderer = new GLRender(seatVisualisation, controller.getPassengers());
@@ -289,7 +289,6 @@ public class ProjectBoarding {
                     { 2, 3, 4, 1, 4, 1, 3, 2}};
         
         //****************NEED A PROPER WAY TO START/STOP/RESET THE SIMULATION**********************//
-        boolean chosen = false;
         while(true){
             Thread.sleep(1); //Java's being buggy. Srsly. The 'if' statement here goes ignored, if this 'sleep' isn't here.
             if(window.isNewSelection()){

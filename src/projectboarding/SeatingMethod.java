@@ -298,9 +298,10 @@ public class SeatingMethod {
      * @param array a 2D array to be converted.
      * @return an arrayList containing the objects in the original array.
      */
+    
     private ArrayList<Cell> convertArrayToArrayList(Cell[][] array) {
         ArrayList<Cell> seats = new ArrayList<>();
- 
+        
         for (Cell[] row: array) {
             seats.addAll(Arrays.asList(row));
         }

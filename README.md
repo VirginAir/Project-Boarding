@@ -1,13 +1,18 @@
 ## Weekly Plan (to be completed for...)
+#### Week 8
+##### Ben
+- [ ] Add textures
+- [ ] Add smoother animation
+
+
 #### Week 7
 ###### Matthew
 - [ ] Look into using .dll's for the seating method maths
 - [ ] Look at multithreading the boarding controllers
 
 ###### Ben
-- [ ] Add smoother animation
-- [ ] Add basic user control functions
-- [ ] Add textures
+- [X] Add basic user control functions
+
 
 ## Changelog
 #### (18/10, 17:00) - Matthew
@@ -30,6 +35,11 @@
 
 #### (05/11, 11:00) - Matthew
 * Completed all defualt seating methods and added custom seating method support
+
+#### (17/11, 01:54) - Ben
+* Basic interaction present
+* Simulation can be reset
+* IMPORTANT: Need some way in BoardingController to be able to elegantly Start, Stop and Reset the simulation. I attempted to put in some quick methods to do it but since I don't know much about the class, they don't work 100%. Hit 'Run' about 10 times and you'll see the simulation slows right down. I don't know why. Seems like the times between passengers being let on, increase, or something. It's not graphical, because the 'results' are output as the graphics end, so the graphics are keeping up.
 
 ## Previous Weekly Plans
 

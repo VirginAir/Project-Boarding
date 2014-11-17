@@ -108,6 +108,7 @@ public class BoardingController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         this.seatedPassengers = 0;
         if (this.newPassenger == 0 && !this.seatingOrder.isEmpty()) {
+            
             // Get a seat that the user can sit on
             Cell seat = this.seatingOrder.remove(0);
 
@@ -128,6 +129,7 @@ public class BoardingController implements ActionListener {
         } else if (this.newPassenger > 0 && !this.seatingOrder.isEmpty()) {
             newPassenger--;
         } else {
+           
         }
 
         for (Passenger passenger : planePassengers) {
@@ -219,7 +221,11 @@ public class BoardingController implements ActionListener {
             this.endBoardingTime = new DateTime();
             this.timer.stop();
             //System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
-            System.out.println("Time taken: " + this.totalTicks + "s using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+            if(this.totalTicks%60 == 0){
+               System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+            }else{
+                System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes and " + this.totalTicks%60 + " seconds using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+            }
         }
     }
 

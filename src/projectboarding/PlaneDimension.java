@@ -107,4 +107,11 @@ public class PlaneDimension {
         return (this.getNumberOfNormalSeats() + this.getNumberOfPrioritySeats());
     }
     
+    public void resetHasPassengers(){
+        for (Cell[] cell : planeSeats) {
+            for (Cell cell1 : cell) {
+                cell1.setHasPassenger(false);
+            }
+        }
+    }
 }

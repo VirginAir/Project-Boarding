@@ -248,7 +248,7 @@ public class ProjectBoarding {
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 4, 1, 4, 1, 3, 2}});*/
->>>>>>> dlltesting
+/// dlltesting
         
         Cell[][] seatVisualisation = controller.getSeatVisualisation();
         
@@ -272,30 +272,30 @@ public class ProjectBoarding {
         animator.start();
         window.setVisibility(true);
         
-        int[][] custom = new int[][]{
-                    { 1, 31, 61, 91, 99, 69, 39, 9},
-                    { 17, 47, 77, 107, 114, 84, 54, 24},
-                    { 2, 32, 62, 92, 100, 70, 40, 10},
-                    { 18, 48, 78, 108, 115, 85, 55, 25},
-                    { 3, 33, 63, 93, 101, 71, 41, 11},
-                    { 19, 49, 79, 109, 116, 86, 56, 26},
-                    { 4, 34, 64, 94, 102, 72, 42, 12},
-                    { 20, 50, 80, 110, 117, 87, 57, 27},
-                    { 5, 35, 65, 95, 103, 73, 43, 13},
-                    { 21, 51, 81, 111, 118, 88, 58, 28},
-                    { 6, 36, 66, 96, 104, 74, 44, 14},
-                    { 22, 52, 82, 112, 119, 89, 59, 29},
-                    { 7, 37, 67, 97, 105, 75, 45, 15},
-                    { 23, 53, 83, 113, 120, 90, 60, 30},
-                    { 8, 38, 68, 98, 106, 76, 46, 16}};
+        int[][] custom = new int[][]{{ 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 1, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 1, 4, 3, 2},
+                    { 2, 3, 4, 4, 1, 4, 3, 2},
+                    { 2, 3, 1, 1, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 1, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 4, 1, 1, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 4, 4, 4, 4, 3, 2},
+                    { 2, 3, 4, 1, 4, 1, 3, 2},
+                    { 2, 3, 1, 4, 4, 4, 3, 2},
+                    { 2, 3, 1, 4, 4, 4, 3, 2},
+                    { 2, 3, 4, 1, 4, 1, 3, 2}};
         
         //****************NEED A PROPER WAY TO START/STOP/RESET THE SIMULATION**********************//
         boolean chosen = false;
-        while(!chosen){
-            Thread.sleep(10); //Java's being buggy. Srsly. The 'if' statement here goes ignored, if this 'sleep' isn't here.
+        while(true){
+            Thread.sleep(1); //Java's being buggy. Srsly. The 'if' statement here goes ignored, if this 'sleep' isn't here.
             if(window.isNewSelection()){
-                
+                controller.stopBoarding();
                 int newSelection = window.getLastSelected();
+                planeDimension.resetHasPassengers();
                 switch(newSelection){
                     case 0:
                         controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.RANDOM);
@@ -327,6 +327,7 @@ public class ProjectBoarding {
                 
                 window.setNewSelection(false);
             }
+            
         }
         
         

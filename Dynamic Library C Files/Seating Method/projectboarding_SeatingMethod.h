@@ -9,10 +9,10 @@ extern "C" {
 #endif
 /*
  * Class:     projectboarding_SeatingMethod
- * Method:    convert2ArrayToArrayList
+ * Method:    convertArrayToArrayList
  * Signature: ([[Lprojectboarding/Cell;)Ljava/util/ArrayList;
  */
-JNIEXPORT jobject JNICALL Java_projectboarding_SeatingMethod_convert2ArrayToArrayList
+JNIEXPORT jobject JNICALL Java_projectboarding_SeatingMethod_convertArrayToArrayList
   (JNIEnv *, jobject, jobjectArray);
 
 #ifdef __cplusplus

@@ -308,21 +308,17 @@ public class SeatingMethod {
         return this.createFinalOrder(finalOrder);
     }
 
+    static {
+        System.loadLibrary("SeatingMethodLibrary");
+    }
+    
     /**
      * Convert a 2D array into an arrayList.
      *
      * @param array a 2D array to be converted.
      * @return an arrayList containing the objects in the original array.
      */
-    private ArrayList<Cell> convertArrayToArrayList(Cell[][] array) {
-        ArrayList<Cell> seats = new ArrayList<>();
-
-        for (Cell[] row : array) {
-            seats.addAll(Arrays.asList(row));
-        }
-
-        return seats;
-    }
+    private native ArrayList<Cell> convertArrayToArrayList(Cell[][] array);
 
     /**
      * Randomize the order of the seats.
@@ -333,7 +329,7 @@ public class SeatingMethod {
     private ArrayList<Cell> createRandomSeatingOrderFromSeats(ArrayList<Cell> seats) {
         // Create the arrayList containing the seating order
         ArrayList<Cell> seatingOrder = new ArrayList<>();
-
+        
         while (!seats.isEmpty()) {
             Random randomGenerator = new Random();
             int seatNumber = randomGenerator.nextInt(seats.size());

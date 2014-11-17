@@ -4,15 +4,8 @@
 - [ ] Add textures
 - [ ] Add smoother animation
 
-
-#### Week 7
 ###### Matthew
-- [X] Look into using .dll's for the seating method maths
 - [ ] Look at multithreading the boarding controllers
-
-###### Ben
-- [X] Add basic user control functions
-
 
 ## Changelog
 #### (18/10, 17:00) - Matthew
@@ -43,28 +36,4 @@
 
 #### (17/11, 13:00) - Matthew
 * Added .dll and .dlib files for PlaneDimension to provide simple dynamic library usage for the project
-
-## Previous Weekly Plans
-
-#### Week 6
-###### Matthew
-- [x] Complete the programmed seating methods.
-
-###### Matt
-- [x] Wait for Ben to finish visualisation to work out bugs in timings.
-
-##### Ben
-- [X] Add dynamic sizing for screen elements
-- [X] Fix up dirty code
-
-#### Week 5
-- [x] **Working example of the project**
-
-###### Matthew
-- [x] Change the plane dementions class to allow any plane with any dimentions to be inputted into the system.
-
-###### Matt
-- [X] Complete the passenger class with simple maths to work out the timings
-
-###### Ben
-- [X] Finish the simple visulisation of the simulation
+* Added .dll and .dlib files for SeatingMethod to provide a more complex dynamic library usage for the project

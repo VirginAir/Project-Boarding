@@ -10,6 +10,7 @@ import javax.media.opengl.GLEventListener;
 import glhandler.GLBufferHandler;
 import glshapes.Square;
 import java.util.ArrayList;
+import javax.media.opengl.GL;
 import jml.mat3;
 import projectboarding.BoardingController.Passenger;
 import sceneobjects.Scene;
@@ -29,6 +30,7 @@ public class GLRender implements GLEventListener{
     private ArrayList<Passenger> passengers;
     private int pCount;
     private int programHandle;
+    private boolean test = false;
     
     private Scene scene;
 
@@ -46,6 +48,7 @@ public class GLRender implements GLEventListener{
 
     public void setPassengers(ArrayList<Passenger> passengers) {
         this.passengers = passengers;
+        scene.resetPassengerList();
     }
     
     public GLRender(Cell[][] cells, ArrayList<Passenger> passengers){
@@ -60,6 +63,7 @@ public class GLRender implements GLEventListener{
     @Override
     public void init(GLAutoDrawable drawable) {
         final GL3 gl = drawable.getGL().getGL3();
+        
         this.scene.createScene(600, 800, drawable, this.cells, this.passengers);
         gl.glClearColor(0.5f, 0.8f, 0.5f, 0.0f);
         
@@ -82,7 +86,7 @@ public class GLRender implements GLEventListener{
     @Override
     public void display(GLAutoDrawable drawable) {
         final GL3 gl = drawable.getGL().getGL3();
-        
+        gl.glUseProgram(programHandle);
         gl.glClear(GL3.GL_COLOR_BUFFER_BIT);
         
         mat3 modelMatrix = new mat3();
@@ -104,7 +108,6 @@ public class GLRender implements GLEventListener{
                 gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
             }
         }
-        
         scene.updatePassengers(passengers);
         
         for(int i = 0; i < scene.getPassengerList().size(); i++){
@@ -116,8 +119,8 @@ public class GLRender implements GLEventListener{
             gl.glBindVertexArray(scene.getPassengerList().get(i).getHandle());
             gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
         }
-        
         gl.glFlush();
+        
     }
 
     @Override

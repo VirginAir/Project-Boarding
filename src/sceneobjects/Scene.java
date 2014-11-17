@@ -193,6 +193,10 @@ public class Scene {
     public void setPassengerList(ArrayList<PassengerObject> passengerList) {
         this.passengerList = passengerList;
     }
+    
+    public void resetPassengerList(){
+        this.passengerList.clear();
+    }
 
     public ArrayList<Chair> getChairList() {
         return chairList;

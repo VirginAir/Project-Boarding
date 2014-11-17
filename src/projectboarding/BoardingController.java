@@ -18,7 +18,7 @@ public class BoardingController implements ActionListener {
     // Plane information
     private final PlaneDimension planeDimension;
     private final SeatingMethod seatingMethod;
-    private final ArrayList<Cell> seatingOrder;
+    private ArrayList<Cell> seatingOrder;
     private ArrayList<Passenger> boardingPassengers;
     private ArrayList<Passenger> planePassengers;
     private ArrayList<Cell> seatsTaken;
@@ -60,6 +60,7 @@ public class BoardingController implements ActionListener {
         this.seatedPassengers = 0;
         this.r = new Random();
         this.totalTicks = 0;
+        this.timer = new Timer(50, this);
     }
 
     /**
@@ -73,6 +74,30 @@ public class BoardingController implements ActionListener {
         timer = new Timer(50, this);
         timer.start();
     }
+    
+    
+    /**
+     * Start the boarding process.
+     */
+    public void stopBoarding() {
+        // Record the initial time that the bording starts
+        timer.stop();
+    }
+    
+    public void reset() {
+        this.seatVisualisation = this.planeDimension.getAllSeats();
+        boardingPassengers.clear();
+        planePassengers.clear();
+        seatsTaken.clear();
+        seatedPassengers = 0;
+        totalTicks = 0;
+    }
+    
+    
+    public void setSeatingOrder(DefaultSeatingMethod defaultMethod){
+        this.seatingOrder = this.seatingMethod.getSeatingOrder(defaultMethod);
+    }
+    
 
     /**
      * Creates a new passenger every time the event is called.

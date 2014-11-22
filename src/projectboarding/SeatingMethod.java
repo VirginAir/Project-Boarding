@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 /**
  *
  * @author Matthew
  */
-public class SeatingMethod {
+public class SeatingMethod implements Callable<ArrayList<Cell>>{
 
     /**
      * A pre-defined seating method.
@@ -22,7 +23,7 @@ public class SeatingMethod {
 
     private final PlaneDimension planeDimension;
     private final ArrayList<Cell> randomisedPrioritySeats;
-    private DefaultSeatingMethod defaultMethod;
+    private final DefaultSeatingMethod defaultMethod;
     private int[][] customMethod;
 
     /**
@@ -30,11 +31,41 @@ public class SeatingMethod {
      *
      * @param planeDimension the dimensions of the plane to order the seats
      * from.
+     * @param seatingMethod
      */
-    public SeatingMethod(PlaneDimension planeDimension) {
+    public SeatingMethod(PlaneDimension planeDimension, DefaultSeatingMethod seatingMethod) {
         this.planeDimension = planeDimension;
+        this.defaultMethod = seatingMethod;
 
         this.randomisedPrioritySeats = this.calculateRandomSeatingOrderForPrioritySeats();
+    }
+    
+    /**
+     * Initialize the seating method class with a default method.
+     *
+     * @param planeDimension the dimensions of the plane to order the seats
+     * from.
+     * @param customSeatingMethod
+     */
+    public SeatingMethod(PlaneDimension planeDimension, int[][] customSeatingMethod) {
+        this.planeDimension = planeDimension;
+        this.customMethod = customSeatingMethod;
+        this.defaultMethod = DefaultSeatingMethod.CUSTOM;
+
+        this.randomisedPrioritySeats = this.calculateRandomSeatingOrderForPrioritySeats();
+    }
+    
+     @Override
+    public ArrayList<Cell> call() throws Exception {
+        ArrayList<Cell> seatingOrder;
+        
+        if (this.defaultMethod == DefaultSeatingMethod.CUSTOM) {
+            seatingOrder = this.calculateCustomSeatingOrder();
+        } else {
+            seatingOrder = this.getDefaultSeatingOrder();
+        }
+        
+        return seatingOrder;
     }
 
     /**
@@ -43,11 +74,9 @@ public class SeatingMethod {
      * @param seatingMethod the seating method to use.
      * @return an arrayList containing the seating order.
      */
-    public ArrayList<Cell> getSeatingOrder(DefaultSeatingMethod seatingMethod) {
+    private ArrayList<Cell> getDefaultSeatingOrder() {
 
-        defaultMethod = seatingMethod;
-
-        switch (seatingMethod) {
+        switch (this.defaultMethod) {
             case BACK_TO_FRONT:
                 return this.calculateBackToFrontSeatingOrder();
             case BLOCK_BOARDING:
@@ -65,23 +94,6 @@ public class SeatingMethod {
             default:
                 return null;
         }
-    }
-
-    public ArrayList<Cell> getCustomSeatingOrder(int[][] customSeatingMethod) {
-        defaultMethod = DefaultSeatingMethod.CUSTOM;
-        this.customMethod = customSeatingMethod;
-
-        return this.calculateCustomSeatingOrder();
-    }
-
-    /**
-     * Get the seating order for a user created seating method.
-     *
-     * @param userSeatingMethod the order for the seats to be taken.
-     * @return an arrayList containing the seating order.
-     */
-    public ArrayList<Cell> getSeatingOrder(Cell[][] userSeatingMethod) {
-        return null;
     }
 
     /**

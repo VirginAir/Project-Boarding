@@ -4,6 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.swing.Timer;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -17,12 +21,13 @@ public class BoardingController implements ActionListener {
     
     // Plane information
     private final PlaneDimension planeDimension;
-    private final SeatingMethod seatingMethod;
+    private DefaultSeatingMethod seatingMethodType;
     private ArrayList<Cell> seatingOrder;
     private ArrayList<Passenger> boardingPassengers;
     private ArrayList<Passenger> planePassengers;
     private ArrayList<Cell> seatsTaken;
     private Cell[][] seatVisualisation;
+    private SeatingMethod seatingMethod;
     // Timing information
     private Timer timer;
     private DateTime beginningBoardingTime;
@@ -37,22 +42,9 @@ public class BoardingController implements ActionListener {
         MIDDLE, AISLE, MIDDLE_AISLE, NONE
     }
 
-    public BoardingController(PlaneDimension planeDimension, SeatingMethod seatingMethod, DefaultSeatingMethod defaultMethod) {
+    public BoardingController(PlaneDimension planeDimension) {
         // Initalise variables
         this.planeDimension = planeDimension;
-        this.seatingMethod = seatingMethod;
-        this.seatingOrder = this.seatingMethod.getSeatingOrder(defaultMethod);
-        this.createClass();
-    }
-    
-    public BoardingController(PlaneDimension planeDimension, SeatingMethod seatingMethod, int[][] customSeatingMethod) {
-        this.planeDimension = planeDimension;
-        this.seatingMethod = seatingMethod;
-        this.seatingOrder = this.seatingMethod.getCustomSeatingOrder(customSeatingMethod);
-        this.createClass();
-    }
-    
-    private void createClass() {
         this.boardingPassengers = new ArrayList<>();
         this.seatsTaken = new ArrayList<>();
         this.planePassengers = new ArrayList<>();
@@ -66,7 +58,27 @@ public class BoardingController implements ActionListener {
     /**
      * Start the boarding process.
      */
-    public void startBoarding() {
+    public void startBoarding(DefaultSeatingMethod seatingMethodType) {
+        this.seatingMethodType = seatingMethodType;
+        
+        this.seatingMethod = new SeatingMethod(this.planeDimension, this.seatingMethodType);
+    }
+    
+    public void startBoarding(int[][] customSeatingOrder) {
+        this.seatingMethodType = DefaultSeatingMethod.CUSTOM;
+        
+        this.seatingMethod = new SeatingMethod(this.planeDimension, customSeatingOrder);
+    }
+    
+    private void finishStartBoarding() {
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        Future<ArrayList<Cell>> future = null;
+        try {
+            future = service.submit(this.seatingMethod.call());
+        } catch (Exception e) {
+            
+        }
+        
         // Record the initial time that the bording starts
         this.beginningBoardingTime = new DateTime();
 
@@ -74,7 +86,6 @@ public class BoardingController implements ActionListener {
         timer = new Timer(50, this);
         timer.start();
     }
-    
     
     /**
      * Start the boarding process.
@@ -91,11 +102,6 @@ public class BoardingController implements ActionListener {
         seatsTaken.clear();
         seatedPassengers = 0;
         totalTicks = 0;
-    }
-    
-    
-    public void setSeatingOrder(DefaultSeatingMethod defaultMethod){
-        this.seatingOrder = this.seatingMethod.getSeatingOrder(defaultMethod);
     }
     
 
@@ -222,10 +228,33 @@ public class BoardingController implements ActionListener {
             this.timer.stop();
             //System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
             if(this.totalTicks%60 == 0){
-               System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+               System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes using " + this.getSeatingMethodName() + " seating method.");//calculated using one triggered action as a second time frame
             }else{
-                System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes and " + this.totalTicks%60 + " seconds using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+                System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes and " + this.totalTicks%60 + " seconds using " + this.getSeatingMethodName() + " seating method.");//calculated using one triggered action as a second time frame
             }
+        }
+    }
+    
+    private String getSeatingMethodName() {
+        switch (this.seatingMethodType) {
+            case BACK_TO_FRONT:
+                return "back-to-front";
+            case OUTSIDE_IN:
+                return "outside-in";
+            case RANDOM:
+                return "random";
+            case BLOCK_BOARDING:
+                return "block boarding";
+            case BY_SEAT:
+                return "by seat";
+            case REVERSE_PYRAMID:
+                return "reverse pyramid";
+            case ROTATING_ZONE:
+                return "rotating zone";
+            case CUSTOM:
+                return "custom";
+            default:
+                return "unrecognised method";
         }
     }
 
@@ -286,10 +315,6 @@ public class BoardingController implements ActionListener {
     
     public ArrayList<Passenger> getPassengers() {
         return planePassengers;
-    }
-
-    public SeatingMethod getSeatingMethod() {
-        return seatingMethod;
     }
     
     

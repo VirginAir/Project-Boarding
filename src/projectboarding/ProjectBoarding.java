@@ -3,6 +3,12 @@ package projectboarding;
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
@@ -204,35 +210,19 @@ public class ProjectBoarding {
         
         PlaneDimension planeDimension = new PlaneDimension(
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4, normalRow5, normalRow6, normalRow7, normalRow8, normalRow9, normalRow10, normalRow11, normalRow12, normalRow13, normalRow14});
-        SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
+       // SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
         
-
-        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.RANDOM);
-        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BACK_TO_FRONT);
-        BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BLOCK_BOARDING);
-        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BY_SEAT);
-        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.OUTSIDE_IN);
-        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.ROTATING_ZONE);
-        //BoardingController controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.REVERSE_PYRAMID);
-        /*BoardingController controller = new BoardingController(planeDimension, seatingMethod, 
-                new int[][]{
-<<<<<<< HEAD
-                    { 1, 31, 61, 91, 99, 69, 39, 9},
-                    { 17, 47, 77, 107, 114, 84, 54, 24},
-                    { 2, 32, 62, 92, 100, 70, 40, 10},
-                    { 18, 48, 78, 108, 115, 85, 55, 25},
-                    { 3, 33, 63, 93, 101, 71, 41, 11},
-                    { 19, 49, 79, 109, 116, 86, 56, 26},
-                    { 4, 34, 64, 94, 102, 72, 42, 12},
-                    { 20, 50, 80, 110, 117, 87, 57, 27},
-                    { 5, 35, 65, 95, 103, 73, 43, 13},
-                    { 21, 51, 81, 111, 118, 88, 58, 28},
-                    { 6, 36, 66, 96, 104, 74, 44, 14},
-                    { 22, 52, 82, 112, 119, 89, 59, 29},
-                    { 7, 37, 67, 97, 105, 75, 45, 15},
-                    { 23, 53, 83, 113, 120, 90, 60, 30},
-                    { 8, 38, 68, 98, 106, 76, 46, 16}});
-=======
+        /*ExecutorService executorService = Executors.newFixedThreadPool(8);
+        
+        List<SeatingMethod> seatingMethods = Arrays.asList(
+                new SeatingMethod(planeDimension, DefaultSeatingMethod.BACK_TO_FRONT),
+                new SeatingMethod(planeDimension, DefaultSeatingMethod.BLOCK_BOARDING),
+                new SeatingMethod(planeDimension, DefaultSeatingMethod.BY_SEAT),
+                new SeatingMethod(planeDimension, DefaultSeatingMethod.OUTSIDE_IN),
+                new SeatingMethod(planeDimension, DefaultSeatingMethod.RANDOM),
+                new SeatingMethod(planeDimension, DefaultSeatingMethod.REVERSE_PYRAMID),
+                new SeatingMethod(planeDimension, DefaultSeatingMethod.ROTATING_ZONE),
+                new SeatingMethod(planeDimension, new int[][]{
                     { 2, 3, 4, 4, 4, 4, 3, 2},
                     { 2, 3, 1, 1, 1, 1, 3, 2},
                     { 2, 3, 4, 4, 1, 4, 3, 2},
@@ -247,10 +237,30 @@ public class ProjectBoarding {
                     { 2, 3, 4, 1, 4, 1, 3, 2},
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 1, 4, 4, 4, 3, 2},
-                    { 2, 3, 4, 1, 4, 1, 3, 2}});*/
-/// dlltesting
+                    { 2, 3, 4, 1, 4, 1, 3, 2}
+                }));
         
-        Cell[][] seatVisualisation = controller.getSeatVisualisation();
+        List<Future<ArrayList<Cell>>> seatingOrderFutures = executorService.invokeAll(seatingMethods);
+        
+
+        Cell[][] seatVisualisation = null;
+        BoardingController controller = null;
+        
+        try {
+            controller = new BoardingController(planeDimension, DefaultSeatingMethod.BACK_TO_FRONT, seatingOrderFutures.get(0).get());
+//            controller = new BoardingController(planeDimension, DefaultSeatingMethod.BLOCK_BOARDING, seatingOrderFutures.get(1).get());
+//            controller = new BoardingController(planeDimension, DefaultSeatingMethod.OUTSIDE_IN, seatingOrderFutures.get(3).get());
+//            controller = new BoardingController(planeDimension, DefaultSeatingMethod.RANDOM, seatingOrderFutures.get(4).get());
+//            controller = new BoardingController(planeDimension, DefaultSeatingMethod.REVERSE_PYRAMID, seatingOrderFutures.get(5).get());
+//            controller = new BoardingController(planeDimension, DefaultSeatingMethod.ROTATING_ZONE, seatingOrderFutures.get(6).get());
+//            controller = new BoardingController(planeDimension, DefaultSeatingMethod.CUSTOM, seatingOrderFutures.get(7).get());
+            
+            seatVisualisation = controller.getSeatVisualisation();
+        } catch (ExecutionException e) {
+            
+        }*/
+        
+        BoardingController controller = new BoardingController(planeDimension);
         
         //Setup Window
         final GLProfile profile = GLProfile.get(GLProfile.GL3);
@@ -262,7 +272,7 @@ public class ProjectBoarding {
         GLCanvas canvas = new GLCanvas(capabilities);
         FPSAnimator animator = new FPSAnimator(canvas, FPS);
         
-        GLRender renderer = new GLRender(seatVisualisation, controller.getPassengers());
+        GLRender renderer = new GLRender(controller.getSeatVisualisation(), controller.getPassengers());
         
         GLWindow window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
         

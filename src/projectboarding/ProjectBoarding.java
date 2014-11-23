@@ -210,7 +210,7 @@ public class ProjectBoarding {
         
         PlaneDimension planeDimension = new PlaneDimension(
                 new Cell[][]{priorityRow, priorityRow1, normalRow, normalRow1, normalRow2, normalRow3, normalRow4, normalRow5, normalRow6, normalRow7, normalRow8, normalRow9, normalRow10, normalRow11, normalRow12, normalRow13, normalRow14});
-       // SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
+//        SeatingMethod seatingMethod = new SeatingMethod(planeDimension);
         
         /*ExecutorService executorService = Executors.newFixedThreadPool(8);
         
@@ -260,28 +260,6 @@ public class ProjectBoarding {
             
         }*/
         
-        BoardingController controller = new BoardingController(planeDimension);
-        
-        //Setup Window
-        final GLProfile profile = GLProfile.get(GLProfile.GL3);
-        GLCapabilities capabilities = new GLCapabilities(profile);
-        capabilities.setDoubleBuffered(true);
-        capabilities.setHardwareAccelerated(true);
-        
-        
-        GLCanvas canvas = new GLCanvas(capabilities);
-        FPSAnimator animator = new FPSAnimator(canvas, FPS);
-        
-        GLRender renderer = new GLRender(controller.getSeatVisualisation(), controller.getPassengers());
-        
-        GLWindow window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
-        
-        canvas.addGLEventListener(renderer);
-        
-        window.setGLCanvas(canvas, BorderLayout.CENTER);
-        animator.start();
-        window.setVisibility(true);
-        
         int[][] custom = new int[][]{{ 2, 3, 4, 4, 4, 4, 3, 2},
                     { 2, 3, 1, 1, 1, 1, 3, 2},
                     { 2, 3, 4, 4, 1, 4, 3, 2},
@@ -298,40 +276,64 @@ public class ProjectBoarding {
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 4, 1, 4, 1, 3, 2}};
         
+        BoardingController controller = new BoardingController(planeDimension, custom);
+        
+        //Setup Window
+        final GLProfile profile = GLProfile.get(GLProfile.GL3);
+        GLCapabilities capabilities = new GLCapabilities(profile);
+        capabilities.setDoubleBuffered(true);
+        capabilities.setHardwareAccelerated(true);
+        
+        
+        GLCanvas canvas = new GLCanvas(capabilities);
+        FPSAnimator animator = new FPSAnimator(canvas, FPS);
+        
+        GLRender renderer = new GLRender(
+                controller.getSeatVisualisationForMethod(DefaultSeatingMethod.RANDOM),
+                controller.getPassengersForMethod(DefaultSeatingMethod.RANDOM));
+        
+        GLWindow window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
+        
+        canvas.addGLEventListener(renderer);
+        
+        window.setGLCanvas(canvas, BorderLayout.CENTER);
+        animator.start();
+        window.setVisibility(true);
+        
         //****************NEED A PROPER WAY TO START/STOP/RESET THE SIMULATION**********************//
         while(true){
             Thread.sleep(1); //Java's being buggy. Srsly. The 'if' statement here goes ignored, if this 'sleep' isn't here.
-            if(window.isNewSelection()){
+            if(window.isNewSelection()){      
                 controller.stopBoarding();
                 int newSelection = window.getLastSelected();
-                planeDimension.resetHasPassengers();
-                switch(newSelection){
+                controller.getPlaneDimension().resetHasPassengers();
+                /*switch(newSelection){
                     case 0:
-                        controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.RANDOM);
+                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.RANDOM);
                         break;
                     case 1:
-                        controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BY_SEAT);
+                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.BY_SEAT);
                         break;
                     case 2:
-                        controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BACK_TO_FRONT);
+                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.BACK_TO_FRONT);
                         break;
                     case 3:
-                        controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.BLOCK_BOARDING);
+                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.BLOCK_BOARDING);
                         break;
                     case 4:
-                        controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.OUTSIDE_IN);
+                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.OUTSIDE_IN);
                         break;
                     case 5:
-                        controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.REVERSE_PYRAMID);
+                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.REVERSE_PYRAMID);
                         break;
                     case 6:
-                        controller = new BoardingController(planeDimension, seatingMethod, DefaultSeatingMethod.ROTATING_ZONE);
+                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.ROTATING_ZONE);
                         break;
                     case 7:
-                        controller = new BoardingController(planeDimension, seatingMethod, custom);
+                        controller = new BoardingController(planeDimension, custom);
                         break;
-                }
-                renderer.setPassengers(controller.getPassengers());
+                }*/
+                renderer.setPassengers(controller.getPassengersForMethod(DefaultSeatingMethod.BLOCK_BOARDING));
                 controller.startBoarding();
                 
                 window.setNewSelection(false);
@@ -343,3 +345,7 @@ public class ProjectBoarding {
         
     }
 }
+
+// create all boarding controllers for each different type
+// get times for each of the ones the user hasnt selected
+// let ui run normal for selected 

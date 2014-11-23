@@ -12,7 +12,6 @@ import glshapes.Square;
 import java.util.ArrayList;
 import javax.media.opengl.GL;
 import jml.mat3;
-import projectboarding.BoardingController.Passenger;
 import sceneobjects.Scene;
 
 /**

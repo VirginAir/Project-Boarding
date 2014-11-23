@@ -5,9 +5,8 @@ import glshapes.Square;
 import java.util.ArrayList;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
-import projectboarding.BoardingController;
-import projectboarding.BoardingController.Passenger;
 import projectboarding.Cell;
+import projectboarding.Passenger;
 
 /**
  *
@@ -27,7 +26,7 @@ public class Scene {
         chairList = new ArrayList<Chair>();
         passengerList = new ArrayList<PassengerObject>();
     }
-    public void createScene(int screenHeight, int screenWidth, GLAutoDrawable drawable, Cell[][] cells, ArrayList<BoardingController.Passenger> passengers){
+    public void createScene(int screenHeight, int screenWidth, GLAutoDrawable drawable, Cell[][] cells, ArrayList<Passenger> passengers){
         
         
         rowCount = cells.length;

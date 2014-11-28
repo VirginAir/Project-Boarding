@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.Timer;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -30,7 +31,7 @@ public class BoardingHandler implements Runnable, ActionListener {
     private int newPassenger = 0;
     private Random r;
     private int seatedPassengers;
-    private int totalTicks;
+    private AtomicInteger totalTicks;
     
     private int timeMin;
     private int timeSec;
@@ -61,7 +62,7 @@ public class BoardingHandler implements Runnable, ActionListener {
         this.seatVisualisation = this.planeDimension.getAllSeats();
         this.seatedPassengers = 0;
         this.r = new Random();
-        this.totalTicks = 0;
+        this.totalTicks = new AtomicInteger();
         this.timer = new Timer(50, this);
     }
     
@@ -117,7 +118,7 @@ public class BoardingHandler implements Runnable, ActionListener {
         planePassengers.clear();
         seatsTaken.clear();
         seatedPassengers = 0;
-        totalTicks = 0;
+        this.totalTicks = new AtomicInteger();
         hasCompleted = false;
     }
 
@@ -237,7 +238,7 @@ public class BoardingHandler implements Runnable, ActionListener {
 
 
 
-        this.totalTicks ++;
+        this.totalTicks.incrementAndGet();
         if (this.seatedPassengers == this.planeDimension.getNumberOfPrioritySeats()+this.planeDimension.getNumberOfNormalSeats()) {
             // End the timer
             this.endBoardingTime = new DateTime();
@@ -248,10 +249,10 @@ public class BoardingHandler implements Runnable, ActionListener {
             
             this.hasCompleted = true;
             //System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
-            timeMin = (int) Math.floor(this.totalTicks/60);
-            timeSec = this.totalTicks%60;
+            timeMin = (int) Math.floor(this.totalTicks.get()/60);
+            timeSec = this.totalTicks.get()%60;
             
-            if(this.totalTicks%60 == 0){
+            if(this.totalTicks.get()%60 == 0){
                System.out.println("Time taken: " + timeMin + " minutes using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
             }else{
                 System.out.println("Time taken: " + timeMin + " minutes and " + timeSec + " seconds using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame

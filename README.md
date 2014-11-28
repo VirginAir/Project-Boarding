@@ -1,11 +1,21 @@
 ## Weekly Plan (to be completed for...)
+
+#### Week 11
+##### Ben
+- [ ] Fix, tidy, comment
+
+#### Week 10
+##### Ben
+- [X] Switch to 'wizard' like layout, for setting up simulations
+- [ ] Finish the custom method interface
+- [ ] Add textures
+
 #### Week 8
 ##### Ben
-- [ ] Add textures
-- [ ] Add smoother animation
+- [X] Interface for direct control
 
 ###### Matthew
-- [ ] Look at multithreading the boarding controllers
+- [X] Look at multithreading the boarding controllers
 
 ## Changelog
 #### (18/10, 17:00) - Matthew
@@ -37,3 +47,13 @@
 #### (17/11, 13:00) - Matthew
 * Added .dll and .dlib files for PlaneDimension to provide simple dynamic library usage for the project
 * Added .dll and .dlib files for SeatingMethod to provide a more complex dynamic library usage for the project
+
+#### (28/11, 11:17) - Ben
+* Switched out for the wizard layout style, mentioned earlier. Custom methods aren't currently working but I'll get them done really soon.
+* You can set up layouts of planes, and even save them for later use.
+* You can now pick which simulation to view.
+* Also changed some BoardingController stuff to work with this. It's a bit messy though.
+* Results screen added (looks bad with the current time glitch).
+* Few bugs here and there (don't run a simulation without defining a plane layout first!)
+* For some reason, the Reverse Pyramid layout set up BREAKS on some layouts (see 'mini.pd' and 'bigplane.pd').
+* Other than that, I just have to add in the Custom method, clean up the interface and code a little, and add textures. Easy stuff!

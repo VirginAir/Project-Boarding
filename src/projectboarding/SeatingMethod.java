@@ -17,7 +17,25 @@ public class SeatingMethod {
      */
     public enum DefaultSeatingMethod {
 
-        BACK_TO_FRONT, BLOCK_BOARDING, BY_SEAT, OUTSIDE_IN, RANDOM, REVERSE_PYRAMID, ROTATING_ZONE, CUSTOM
+        BACK_TO_FRONT("Back To Front"), 
+        BLOCK_BOARDING("Block Boarding"), 
+        BY_SEAT("By Seat"), 
+        OUTSIDE_IN("Outside In"), 
+        RANDOM("Random"), 
+        REVERSE_PYRAMID("Reverse Pyramid"), 
+        ROTATING_ZONE("Rotating Zone"), 
+        CUSTOM("Custom");
+        
+        private final String text;
+        
+        private DefaultSeatingMethod(final String text) {
+            this.text = text;
+        }
+        
+        @Override
+        public String toString() {
+            return text;
+        }
     }
 
     private final PlaneDimension planeDimension;

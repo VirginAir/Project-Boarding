@@ -14,6 +14,7 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.awt.GLJPanel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import projectboarding.Cell.CellType;
 import projectboarding.SeatingMethod.DefaultSeatingMethod;
 import sceneobjects.Scene;
@@ -24,16 +25,19 @@ import sceneobjects.Scene;
  */
 public class ProjectBoarding {
 
-    private static final int WINDOW_HEIGHT = 800;
-    private static final int WINDOW_WIDTH = 600;
+    private static final int WINDOW_HEIGHT = 1280;
+    private static final int WINDOW_WIDTH = 960;
     private static final int FPS = 60;
+    
+    public enum LoopState {
+
+        WIZARD, SIMULATION, RESULTS
+    }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException {
-        
-              
         // Create and run the boarding
         // DONT WORRY THIS WILL ALL BE REMOVED, IT SHOULD BE CREATED PROGRAMMATICALLY
         // JUST HERE TO BE USED AS A TEST
@@ -276,7 +280,7 @@ public class ProjectBoarding {
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 4, 1, 4, 1, 3, 2}};
         
-        BoardingController controller = new BoardingController(planeDimension, custom);
+        BoardingController controller = new BoardingController(planeDimension, true, custom);
         
         //Setup Window
         final GLProfile profile = GLProfile.get(GLProfile.GL3);
@@ -298,47 +302,53 @@ public class ProjectBoarding {
         
         window.setGLCanvas(canvas, BorderLayout.CENTER);
         animator.start();
-        window.setVisibility(true);
+        //window.setVisibility(true);
         
-        //****************NEED A PROPER WAY TO START/STOP/RESET THE SIMULATION**********************//
+        WizardWindow wzWindow = new WizardWindow("Project-Boarding Wizard", 300, 200);
+        wzWindow.setVisibility(true);
+        
+        
+        LoopState state = LoopState.WIZARD;
+        
         while(true){
             Thread.sleep(1); //Java's being buggy. Srsly. The 'if' statement here goes ignored, if this 'sleep' isn't here.
-            if(window.isNewSelection()){      
-                controller.stopBoarding();
-                int newSelection = window.getLastSelected();
-                controller.getPlaneDimension().resetHasPassengers();
-                /*switch(newSelection){
-                    case 0:
-                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.RANDOM);
-                        break;
-                    case 1:
-                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.BY_SEAT);
-                        break;
-                    case 2:
-                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.BACK_TO_FRONT);
-                        break;
-                    case 3:
-                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.BLOCK_BOARDING);
-                        break;
-                    case 4:
-                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.OUTSIDE_IN);
-                        break;
-                    case 5:
-                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.REVERSE_PYRAMID);
-                        break;
-                    case 6:
-                        controller = new BoardingController(planeDimension, DefaultSeatingMethod.ROTATING_ZONE);
-                        break;
-                    case 7:
-                        controller = new BoardingController(planeDimension, custom);
-                        break;
-                }*/
-                renderer.setPassengers(controller.getPassengersForMethod(DefaultSeatingMethod.BLOCK_BOARDING));
-                controller.startBoarding();
-                
-                window.setNewSelection(false);
+            if(state == LoopState.WIZARD){
+                wzWindow.update();
+                if(wzWindow.isToRun()){
+                    wzWindow.setToRun(false);
+                    state = LoopState.SIMULATION;
+                    controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
+                    renderer = new GLRender(controller.getSeatVisualisationForMethod(DefaultSeatingMethod.RANDOM), controller.getPassengersForMethod(DefaultSeatingMethod.RANDOM));
+                    canvas.addGLEventListener(renderer);
+                    window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
+                    window.setGLCanvas(canvas, BorderLayout.CENTER);
+                    controller.stopBoarding();
+                    controller.getPlaneDimension().resetHasPassengers();
+                    renderer.setPassengers(controller.getPassengersForMethod(wzWindow.getToView()));
+                    window.updateRunning(wzWindow.getToView().toString());
+                    window.setVisibility(true);
+                    wzWindow.setVisibility(false);
+                    controller.startBoarding(wzWindow.getToView());
+                }
+            } else if (state == LoopState.SIMULATION) {
+                if(controller.checkComplete()){
+                    state = LoopState.RESULTS;
+                    window.setVisibility(false);
+                } else if (window.isStopped()) {
+                    window.setStopped(false);
+                    controller.stopBoarding();
+                    JOptionPane.showMessageDialog(null, "Simulation Stopped!", "Stopped", 1);
+                    state = LoopState.WIZARD;
+                    wzWindow.setVisibility(true);
+                    window.setVisibility(false);
+                }
+            } else if (state == LoopState.RESULTS) {
+                JTextArea toDisplay = new JTextArea(controller.getResults());
+                toDisplay.setEditable(false);
+                JOptionPane.showMessageDialog(null, toDisplay, "Results", JOptionPane.PLAIN_MESSAGE);
+                state = LoopState.WIZARD;
+                wzWindow.setVisibility(true);
             }
-            
         }
         
         

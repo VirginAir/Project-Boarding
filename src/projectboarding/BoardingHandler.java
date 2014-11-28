@@ -32,6 +32,9 @@ public class BoardingHandler implements Runnable, ActionListener {
     private int seatedPassengers;
     private int totalTicks;
     
+    private int timeMin;
+    private int timeSec;
+    
     private boolean withTimer = false;
     private boolean hasCompleted = false;
 
@@ -91,10 +94,6 @@ public class BoardingHandler implements Runnable, ActionListener {
                 this.actionPerformed(null);
             }
         }
-        
-        while (!this.hasCompleted) {
-            
-        }
     }
     
     
@@ -108,7 +107,7 @@ public class BoardingHandler implements Runnable, ActionListener {
                 this.timer.stop();
             }
         }
-        
+        this.withTimer = false;
         this.hasCompleted = true;
     }
     
@@ -119,6 +118,7 @@ public class BoardingHandler implements Runnable, ActionListener {
         seatsTaken.clear();
         seatedPassengers = 0;
         totalTicks = 0;
+        hasCompleted = false;
     }
 
     /**
@@ -248,10 +248,13 @@ public class BoardingHandler implements Runnable, ActionListener {
             
             this.hasCompleted = true;
             //System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
+            timeMin = (int) Math.floor(this.totalTicks/60);
+            timeSec = this.totalTicks%60;
+            
             if(this.totalTicks%60 == 0){
-               System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+               System.out.println("Time taken: " + timeMin + " minutes using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
             }else{
-                System.out.println("Time taken: " + (int) Math.floor(this.totalTicks/60) + " minutes and " + this.totalTicks%60 + " seconds using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+                System.out.println("Time taken: " + timeMin + " minutes and " + timeSec + " seconds using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
             }
         }
     }
@@ -314,4 +317,32 @@ public class BoardingHandler implements Runnable, ActionListener {
     public ArrayList<Passenger> getPassengers() {
         return planePassengers;
     }
+
+    public boolean isHasCompleted() {
+        return hasCompleted;
+    }
+
+    public void setHasCompleted(boolean hasCompleted) {
+        this.hasCompleted = hasCompleted;
+    }
+
+    public int getTimeMin() {
+        return timeMin;
+    }
+
+    public void setTimeMin(int timeMin) {
+        this.timeMin = timeMin;
+    }
+
+    public int getTimeSec() {
+        return timeSec;
+    }
+
+    public void setTimeSec(int timeSec) {
+        this.timeSec = timeSec;
+    }
+    
+    
+    
+    
 }

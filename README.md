@@ -1,21 +1,16 @@
+## Bugs and Things to add
+- [ ] Add option to set the number of rows per block for the plane (SeatingMethod: numberOfRowsPerBlock getter/setter)
+- [ ] Fix seating method to take into account planes which have a middle asle
+- [ ] Checking to make sure a plane has at least one asle
+- [ ] Checking that the asle goes from back to front with no breaks
+
 ## Weekly Plan (to be completed for...)
 
 #### Week 11
 ##### Ben
 - [ ] Fix, tidy, comment
-
-#### Week 10
-##### Ben
-- [X] Switch to 'wizard' like layout, for setting up simulations
 - [ ] Finish the custom method interface
 - [ ] Add textures
-
-#### Week 8
-##### Ben
-- [X] Interface for direct control
-
-###### Matthew
-- [X] Look at multithreading the boarding controllers
 
 ## Changelog
 #### (18/10, 17:00) - Matthew

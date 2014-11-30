@@ -5,6 +5,7 @@
 - [ ] Checking that the asle goes from back to front with no breaks
 - [ ] Option to re-edit your plane dimension if you made a mistake after creating it
 - [ ] BUG: Plane dimension loads upside down
+- [ ] BUG: Set plane dimension to 15*7 then put asles down 3 and 5 column and it creates the plane wrong
 
 ## Weekly Plan (to be completed for...)
 

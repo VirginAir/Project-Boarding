@@ -1,8 +1,10 @@
 ## Bugs and Things to add
 - [ ] Add option to set the number of rows per block for the plane (SeatingMethod: numberOfRowsPerBlock getter/setter)
-- [ ] Fix seating method to take into account planes which have a middle asle
+- [ ] BUG: Fix seating method to take into account planes which have a middle asle
 - [ ] Checking to make sure a plane has at least one asle
 - [ ] Checking that the asle goes from back to front with no breaks
+- [ ] Option to re-edit your plane dimension if you made a mistake after creating it
+- [ ] BUG: Plane dimension loads upside down
 
 ## Weekly Plan (to be completed for...)
 

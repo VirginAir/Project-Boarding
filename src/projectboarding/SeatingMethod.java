@@ -42,6 +42,8 @@ public class SeatingMethod {
     private final ArrayList<Cell> randomisedPrioritySeats;
     private DefaultSeatingMethod defaultMethod;
     private int[][] customMethod;
+    
+    int numberOfRowsPerBlock = 5;
 
     /**
      * Initialize the seating method class with a default method.
@@ -402,6 +404,14 @@ public class SeatingMethod {
 
         return seatingOrder;
     }
+    
+    public int getNumberOfRowsPerBlock() {
+        return this.numberOfRowsPerBlock;
+    }
+    
+    public void setNumberOfRowsPerBlock(int numberOfRowsPerBlock) {
+        this.numberOfRowsPerBlock = numberOfRowsPerBlock;
+    }
 
     /**
      * Split the normal seats into blocks.
@@ -411,8 +421,7 @@ public class SeatingMethod {
     private ArrayList<ArrayList<Cell>> splitNormalSeatsIntoBlocks() {
         // Calculate how many blocks to split the plane into
         int numberOfRows = this.planeDimension.getNumberOfNormalRows();
-        int numberOfRowsPerBlock = 3;
-        if (numberOfRows < 3) {
+        if (numberOfRows < numberOfRowsPerBlock) {
             numberOfRowsPerBlock = numberOfRows;
         }
         int numberOfBlocks = numberOfRows / numberOfRowsPerBlock;

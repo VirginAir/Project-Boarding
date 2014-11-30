@@ -247,8 +247,9 @@ public class SeatingMethod {
 
         // Get the number of splits rounded down
         int differentSplits = (int) (blocks.size() / 2.0) + 2;
-        int fortyPercent = (int) ((this.planeDimension.getNumberOfNormalRows() / 100.0) * 40);
-        int twentyPercent = this.planeDimension.getNumberOfNormalRows() - (fortyPercent * 2);
+        int numberOfNormalRows = this.planeDimension.getNumberOfNormalRows();
+        int fortyPercent = (int) ((numberOfNormalRows / 100.0) * 40);
+        int twentyPercent = numberOfNormalRows - (fortyPercent * 2);
 
         ArrayList<ArrayList<Cell>> splitSeating = new ArrayList<>();
 
@@ -263,19 +264,48 @@ public class SeatingMethod {
             ArrayList<Cell> cells1 = blocks.remove(0);
             ArrayList<Cell> cells2 = blocks.remove(blocks.size() - 1);
 
+            /* 
+              Need the try catch statments because sometimes blocks can be
+              different sizes due to unbalanced plane dimensions
+            */
+            
             for (int t = 0; t < twentyPercent; t++) {
-                splitSeating.get(x + 2).add(cells1.remove(0));
-                splitSeating.get(x + 2).add(cells2.remove(0));
+                try {
+                    splitSeating.get(x + 2).add(cells1.remove(0));
+                } catch (IndexOutOfBoundsException e) {
+                    // Ignore    
+                }
+                try {
+                    splitSeating.get(x + 2).add(cells2.remove(0));
+                } catch (IndexOutOfBoundsException e) {
+                    // Ignore    
+                }
             }
 
             for (int f = 0; f < fortyPercent; f++) {
-                splitSeating.get(x + 1).add(cells1.remove(0));
-                splitSeating.get(x + 1).add(cells2.remove(0));
+                try {
+                    splitSeating.get(x + 1).add(cells1.remove(0));
+                } catch (IndexOutOfBoundsException e) {
+                    // Ignore    
+                }
+                try {
+                    splitSeating.get(x + 1).add(cells2.remove(0));
+                } catch (IndexOutOfBoundsException e) {
+                    // Ignore    
+                }
             }
 
             for (int f = 0; f < fortyPercent; f++) {
-                splitSeating.get(x).add(cells1.remove(0));
-                splitSeating.get(x).add(cells2.remove(0));
+                try {
+                    splitSeating.get(x).add(cells1.remove(0));
+                } catch (IndexOutOfBoundsException e) {
+                    // Ignore    
+                }
+                try {
+                    splitSeating.get(x).add(cells2.remove(0));
+                } catch (IndexOutOfBoundsException e) {
+                    // Ignore    
+                }
             }
 
             x++;

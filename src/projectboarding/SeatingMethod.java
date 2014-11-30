@@ -380,8 +380,11 @@ public class SeatingMethod {
      */
     private ArrayList<ArrayList<Cell>> splitNormalSeatsIntoBlocks() {
         // Calculate how many blocks to split the plane into
-        int numberOfRowsPerBlock = 3;
         int numberOfRows = this.planeDimension.getNumberOfNormalRows();
+        int numberOfRowsPerBlock = 3;
+        if (numberOfRows < 3) {
+            numberOfRowsPerBlock = numberOfRows;
+        }
         int numberOfBlocks = numberOfRows / numberOfRowsPerBlock;
         int remainder = numberOfRows % numberOfRowsPerBlock;
 

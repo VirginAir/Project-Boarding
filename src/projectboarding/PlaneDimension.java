@@ -24,17 +24,20 @@ public class PlaneDimension {
     }
     
     public PlaneDimension(PlaneDimension pd) {
-        System.out.println(pd.normalSeats);
-        System.out.println(pd.planeSeats);
-        System.out.println(pd.prioritySeats);
         
-        this.normalSeats = pd.normalSeats.clone();
-        this.planeSeats = pd.planeSeats.clone();
-        this.prioritySeats = pd.prioritySeats.clone();
+        int row = pd.getAllSeats().length;
+        int column = pd.getAllSeats()[0].length;
         
-        System.out.println(normalSeats);
-        System.out.println(planeSeats);
-        System.out.println(prioritySeats);
+        planeSeats = new Cell[row][column];
+        
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < column; j++){
+                this.planeSeats[i][j] = pd.getAllSeats()[i][j].clone();
+            }
+        }
+        
+        this.prioritySeats = this.getSeats(true);
+        this.normalSeats = this.getSeats(false);
         
     }
     

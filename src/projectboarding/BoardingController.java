@@ -115,11 +115,6 @@ public class BoardingController {
                 System.out.println(threads[i].isAlive());
                 if(!threads[i].isAlive()){
                     threads[i].start();
-                    try {
-                        threads[i].join();                      /*  REMOVE MEEE */
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(BoardingController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
             }
         }

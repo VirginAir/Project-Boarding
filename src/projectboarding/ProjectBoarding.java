@@ -2,22 +2,13 @@ package projectboarding;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.awt.GLJPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import projectboarding.Cell.CellType;
 import projectboarding.SeatingMethod.DefaultSeatingMethod;
-import sceneobjects.Scene;
 
 /**
  *
@@ -280,7 +271,7 @@ public class ProjectBoarding {
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 4, 1, 4, 1, 3, 2}};
         
-        BoardingController controller = new BoardingController(planeDimension, true, custom);
+        BoardingController controller = new BoardingController(planeDimension, custom);
         
         //Setup Window
         final GLProfile profile = GLProfile.get(GLProfile.GL3);
@@ -317,7 +308,7 @@ public class ProjectBoarding {
                 if(wzWindow.isToRun()){
                     wzWindow.setToRun(false);
                     state = LoopState.SIMULATION;
-                    controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
+                    controller = new BoardingController(wzWindow.getPd()/*, wzWindow.isUseCustom()*/, custom);
                     renderer = new GLRender(controller.getSeatVisualisationForMethod(DefaultSeatingMethod.RANDOM), controller.getPassengersForMethod(DefaultSeatingMethod.RANDOM));
                     canvas.addGLEventListener(renderer);
                     window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);

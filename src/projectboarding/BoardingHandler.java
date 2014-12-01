@@ -64,6 +64,8 @@ public class BoardingHandler implements Runnable, ActionListener {
         this.r = new Random();
         this.totalTicks = new AtomicInteger();
         this.timer = new Timer(50, this);
+        
+        System.out.println(this.planeDimension);
     }
     
     public void setWithTimer(boolean withTimer) {
@@ -341,9 +343,6 @@ public class BoardingHandler implements Runnable, ActionListener {
 
     public void setTimeSec(int timeSec) {
         this.timeSec = timeSec;
-    }
-    
-    
-    
+    }  
     
 }

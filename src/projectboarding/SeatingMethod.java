@@ -66,6 +66,11 @@ public class SeatingMethod {
      * @return an arrayList containing the seating order.
      */
     public ArrayList<Cell> getDefaultSeatingOrder(DefaultSeatingMethod seatingMethod) {
+        
+        if (this.planeDimension.getNormalSeats().length == 0) {
+            return this.randomisedPrioritySeats;
+        }
+        
         switch (seatingMethod) {
             case BACK_TO_FRONT:
                 return this.calculateBackToFrontSeatingOrder();
@@ -246,7 +251,7 @@ public class SeatingMethod {
     private ArrayList<Cell> calculateReversePyramidSeatingOrder() {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
         ArrayList<ArrayList<Cell>> blocks = this.createOutsideInOrderForBlock(this.convertArrayToArrayList(normalSeats));
-
+        
         // Get the number of splits rounded down
         int differentSplits = (int) (blocks.size() / 2.0) + 2;
         int numberOfNormalRows = this.planeDimension.getNumberOfNormalRows();
@@ -264,7 +269,13 @@ public class SeatingMethod {
 
         while (!blocks.isEmpty()) {
             ArrayList<Cell> cells1 = blocks.remove(0);
-            ArrayList<Cell> cells2 = blocks.remove(blocks.size() - 1);
+            // Try statement needed for odd number of blocks 
+            ArrayList<Cell> cells2 = new ArrayList<>();
+            try {
+                cells2 = blocks.remove(blocks.size() - 1);
+            } catch (IndexOutOfBoundsException e) {
+                // Ignore
+            }
 
             /* 
               Need the try catch statments because sometimes blocks can be
@@ -416,8 +427,11 @@ public class SeatingMethod {
     private ArrayList<ArrayList<Cell>> splitNormalSeatsIntoBlocks() {
         // Calculate how many blocks to split the plane into
         int numberOfRows = this.planeDimension.getNumberOfNormalRows();
-        if (numberOfRows < numberOfRowsPerBlock) {
-            numberOfRowsPerBlock = numberOfRows;
+        // Check the number of rows per block is a valid number
+        if (numberOfRows < this.numberOfRowsPerBlock) {
+            this.numberOfRowsPerBlock = numberOfRows;
+        } else if (this.numberOfRowsPerBlock > numberOfRows) {
+            this.numberOfRowsPerBlock = numberOfRows;
         }
         int numberOfBlocks = numberOfRows / numberOfRowsPerBlock;
         int remainder = numberOfRows % numberOfRowsPerBlock;

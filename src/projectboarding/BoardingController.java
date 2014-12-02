@@ -44,7 +44,7 @@ public class BoardingController {
         
         // Set the boolean value
         this.useCustom = (customMethod != null);
-        this.useCustom = false; /* REMOVE ME */
+        this.useCustom = false;                         /* REMOVE ME */ /***************************************/
         
         // Create the boarding handlers
         this.btfBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.BACK_TO_FRONT);
@@ -58,18 +58,6 @@ public class BoardingController {
             this.cBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), customMethod);
         }
         
-//        // Create the threads and add them to the thread container
-//        this.threads[0] = new Thread(this.btfBoardingHandler);
-//        this.threads[0].setName("Back to Front");
-//        this.threads[1] = new Thread(this.bBoardingHandler);
-//        this.threads[2] = new Thread(this.bsBoardingHandler);
-//        this.threads[3] = new Thread(this.oiBoardingHandler);
-//        this.threads[4] = new Thread(this.rBoardingHandler);
-//        this.threads[5] = new Thread(this.rpBoardingHandler);
-//        this.threads[6] = new Thread(this.rzBoardingHandler);
-//        if(useCustom){
-//             this.threads[7] = new Thread(this.cBoardingHandler);
-//        }
         this.resetBoardingHandlers();
         
         // Let the program know the threads have been created

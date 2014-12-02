@@ -256,10 +256,12 @@ public class SeatingMethod {
         int differentSplits = (int) (blocks.size() / 2.0) + 2;
         int numberOfNormalRows = this.planeDimension.getNumberOfNormalRows();
         int fortyPercent = (int) ((numberOfNormalRows / 100.0) * 40);
+        /* Catch required if the number of normal rows is equal to 1 */
         if (fortyPercent == 0) {
             fortyPercent = 1;
         }
         int twentyPercent = numberOfNormalRows - (fortyPercent * 2);
+        /* Catch required if the number of normal rows is equal to 1 */
         if (twentyPercent < 0) {
             twentyPercent = 0;
         }

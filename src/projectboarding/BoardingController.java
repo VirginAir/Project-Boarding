@@ -91,16 +91,16 @@ public class BoardingController {
         }
         
         // DELETE THIS 
-        for (int i = 0; i < this.threads.length; i++) {
-            if(!(i == 7 && !useCustom)){
-                System.out.println(threads[i].getState().toString());
-            }
-        }
+//        for (int i = 0; i < this.threads.length; i++) {
+//            if(!(i == 7 && !useCustom)){
+//                System.out.println(threads[i].getState().toString());
+//            }
+//        }
         
         // Start all of the the threads simultaniously
         for (int i = 0; i < this.threads.length; i++) {
             if(!(i == 7 && !useCustom)){
-                System.out.println(threads[i].isAlive());
+//                System.out.println(threads[i].isAlive());
                 if(!threads[i].isAlive()){
                     threads[i].start();
                 }

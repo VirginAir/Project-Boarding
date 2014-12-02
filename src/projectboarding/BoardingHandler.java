@@ -65,7 +65,7 @@ public class BoardingHandler implements Runnable, ActionListener {
         this.totalTicks = new AtomicInteger();
         this.timer = new Timer(50, this);
         
-        System.out.println(this.planeDimension);
+//        System.out.println(this.planeDimension);
     }
     
     public void setWithTimer(boolean withTimer) {
@@ -207,7 +207,7 @@ public class BoardingHandler implements Runnable, ActionListener {
                                 try{
                                     passenger.setSeatInterferenceTime(r.nextInt(15) + 5);
                                 } catch (Exception ex) {
-                                    System.out.println("Exception ");
+//                                    System.out.println("Exception ");
                                 }
                             }
                             seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(false);
@@ -216,7 +216,7 @@ public class BoardingHandler implements Runnable, ActionListener {
                         }
                         passenger.decreaseSeatInterferenceTime();
                         if (passenger.getSeatInterferenceTime() < 0){
-                            System.out.println("less than zero");
+//                            System.out.println("less than zero");
                         }
                         if (passenger.getSeatInterferenceTime() == 0) {
                             passenger.setHasTakenSeat(true);
@@ -247,18 +247,18 @@ public class BoardingHandler implements Runnable, ActionListener {
             if (this.timer.isRunning()) {
                 this.timer.stop();
             }
-            System.out.println(this.totalTicks);
+            //System.out.println(this.totalTicks);
             
             this.hasCompleted = true;
             //System.out.println(this.totalBoardingTime().multipliedBy(20).getSeconds()+"s (\"real time\")"); // calculated real time
             timeMin = (int) Math.floor(this.totalTicks.get()/60);
             timeSec = this.totalTicks.get()%60;
             
-            if(this.totalTicks.get()%60 == 0){
-               System.out.println("Time taken: " + timeMin + " minutes using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
-            }else{
-                System.out.println("Time taken: " + timeMin + " minutes and " + timeSec + " seconds using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
-            }
+//            if(this.totalTicks.get()%60 == 0){
+//               System.out.println("Time taken: " + timeMin + " minutes using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+//            }else{
+//                System.out.println("Time taken: " + timeMin + " minutes and " + timeSec + " seconds using " + this.seatingMethod.toString() + " seating method.");//calculated using one triggered action as a second time frame
+//            }
         }
     }
 

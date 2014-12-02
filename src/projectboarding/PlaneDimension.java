@@ -85,15 +85,19 @@ public class PlaneDimension {
     }
     
     public int getNumberOfAisles() {
-        int aisles = 0;
+        return this.getAisleColumnNumbers().size();
+    }
+    
+    public ArrayList<Integer> getAisleColumnNumbers() {
+        ArrayList<Integer> columnNumbers = new ArrayList<>(); 
         
         for (Cell cell: this.planeSeats[0]) {
             if (cell.getCellType() == CellType.AISLE) {
-                aisles++;
+                columnNumbers.add(cell.getCellColumn());
             }
         }
         
-        return aisles;
+        return columnNumbers;
     }
     
     public int getNumberOfPrioritySeats() {

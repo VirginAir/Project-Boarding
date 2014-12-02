@@ -156,7 +156,7 @@ public class SeatingMethod {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
         ArrayList<Cell> normalSeatsList = this.convertArrayToArrayList(normalSeats);
 
-        ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.createOutsideInOrderForBlock(normalSeatsList));
+        ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.splitBlockIntoColumns(normalSeatsList));
         ArrayList<Cell> outsideInOrder = this.randomiseOutsideInOrder(jointOrder);
 
         return this.createFinalOrder(outsideInOrder);
@@ -174,7 +174,7 @@ public class SeatingMethod {
         // Loop over the blocks, creating outside in order for each and adding to a final arrayList
         ArrayList<ArrayList<Cell>> orderedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block : blocks) {
-            ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.createOutsideInOrderForBlock(block));
+            ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.splitBlockIntoColumns(block));
             ArrayList<Cell> seats = this.randomiseOutsideInOrder(jointOrder);
             orderedBlocks.add(seats);
         }
@@ -216,7 +216,7 @@ public class SeatingMethod {
      */
     private ArrayList<Cell> calculateBySeatSeatingOrder() {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
-        ArrayList<ArrayList<Cell>> outsideInOrder = this.createOutsideInOrderForBlock(this.convertArrayToArrayList(normalSeats));
+        ArrayList<ArrayList<Cell>> outsideInOrder = this.splitBlockIntoColumns(this.convertArrayToArrayList(normalSeats));
 
         // Order each list of cells
         ArrayList<ArrayList<Cell>> orderedSeats = new ArrayList<>();
@@ -250,7 +250,7 @@ public class SeatingMethod {
      */
     private ArrayList<Cell> calculateReversePyramidSeatingOrder() {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
-        ArrayList<ArrayList<Cell>> blocks = this.createOutsideInOrderForBlock(this.convertArrayToArrayList(normalSeats));
+        ArrayList<ArrayList<Cell>> blocks = this.splitBlockIntoColumns(this.convertArrayToArrayList(normalSeats));
         
         // Get the number of splits rounded down
         int differentSplits = (int) (blocks.size() / 2.0) + 2;
@@ -482,12 +482,12 @@ public class SeatingMethod {
     }
 
     /**
-     * Creates an outside in order for the given block of cells.
+     * Splits a given block into columns.
      *
      * @param block an arrayList containing the block of cells.
      * @return an arrayList containing the ordered block of cells.
      */
-    private ArrayList<ArrayList<Cell>> createOutsideInOrderForBlock(ArrayList<Cell> block) {
+    private ArrayList<ArrayList<Cell>> splitBlockIntoColumns(ArrayList<Cell> block) {
         // Get the number of columns the plane holds
         int numberOfColumns = this.planeDimension.getNumberOfColumns();
 
@@ -499,13 +499,14 @@ public class SeatingMethod {
             ArrayList<Cell> list = new ArrayList<>();
             columnNormalSeats.add(list);
         }
-
+        
         // Place each of the cells into the correct list
         for (Cell cell : block) {
             int cellColumn = cell.getCellColumn();
             columnNormalSeats.get(cellColumn).add(cell);
         }
 
+        // Remove the empty rows (the aisles)
         ArrayList<ArrayList<Cell>> finalNormalSeats = new ArrayList<>();
         for (ArrayList<Cell> list : columnNormalSeats) {
             if (!list.isEmpty()) {
@@ -523,6 +524,9 @@ public class SeatingMethod {
      * @return an arrayList containing the joint seats.
      */
     private ArrayList<ArrayList<Cell>> joinOutsideSeatsTogether(ArrayList<ArrayList<Cell>> seats) {
+        
+        
+        
         // Create a container to hold the joint columns
         ArrayList<ArrayList<Cell>> jointColumnNormalSeats = new ArrayList<>();
 

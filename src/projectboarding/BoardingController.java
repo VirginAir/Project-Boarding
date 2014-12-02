@@ -2,8 +2,6 @@ package projectboarding;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import projectboarding.SeatingMethod.DefaultSeatingMethod;
 
 /**
@@ -60,17 +58,19 @@ public class BoardingController {
             this.cBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), customMethod);
         }
         
-        // Create the threads and add them to the thread container
-        this.threads[0] = new Thread(this.btfBoardingHandler);
-        this.threads[1] = new Thread(this.bBoardingHandler);
-        this.threads[2] = new Thread(this.bsBoardingHandler);
-        this.threads[3] = new Thread(this.oiBoardingHandler);
-        this.threads[4] = new Thread(this.rBoardingHandler);
-        this.threads[5] = new Thread(this.rpBoardingHandler);
-        this.threads[6] = new Thread(this.rzBoardingHandler);
-        if(useCustom){
-             this.threads[7] = new Thread(this.cBoardingHandler);
-        }
+//        // Create the threads and add them to the thread container
+//        this.threads[0] = new Thread(this.btfBoardingHandler);
+//        this.threads[0].setName("Back to Front");
+//        this.threads[1] = new Thread(this.bBoardingHandler);
+//        this.threads[2] = new Thread(this.bsBoardingHandler);
+//        this.threads[3] = new Thread(this.oiBoardingHandler);
+//        this.threads[4] = new Thread(this.rBoardingHandler);
+//        this.threads[5] = new Thread(this.rpBoardingHandler);
+//        this.threads[6] = new Thread(this.rzBoardingHandler);
+//        if(useCustom){
+//             this.threads[7] = new Thread(this.cBoardingHandler);
+//        }
+        this.resetBoardingHandlers();
         
         // Let the program know the threads have been created
         threadsCreated = true;
@@ -136,14 +136,22 @@ public class BoardingController {
         /* Recreate the threads. Has to be done because when 
            a thread teminated in Java you are unable to restart it */
         this.threads[0] = new Thread(this.btfBoardingHandler);
+        this.threads[0].setName("Back to Front");
         this.threads[1] = new Thread(this.bBoardingHandler);
+        this.threads[1].setName("Block boarding");
         this.threads[2] = new Thread(this.bsBoardingHandler);
+        this.threads[2].setName("By Seat");
         this.threads[3] = new Thread(this.oiBoardingHandler);
+        this.threads[3].setName("Outside In");
         this.threads[4] = new Thread(this.rBoardingHandler);
+        this.threads[4].setName("Random");
         this.threads[5] = new Thread(this.rpBoardingHandler);
+        this.threads[5].setName("Reverse Pyramid");
         this.threads[6] = new Thread(this.rzBoardingHandler);
+        this.threads[6].setName("Rotating Zone");
         if(useCustom){
             this.threads[7] = new Thread(this.cBoardingHandler);
+            this.threads[7].setName("Custom");
         }
         
         // Reset the timer boolean

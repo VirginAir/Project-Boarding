@@ -256,7 +256,13 @@ public class SeatingMethod {
         int differentSplits = (int) (blocks.size() / 2.0) + 2;
         int numberOfNormalRows = this.planeDimension.getNumberOfNormalRows();
         int fortyPercent = (int) ((numberOfNormalRows / 100.0) * 40);
+        if (fortyPercent == 0) {
+            fortyPercent = 1;
+        }
         int twentyPercent = numberOfNormalRows - (fortyPercent * 2);
+        if (twentyPercent < 0) {
+            twentyPercent = 0;
+        }
 
         ArrayList<ArrayList<Cell>> splitSeating = new ArrayList<>();
 

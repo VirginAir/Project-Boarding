@@ -524,9 +524,6 @@ public class SeatingMethod {
      * @return an arrayList containing the joint seats.
      */
     private ArrayList<ArrayList<Cell>> joinOutsideSeatsTogether(ArrayList<ArrayList<Cell>> seats) {
-        
-        
-        
         // Create a container to hold the joint columns
         ArrayList<ArrayList<Cell>> jointColumnNormalSeats = new ArrayList<>();
 

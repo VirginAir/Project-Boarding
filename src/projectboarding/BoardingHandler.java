@@ -218,7 +218,7 @@ public class BoardingHandler implements Runnable, ActionListener {
                         if (passenger.getSeatInterferenceTime() < 0){
 //                            System.out.println("less than zero");
                         }
-                        if (passenger.getSeatInterferenceTime() == 0) {
+                        if (passenger.getSeatInterferenceTime() <= 0) {
                             passenger.setHasTakenSeat(true);
                         }
                     }

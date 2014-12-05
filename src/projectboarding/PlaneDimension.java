@@ -80,6 +80,16 @@ public class PlaneDimension {
     
     public native int totalNumberOfRows();
     
+    public ArrayList<Integer> getNormalRowNumbers() {
+        ArrayList<Integer> rowNumbers = new ArrayList<>();
+        
+        for (Cell[] cellRow: this.normalSeats) {
+            rowNumbers.add(cellRow[0].getCellRow());
+        }
+        
+        return rowNumbers;
+    }
+    
     public int getNumberOfColumns() {
         return this.planeSeats[0].length;
     }

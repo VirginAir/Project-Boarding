@@ -243,12 +243,84 @@ public class SeatingMethod {
 
         return this.createFinalOrder(finalOrder);
     }
+    
+    private ArrayList<Cell> calculateReversePyramidSeatingOrder() {
+        // Split the entire plane into columns
+        Cell[][] normalSeats = this.planeDimension.getNormalSeats();
+        ArrayList<ArrayList<Cell>> blocks = this.splitBlockIntoColumns(this.convertArrayToArrayList(normalSeats));
+        
+        // Get the first (50%), second (30%) and third (20%) amount of seats to get
+        int numberOfRows = this.planeDimension.getNumberOfNormalRows();
+        int firstPercent = (int) Math.round((numberOfRows / 100.0) * 50.0);
+        int secondPercent = (int) Math.round((numberOfRows / 100.0) * 30.0);
+        int thirdPercent = numberOfRows - firstPercent - secondPercent;
+        
+        int thirdEndingPoint = thirdPercent;
+        int secondEndingPoint = thirdPercent + secondPercent;
+                
+        /* Calculate the number of splits the reverse pyramid will
+        create and create the spits */
+        int numberOfSplits = (int) Math.ceil((blocks.size() / 2.0) + 2);
+        ArrayList<ArrayList<Cell>> splits = new ArrayList<>();
+        
+        for (int x = 0; x < numberOfSplits; x++) {
+            splits.add(new ArrayList<Cell>());
+        }
+        
+        // Add the seats into the splits
+        ArrayList<Integer> rowNumbers = this.planeDimension.getNormalRowNumbers();
+        int splitHelper = 0;
+        boolean isEven = (blocks.size() % 2 == 0);
+        int middle = blocks.size() / 2;
+        
+//        System.out.println(String.format("middle:%d, le:%d, ev:%d", middle, blocks.size(), (isEven ? 1 : 0)));
+        
+        for (int i = 0; i < blocks.size(); i++) {
+            
+//            System.out.println(String.format("j:%d, sh:%d", i, splitHelper));
+            
+            ArrayList<Cell> block = blocks.get(i);
+            
+            for (int j = 0; j < rowNumbers.size(); j++) {
+                Integer rowNumber = rowNumbers.get(j);
+                Cell cell = block.get(0);
+                
+                if (cell.getCellRow() == rowNumber) {
+                    if (j < thirdEndingPoint) {                             // Third percent area
+                        splits.get(splitHelper + 2).add(block.remove(0));
+                    } else if (j < secondEndingPoint) {                     // Second percent area
+                        splits.get(splitHelper + 1).add(block.remove(0));
+                    } else {                                                // First percent area
+                        splits.get(splitHelper + 0).add(block.remove(0));
+                    }
+                }
+                
+                if (block.isEmpty()) {
+                    break;
+                }
+            }
+            
+            if ((!isEven && (i < middle)) || (isEven && (i < middle - 1))) {
+                splitHelper++;
+            } else if (i >= middle) {
+                splitHelper--;
+            }
+        }
+
+        ArrayList<Cell> seatingOrder = new ArrayList<>();
+
+        for (ArrayList<Cell> list : splits) {
+            seatingOrder.addAll(this.createRandomSeatingOrderFromSeats(list));
+        }
+        
+        return this.createFinalOrder(seatingOrder);
+    }
 
     /**
      *
      * @return
      */
-    private ArrayList<Cell> calculateReversePyramidSeatingOrder() {
+    private ArrayList<Cell> calculateReversePyramidSeatingOrder1() {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
         ArrayList<ArrayList<Cell>> blocks = this.splitBlockIntoColumns(this.convertArrayToArrayList(normalSeats));
         

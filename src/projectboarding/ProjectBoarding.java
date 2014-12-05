@@ -80,6 +80,8 @@ public class ProjectBoarding {
         capabilities.setDoubleBuffered(true);
         capabilities.setHardwareAccelerated(true);
         
+        // delete this!
+        new HelpFrame();
         
         GLCanvas canvas = new GLCanvas(capabilities);
         FPSAnimator animator = new FPSAnimator(canvas, FPS);

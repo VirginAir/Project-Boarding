@@ -292,25 +292,56 @@ public class BoardingHandler implements Runnable, ActionListener {
             this.finishedBoarding();
         }
     }
-
-    public int closestAisle(Cell c) {
-        ArrayList<Integer> aisleList = new ArrayList<>();
-        int smallestDifference = 10;
-        int closestAisle = 0;
-        for (int i = 0; i < seatVisualisation[0].length; i++) {
-            if (seatVisualisation[0][i].getCellType().equals(Cell.CellType.AISLE)) {
-                aisleList.add(i);
+    
+    public int closestAisle(Cell seat) {
+        ArrayList<Integer> aisleList = this.planeDimension.getAisleColumnNumbers();
+        int seatColumn = seat.getSeatColumn();
+        
+        // Find the two closes aisles on either side of seat (if possible)
+        ArrayList<Integer> closestAisles = new ArrayList<>();
+        
+        for (int x = 0; x < 2; x++) { // 0: Up, 1: Down
+            Integer aisleNumber = null;
+            
+            for (Integer aisle: aisleList) {
+                if (x == 0) { // Up
+                     if (aisle > seatColumn && (aisleNumber == null || aisle < aisleNumber)) {
+                         aisleNumber = aisle;
+                     }
+                } else if (x == 1) { // Down
+                    if (aisle < seatColumn && (aisleNumber == null || aisle > aisleNumber)) {
+                        aisleNumber = aisle;
+                    }
+                }
+            }
+            
+            if (aisleNumber != null) {
+                closestAisles.add(aisleNumber);
             }
         }
-
-        for (Integer aisle : aisleList) {
-            if (Math.abs(c.getCellColumn() - aisle) <= smallestDifference) {
-                smallestDifference = Math.abs(c.getCellColumn() - aisle);
-                closestAisle = aisle;
-            }
+        
+        // If there is one result return that
+        if (closestAisles.size() == 1) {
+            return closestAisles.get(0);
         }
-
-        return closestAisle;
+        
+        /* There are two results. If one is smaller return that
+        else if they are the same distance randomise the returned value
+        */
+        int aisleZeroDifference = Math.abs(seat.getCellColumn() - closestAisles.get(0));
+        int aisleOneDifference = Math.abs(seat.getCellColumn() - closestAisles.get(1));
+        
+        if (aisleZeroDifference < aisleOneDifference) {
+            return closestAisles.get(0);
+        } else if (aisleZeroDifference > aisleOneDifference) {
+            return closestAisles.get(1);
+        } else {
+            // Randomise between zero and one
+            Random random = new Random();
+            int zeroOrOne = random.nextInt(2);
+            
+            return closestAisles.get(zeroOrOne);
+        }
     }
 
     public Cell[][] getSeatVisualisation() {

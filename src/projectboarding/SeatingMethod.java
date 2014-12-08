@@ -340,7 +340,9 @@ public class SeatingMethod {
         // Place all of the seats into the container
         for (int x = 0; x < this.customMethod.length; x++) {
             for (int y = 0; y < this.customMethod[x].length; y++) {
-                container.get(this.customMethod[x][y]).add(normalSeats[x][y]);
+                if (this.customMethod[x][y] != -1) {
+                    container.get(this.customMethod[x][y]).add(normalSeats[x][y]);
+                }
             }
         }
 

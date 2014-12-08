@@ -1,0 +1,7 @@
+MAC:
+
+gcc -o libNAME_OF_FILE.dylib -shared -I"/Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home//include/" -I"/Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home//include/darwin" NAME_OF_FILE.c -lc
+
+WINDOWS:
+
+gcc -Wl,--add-stdcall-alias -I"%JAVA_HOME%\include" -I"%JAVA_HOME%\include\win32" -shared -o NAME_OF_FILE.dll NAME_OF_FILE.c

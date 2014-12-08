@@ -244,6 +244,11 @@ public class SeatingMethod {
         return this.createFinalOrder(finalOrder);
     }
     
+    /**
+     * Create the seating order for the reverse pyramid seating method.
+     * 
+     * @return an arrayList containing the seating order.
+     */
     private ArrayList<Cell> calculateReversePyramidSeatingOrder() {
         // Split the entire plane into columns
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
@@ -272,25 +277,21 @@ public class SeatingMethod {
         int splitHelper = 0;
         boolean isEven = (blocks.size() % 2 == 0);
         int middle = blocks.size() / 2;
-        
-//        System.out.println(String.format("middle:%d, le:%d, ev:%d", middle, blocks.size(), (isEven ? 1 : 0)));
-        
+
         for (int i = 0; i < blocks.size(); i++) {
-            
-//            System.out.println(String.format("j:%d, sh:%d", i, splitHelper));
-            
             ArrayList<Cell> block = blocks.get(i);
             
+            // Loop over all of the row numbers
             for (int j = 0; j < rowNumbers.size(); j++) {
                 Integer rowNumber = rowNumbers.get(j);
                 Cell cell = block.get(0);
                 
                 if (cell.getCellRow() == rowNumber) {
-                    if (j < thirdEndingPoint) {                             // Third percent area
+                    if (j < thirdEndingPoint) {          
                         splits.get(splitHelper + 2).add(block.remove(0));
-                    } else if (j < secondEndingPoint) {                     // Second percent area
+                    } else if (j < secondEndingPoint) {            
                         splits.get(splitHelper + 1).add(block.remove(0));
-                    } else {                                                // First percent area
+                    } else {                         
                         splits.get(splitHelper + 0).add(block.remove(0));
                     }
                 }
@@ -313,103 +314,6 @@ public class SeatingMethod {
             seatingOrder.addAll(this.createRandomSeatingOrderFromSeats(list));
         }
         
-        return this.createFinalOrder(seatingOrder);
-    }
-
-    /**
-     *
-     * @return
-     */
-    private ArrayList<Cell> calculateReversePyramidSeatingOrder1() {
-        Cell[][] normalSeats = this.planeDimension.getNormalSeats();
-        ArrayList<ArrayList<Cell>> blocks = this.splitBlockIntoColumns(this.convertArrayToArrayList(normalSeats));
-        
-        // Get the number of splits rounded down
-        int differentSplits = (int) (blocks.size() / 2.0) + 2;
-        int numberOfNormalRows = this.planeDimension.getNumberOfNormalRows();
-        int fortyPercent = (int) ((numberOfNormalRows / 100.0) * 40);
-        /* Catch required if the number of normal rows is equal to 1 */
-        if (fortyPercent == 0) {
-            fortyPercent = 1;
-        }
-        int twentyPercent = numberOfNormalRows - (fortyPercent * 2);
-        /* Catch required if the number of normal rows is equal to 1 */
-        if (twentyPercent < 0) {
-            twentyPercent = 0;
-        }
-
-        ArrayList<ArrayList<Cell>> splitSeating = new ArrayList<>();
-
-        for (int x = 0; x < differentSplits; x++) {
-            ArrayList<Cell> split = new ArrayList<>();
-            splitSeating.add(split);
-        }
-
-        int x = 0;
-
-        while (!blocks.isEmpty()) {
-            ArrayList<Cell> cells1 = blocks.remove(0);
-            // Try statement needed for odd number of blocks 
-            ArrayList<Cell> cells2 = new ArrayList<>();
-            try {
-                cells2 = blocks.remove(blocks.size() - 1);
-            } catch (IndexOutOfBoundsException e) {
-                // Ignore
-            }
-
-            /* 
-              Need the try catch statments because sometimes blocks can be
-              different sizes due to unbalanced plane dimensions
-            */
-            
-            for (int t = 0; t < twentyPercent; t++) {
-                try {
-                    splitSeating.get(x + 2).add(cells1.remove(0));
-                } catch (IndexOutOfBoundsException e) {
-                    // Ignore    
-                }
-                try {
-                    splitSeating.get(x + 2).add(cells2.remove(0));
-                } catch (IndexOutOfBoundsException e) {
-                    // Ignore    
-                }
-            }
-
-            for (int f = 0; f < fortyPercent; f++) {
-                try {
-                    splitSeating.get(x + 1).add(cells1.remove(0));
-                } catch (IndexOutOfBoundsException e) {
-                    // Ignore    
-                }
-                try {
-                    splitSeating.get(x + 1).add(cells2.remove(0));
-                } catch (IndexOutOfBoundsException e) {
-                    // Ignore    
-                }
-            }
-
-            for (int f = 0; f < fortyPercent; f++) {
-                try {
-                    splitSeating.get(x).add(cells1.remove(0));
-                } catch (IndexOutOfBoundsException e) {
-                    // Ignore    
-                }
-                try {
-                    splitSeating.get(x).add(cells2.remove(0));
-                } catch (IndexOutOfBoundsException e) {
-                    // Ignore    
-                }
-            }
-
-            x++;
-        }
-
-        ArrayList<Cell> seatingOrder = new ArrayList<>();
-
-        for (ArrayList<Cell> list : splitSeating) {
-            seatingOrder.addAll(this.createRandomSeatingOrderFromSeats(list));
-        }
-
         return this.createFinalOrder(seatingOrder);
     }
 

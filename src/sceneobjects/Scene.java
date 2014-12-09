@@ -26,19 +26,25 @@ public class Scene {
     private int rowCount;
     private int columnCount;
     
+    /**
+     * Create the scene
+     */
     public Scene(){
         chairList = new ArrayList<Chair>();
         passengerList = new ArrayList<PassengerObject>();
     }
+    
+    /**
+     * Create the scene
+     * @param screenHeight the height
+     * @param screenWidth the width
+     * @param drawable the drawable
+     * @param cells the cells
+     * @param passengers the passengers
+     */
     public void createScene(int screenHeight, int screenWidth, GLAutoDrawable drawable, Cell[][] cells, ArrayList<Passenger> passengers) throws IOException{
-        
-        
         rowCount = cells.length;
         columnCount = cells[0].length;
-        
-//        float screenRatio = (float)screenWidth/(float)screenHeight;
-//        float seatRatio = (float)rowCount/(float)columnCount;
-        
         
         float chairWidthBoundarySize = 2.f/(float)rowCount;
         float chairHeightBoundarySize = 1.2f/(float)columnCount;
@@ -53,10 +59,7 @@ public class Scene {
         paddingWidth = actualPaddingHeight/screenWidth;
             
         chairWidthSize = chairWidthBoundarySize-paddingWidth;
-        
-        
-        
-        
+
         if((chairWidthBoundarySize*rowCount) > 2.f){
             chairWidthBoundarySize = 2.f/(float)rowCount;
             paddingWidth = chairWidthBoundarySize*0.05f;
@@ -74,8 +77,6 @@ public class Scene {
         
         float vDistance = chairHeightBoundarySize*columnCount;
         float vAdjust = vDistance/2-1;
-        
-        
         
         float[] posData = 
         {
@@ -133,14 +134,29 @@ public class Scene {
         
     }
 
+    /**
+     * The hull id
+     * @return the hull id
+     */
     public int getHullID() {
         return hullID;
     }
 
+    /**
+     * Set the hull id
+     * @param hullID the hull id
+     */
     public void setHullID(int hullID) {
         this.hullID = hullID;
     }
     
+    /**
+     * Create the hull
+     * @param distance the distance
+     * @param vAdjust the adjust
+     * @param padding the padding
+     * @param gl the gl
+     */
     private void createHull(float distance, float vAdjust, float padding, GL3 gl){
         float[] posData = 
         {
@@ -169,6 +185,10 @@ public class Scene {
         hullTexture = textureList.get(3);
     }
     
+    /**
+     * Update the passengers
+     * @param passengers the passengers
+     */
     public void updatePassengers(ArrayList<Passenger> passengers){
         for(int i = 0; i < passengers.size(); i++){
             if(i >= this.passengerList.size()){
@@ -183,22 +203,41 @@ public class Scene {
         }
     }
 
+    /**
+     * Get the passenger list
+     * @return the passenger list
+     */
     public ArrayList<PassengerObject> getPassengerList() {
         return passengerList;
     }
 
+    /**
+     * Set the passenger list
+     * @param passengerList the passenger list
+     */
     public void setPassengerList(ArrayList<PassengerObject> passengerList) {
         this.passengerList = passengerList;
     }
     
+    /**
+     * Reset the passenger list
+     */
     public void resetPassengerList(){
         this.passengerList.clear();
     }
 
+    /**
+     * Get the chair list
+     * @return the chair list
+     */
     public ArrayList<Chair> getChairList() {
         return chairList;
     }
 
+    /**
+     * Set the chair list
+     * @param chairList the chair list
+     */
     public void setChairList(ArrayList<Chair> chairList) {
         this.chairList = chairList;
     }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package glhandler;
 
 import com.jogamp.common.nio.Buffers;
@@ -14,7 +10,16 @@ import javax.media.opengl.GL3;
  */
 public class GLBufferHandler {
     
-    public static void setupBuffers(int[] objectVaoHandle, float[] positionData,  float[] uvData, final int vertexPositionIndex, final int uvPositionIndex, GL3 gl){
+    /**
+     * Setup the buffers
+     * @param objectVaoHandle
+     * @param positionData
+     * @param colourData
+     * @param vertexPositionIndex
+     * @param colourPositionIndex
+     * @param gl 
+     */
+    public static void setupBuffers(int[] objectVaoHandle, float[] positionData, float[] uvData, final int vertexPositionIndex, final int uvPositionIndex, GL3 gl){
         int vboHandles[] = new int[3];
         gl.glGenBuffers(3, vboHandles, 0);
         

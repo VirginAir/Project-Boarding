@@ -45,7 +45,7 @@ public class SeatingMethod {
     private final ArrayList<Cell> randomisedPrioritySeats;
     private int[][] customMethod;
     
-    /* The number of rows per block, user definabl */
+    /* The number of rows per block, user definable */
     int numberOfRowsPerBlock = 5;
 
     /**
@@ -318,6 +318,11 @@ public class SeatingMethod {
         return this.createFinalOrder(seatingOrder);
     }
 
+    /**
+     * Create the seating order for the custom method.
+     * 
+     * @return an arrayList containing the seating order.
+     */
     private ArrayList<Cell> calculateCustomSeatingOrder() {
         // Find the maximum number from the given order
         int maximumNumber = 0;
@@ -357,7 +362,7 @@ public class SeatingMethod {
     }
 
     /**
-     * Load the .dll/.dylib/.o library
+     * Load the dynamic libraries
      */
     static {
         System.loadLibrary("SeatingMethodLibrary");
@@ -553,10 +558,18 @@ public class SeatingMethod {
         return jointBlocks;
     }
     
+    /**
+     * Get the number of rows per block.
+     * @return an int containing the number of rows per block.
+     */
     public int getNumberOfRowsPerBlock() {
         return this.numberOfRowsPerBlock;
     }
     
+    /**
+     * Set the number of rows per block.
+     * @param numberOfRowsPerBlock an int containing the number of rows per block.
+     */
     public void setNumberOfRowsPerBlock(int numberOfRowsPerBlock) {
         this.numberOfRowsPerBlock = numberOfRowsPerBlock;
     }

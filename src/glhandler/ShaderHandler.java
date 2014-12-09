@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package glhandler;
 
 import javax.media.opengl.GL3;
@@ -11,6 +7,14 @@ import javax.media.opengl.GL3;
  * @author Ben Cook
  */
 public class ShaderHandler {
+    
+    /**
+     * Create the shader handler
+     * @param path
+     * @param type
+     * @param gl
+     * @return 
+     */
     public static int createShader(String path, int type, GL3 gl){
         
         int shader = gl.glCreateShader(type);
@@ -45,6 +49,12 @@ public class ShaderHandler {
         return shader;
     }
     
+    /**
+     * Create the program
+     * @param shaderList
+     * @param gl
+     * @return 
+     */
     public static int createProgram(int shaderList[], GL3 gl){
         int programHandle = gl.glCreateProgram();
         
@@ -60,6 +70,11 @@ public class ShaderHandler {
         return programHandle;
     }
     
+    /**
+     * Link the program
+     * @param programHandle
+     * @param gl 
+     */
     public static void linkProgram(int programHandle, GL3 gl){
         gl.glLinkProgram(programHandle);
         

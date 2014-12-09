@@ -14,6 +14,10 @@ public class DimButton {
     private JButton button;
     private boolean isAisle;
     
+    /**
+     * Create the dim button
+     * @param extButton the button
+     */
     public DimButton(JButton extButton){
         this.isAisle = false;
         this.button = extButton;
@@ -43,6 +47,9 @@ public class DimButton {
         });
     }
 
+    /**
+     * Set the dim button to an aisle or unset from aisle
+     */
     public void makeAisle(){
         if(isAisle){
             isAisle = false;
@@ -57,18 +64,34 @@ public class DimButton {
         }
     }
     
+    /**
+     * Get the seat type
+     * @return the seat type
+     */
     public int getSeatType() {
         return seatType;
     }
 
+    /**
+     * Set the seat type
+     * @param seatType the seat type
+     */
     public void setSeatType(int seatType) {
         this.seatType = seatType;
     }
 
+    /**
+     * Get the button
+     * @return the button
+     */
     public JButton getButton() {
         return button;
     }
 
+    /**
+     * Set the button
+     * @param button the button
+     */
     public void setButton(JButton button) {
         this.button = button;
     }

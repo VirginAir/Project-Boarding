@@ -13,7 +13,6 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import projectboarding.Cell.CellType;
 import projectboarding.SeatingMethod.DefaultSeatingMethod;
 
 /**
@@ -31,7 +30,9 @@ public class ProjectBoarding {
     }
     
     /**
+     * The main method, creates and runs the wizard
      * @param args the command line arguments
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws InterruptedException, IOException {
         

@@ -15,6 +15,10 @@ public class AisleButton {
     private JButton button;
     private ArrayList<DimButton> column;
     
+    /**
+     * Create a new aisle button
+     * @param extButton the aisle button
+     */
     public AisleButton(JButton extButton){
         this.column = new ArrayList<>();
         this.button = extButton;
@@ -32,25 +36,43 @@ public class AisleButton {
         });
     }
 
+    /**
+     * Get the seat type
+     * @return the seat type
+     */
     public int getSeatType() {
         return seatType;
     }
 
+    /**
+     * Set the seat type
+     * @param seatType the seat type
+     */
     public void setSeatType(int seatType) {
         this.seatType = seatType;
     }
 
+    /**
+     * Get the button
+     * @return the aisle button
+     */
     public JButton getButton() {
         return button;
     }
 
+    /**
+     * Set the button
+     * @param button the new aisle button
+     */
     public void setButton(JButton button) {
         this.button = button;
     }
     
+    /**
+     * Add a button to the column of buttons
+     * @param db the new button
+     */
     public void addButton(DimButton db){
         column.add(db);
     }
-    
-    
 }

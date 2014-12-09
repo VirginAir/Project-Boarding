@@ -31,10 +31,16 @@ public class HelpFrame extends JFrame {
     private JPanel customSeatingMethod;
     private JPanel resultsScreen;
     
+    /**
+     * Initalize the help frame
+     */
     public HelpFrame() {
         initHelpFrame();
     }
     
+    /**
+     * Initalize the help frame
+     */
     private void initHelpFrame() {    
         // Initialize the frame
         this.setTitle("Help");

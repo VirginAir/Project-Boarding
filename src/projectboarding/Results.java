@@ -12,10 +12,20 @@ public class Results {
     ArrayList<SinResult> results = new ArrayList<>();
     int iters = 1;
 
+    /**
+     * Add a method to the results
+     * @param name the method name
+     * @param mins the minutes
+     * @param secs the seconds
+     * @param totalSecs the total seconds
+     */
     public void addMethod(String name, int mins, int secs, int totalSecs){
         results.add(new SinResult(name, mins, secs, totalSecs));
     }
     
+    /**
+     * Sort the results in ascending order
+     */
     public void sort(){
         Collections.sort(results, new Comparator<SinResult>() {
             public int compare(SinResult c1, SinResult c2) {
@@ -25,22 +35,42 @@ public class Results {
             }});
     }
     
+    /**
+     * Get the results
+     * @return the results
+     */
     public ArrayList<SinResult> getResults() {
         return results;
     }
 
+    /**
+     * Set the results
+     * @param results the results
+     */
     public void setResults(ArrayList<SinResult> results) {
         this.results = results;
     }
 
+    /**
+     * Get the number of iterations
+     * @return the number of iterations
+     */
     public int getIters() {
         return iters;
     }
 
+    /**
+     * Set the number of iterations
+     * @param iters the number of iterations
+     */
     public void setIters(int iters) {
         this.iters = iters;
     }
     
+    /**
+     * Create the results as a string
+     * @return a string containing the results
+     */
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
@@ -55,6 +85,11 @@ public class Results {
         return sb.toString();
     }
     
+    /**
+     * Average the results for a given set of results
+     * @param res the results to average
+     * @return a result object containing the results
+     */
     public static Results averageResults(ArrayList<Results> res){
         Results outResults = res.get(0);
         

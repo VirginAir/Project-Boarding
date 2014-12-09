@@ -1,4 +1,3 @@
-
 package projectboarding;
 
 import glhandler.ShaderHandler;
@@ -7,9 +6,6 @@ import java.io.IOException;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-
-//import glhandler.GLBufferHandler;
-//import glshapes.Square;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,14 +19,8 @@ import sceneobjects.Scene;
  */
 public class GLRender implements GLEventListener{
     
-    //private int[] triangleVaoHandle = new int[1];
-    //private int[][] squareVaoHandle = new int[50][1];
-    //private int[][] squareTakenVaoHandle = new int[49][1];
     private Cell[][] cells;
-    //private int numRows;
-    //private int cellsInRow;
     private ArrayList<Passenger> passengers;
-    //private int pCount;
     private int programHandle;
     private GLTexture tex;
     //private boolean test = false;
@@ -38,7 +28,18 @@ public class GLRender implements GLEventListener{
     private Scene scene;
 
     /**
-     * Get array of cells
+     * Create the renderer
+     * @param cells the cells to render
+     * @param passengers the passengers to render
+     */
+    public GLRender(Cell[][] cells, ArrayList<Passenger> passengers){
+        this.cells = cells;
+        this.passengers = passengers;
+        this.scene = new Scene();
+    }
+    
+    /** 
+     * Get the cells
      * @return the cells
      */
     public Cell[][] getCells() {
@@ -46,39 +47,34 @@ public class GLRender implements GLEventListener{
     }
 
     /**
-     * Set array of cells
-     * @param cells the new cells to replace with
+     * Set the cells
+     * @param cells the cells
      */
     public void setCells(Cell[][] cells) {
         this.cells = cells;
     }
 
     /**
-     * Get list of passengers
-     * @return the list of passengers
+     * Get the passengers
+     * @return the passengers
      */
     public ArrayList<Passenger> getPassengers() {
         return passengers;
     }
 
-     /**
-     * Set list of passengers
-     * @param passengers the new passenger list to replace with
+    /**
+     * Set the passengers 
+     * @param passengers the passengers
      */
     public void setPassengers(ArrayList<Passenger> passengers) {
         this.passengers = passengers;
         scene.resetPassengerList();
     }
-    
-    public GLRender(Cell[][] cells, ArrayList<Passenger> passengers){
-        this.cells = cells;
-        //this.numRows = this.cells.length;
-        //this.cellsInRow = this.cells[0].length;
-        this.passengers = passengers;
-        //this.pCount = passengers.size();
-        this.scene = new Scene();
-    }
 
+    /**
+     * Initalize the render screen
+     * @param drawable 
+     */
     @Override
     public void init(GLAutoDrawable drawable) {
         final GL3 gl = drawable.getGL().getGL3();
@@ -106,11 +102,19 @@ public class GLRender implements GLEventListener{
         gl.glUseProgram(programHandle);
     }
 
+    /**
+     * Dispose of the render
+     * @param drawable 
+     */
     @Override
     public void dispose(GLAutoDrawable drawable) {
         final GL3 gl = drawable.getGL().getGL3();
     }
 
+    /**
+     * Display the render
+     * @param drawable 
+     */
     @Override
     public void display(GLAutoDrawable drawable) {
         final GL3 gl = drawable.getGL().getGL3();
@@ -161,6 +165,14 @@ public class GLRender implements GLEventListener{
         
     }
 
+    /**
+     * Reshape the render
+     * @param drawable
+     * @param x
+     * @param y
+     * @param width
+     * @param height 
+     */
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         final GL3 gl = drawable.getGL().getGL3();

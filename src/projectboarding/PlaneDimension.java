@@ -23,10 +23,29 @@ public class PlaneDimension {
         this.normalSeats = this.getSeats(false);
     }
     
+<<<<<<< HEAD
     public PlaneDimension(PlaneDimension pd){
         this.planeSeats = pd.getAllSeats().clone();
         this.normalSeats = pd.getNormalSeats().clone();
         this.prioritySeats = pd.getPrioritySeats().clone();
+=======
+    public PlaneDimension(PlaneDimension pd) {
+        
+        int row = pd.getAllSeats().length;
+        int column = pd.getAllSeats()[0].length;
+        
+        planeSeats = new Cell[row][column];
+        
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < column; j++){
+                this.planeSeats[i][j] = pd.getAllSeats()[i][j].clone();
+            }
+        }
+        
+        this.prioritySeats = this.getSeats(true);
+        this.normalSeats = this.getSeats(false);
+        
+>>>>>>> origin/master
     }
     
     public native Cell[][] getAllSeats();
@@ -68,20 +87,34 @@ public class PlaneDimension {
     
     public native int totalNumberOfRows();
     
+    public ArrayList<Integer> getNormalRowNumbers() {
+        ArrayList<Integer> rowNumbers = new ArrayList<>();
+        
+        for (Cell[] cellRow: this.normalSeats) {
+            rowNumbers.add(cellRow[0].getCellRow());
+        }
+        
+        return rowNumbers;
+    }
+    
     public int getNumberOfColumns() {
         return this.planeSeats[0].length;
     }
     
     public int getNumberOfAisles() {
-        int aisles = 0;
+        return this.getAisleColumnNumbers().size();
+    }
+    
+    public ArrayList<Integer> getAisleColumnNumbers() {
+        ArrayList<Integer> columnNumbers = new ArrayList<>(); 
         
         for (Cell cell: this.planeSeats[0]) {
             if (cell.getCellType() == CellType.AISLE) {
-                aisles++;
+                columnNumbers.add(cell.getCellColumn());
             }
         }
         
-        return aisles;
+        return columnNumbers;
     }
     
     public int getNumberOfPrioritySeats() {

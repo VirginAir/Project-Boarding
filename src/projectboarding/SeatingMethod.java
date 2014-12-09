@@ -7,8 +7,10 @@ import java.util.Comparator;
 import java.util.Random;
 
 /**
- *
- * @author Matthew
+ * SeatingMethod creates a seating order for a given
+ * seating pattern for a given plane dimension.
+ * 
+ * @author Matthew Kempson
  */
 public class SeatingMethod {
 
@@ -16,15 +18,15 @@ public class SeatingMethod {
      * A pre-defined seating method.
      */
     public enum DefaultSeatingMethod {
-
         BACK_TO_FRONT("Back To Front"), 
         BLOCK_BOARDING("Block Boarding"), 
         BY_SEAT("By Seat"), 
         OUTSIDE_IN("Outside In"), 
         RANDOM("Random"), 
-        REVERSE_PYRAMID("Reverse Pyramid"), 
+        REVERSE_PYRAMID("Rev. Pyramid"), 
         ROTATING_ZONE("Rotating Zone"), 
-        CUSTOM("Custom");
+        CUSTOM("Custom"),
+        NONE("NA");
         
         private final String text;
         
@@ -38,10 +40,13 @@ public class SeatingMethod {
         }
     }
 
+    /* Global variables  */
     private final PlaneDimension planeDimension;
     private final ArrayList<Cell> randomisedPrioritySeats;
-    private DefaultSeatingMethod defaultMethod;
     private int[][] customMethod;
+    
+    /* The number of rows per block, user definabl */
+    int numberOfRowsPerBlock = 5;
 
     /**
      * Initialize the seating method class with a default method.
@@ -62,9 +67,11 @@ public class SeatingMethod {
      * @return an arrayList containing the seating order.
      */
     public ArrayList<Cell> getDefaultSeatingOrder(DefaultSeatingMethod seatingMethod) {
-
-        defaultMethod = seatingMethod;
-
+        
+        if (this.planeDimension.getNormalSeats().length == 0) {
+            return this.randomisedPrioritySeats;
+        }
+        
         switch (seatingMethod) {
             case BACK_TO_FRONT:
                 return this.calculateBackToFrontSeatingOrder();
@@ -85,21 +92,16 @@ public class SeatingMethod {
         }
     }
 
-    public ArrayList<Cell> getCustomSeatingOrder(int[][] customSeatingMethod) {
-        defaultMethod = DefaultSeatingMethod.CUSTOM;
-        this.customMethod = customSeatingMethod;
-
-        return this.calculateCustomSeatingOrder();
-    }
-
     /**
      * Get the seating order for a user created seating method.
      *
-     * @param userSeatingMethod the order for the seats to be taken.
+     * @param customSeatingMethod the order for the seats to be taken.
      * @return an arrayList containing the seating order.
      */
-    public ArrayList<Cell> getSeatingOrder(Cell[][] userSeatingMethod) {
-        return null;
+    public ArrayList<Cell> getCustomSeatingOrder(int[][] customSeatingMethod) {
+        this.customMethod = customSeatingMethod;
+
+        return this.calculateCustomSeatingOrder();
     }
 
     /**
@@ -133,8 +135,10 @@ public class SeatingMethod {
      * @return an arrayList containing the seating order.
      */
     private ArrayList<Cell> calculateBackToFrontSeatingOrder() {
+        // Get the normal seats as blocks
         ArrayList<ArrayList<Cell>> blocks = this.splitNormalSeatsIntoBlocks();
 
+        // Loop over the blocks, randomise them and add to a final arrayList
         ArrayList<ArrayList<Cell>> randomisedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block : blocks) {
             randomisedBlocks.add(this.createRandomSeatingOrderFromSeats(block));
@@ -153,7 +157,7 @@ public class SeatingMethod {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
         ArrayList<Cell> normalSeatsList = this.convertArrayToArrayList(normalSeats);
 
-        ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.createOutsideInOrderForBlock(normalSeatsList));
+        ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.splitBlockIntoColumns(normalSeatsList));
         ArrayList<Cell> outsideInOrder = this.randomiseOutsideInOrder(jointOrder);
 
         return this.createFinalOrder(outsideInOrder);
@@ -165,11 +169,13 @@ public class SeatingMethod {
      * @return an arrayList containing the seating order.
      */
     private ArrayList<Cell> calculateBlockBoardingSeatingOrder() {
+        // Get the normal seats as blocks
         ArrayList<ArrayList<Cell>> blocks = this.splitNormalSeatsIntoBlocks();
 
+        // Loop over the blocks, creating outside in order for each and adding to a final arrayList
         ArrayList<ArrayList<Cell>> orderedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block : blocks) {
-            ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.createOutsideInOrderForBlock(block));
+            ArrayList<ArrayList<Cell>> jointOrder = this.joinOutsideSeatsTogether(this.splitBlockIntoColumns(block));
             ArrayList<Cell> seats = this.randomiseOutsideInOrder(jointOrder);
             orderedBlocks.add(seats);
         }
@@ -183,8 +189,10 @@ public class SeatingMethod {
      * @return an arrayList containing the seating order.
      */
     private ArrayList<Cell> calculateRotatingZoneSeatingOrder() {
+        // Get the normal seats as blocks
         ArrayList<ArrayList<Cell>> blocks = this.splitNormalSeatsIntoBlocks();
 
+        // Loop over the blocks and randomise the order
         ArrayList<ArrayList<Cell>> randomisedBlocks = new ArrayList<>();
         for (ArrayList<Cell> block : blocks) {
             randomisedBlocks.add(this.createRandomSeatingOrderFromSeats(block));
@@ -209,7 +217,7 @@ public class SeatingMethod {
      */
     private ArrayList<Cell> calculateBySeatSeatingOrder() {
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
-        ArrayList<ArrayList<Cell>> outsideInOrder = this.createOutsideInOrderForBlock(this.convertArrayToArrayList(normalSeats));
+        ArrayList<ArrayList<Cell>> outsideInOrder = this.splitBlockIntoColumns(this.convertArrayToArrayList(normalSeats));
 
         // Order each list of cells
         ArrayList<ArrayList<Cell>> orderedSeats = new ArrayList<>();
@@ -236,62 +244,82 @@ public class SeatingMethod {
 
         return this.createFinalOrder(finalOrder);
     }
-
+    
     /**
-     *
-     * @return
+     * Create the seating order for the reverse pyramid seating method.
+     * 
+     * @return an arrayList containing the seating order.
      */
     private ArrayList<Cell> calculateReversePyramidSeatingOrder() {
+        // Split the entire plane into columns
         Cell[][] normalSeats = this.planeDimension.getNormalSeats();
-        ArrayList<ArrayList<Cell>> blocks = this.createOutsideInOrderForBlock(this.convertArrayToArrayList(normalSeats));
-
-        // Get the number of splits rounded down
-        int differentSplits = (int) (blocks.size() / 2.0) + 2;
-        int fortyPercent = (int) ((this.planeDimension.getNumberOfNormalRows() / 100.0) * 40);
-        int twentyPercent = this.planeDimension.getNumberOfNormalRows() - (fortyPercent * 2);
-
-        ArrayList<ArrayList<Cell>> splitSeating = new ArrayList<>();
-
-        for (int x = 0; x < differentSplits; x++) {
-            ArrayList<Cell> split = new ArrayList<>();
-            splitSeating.add(split);
+        ArrayList<ArrayList<Cell>> blocks = this.splitBlockIntoColumns(this.convertArrayToArrayList(normalSeats));
+        
+        // Get the first (50%), second (30%) and third (20%) amount of seats to get
+        int numberOfRows = this.planeDimension.getNumberOfNormalRows();
+        int firstPercent = (int) Math.round((numberOfRows / 100.0) * 50.0);
+        int secondPercent = (int) Math.round((numberOfRows / 100.0) * 30.0);
+        int thirdPercent = numberOfRows - firstPercent - secondPercent;
+        
+        int thirdEndingPoint = thirdPercent;
+        int secondEndingPoint = thirdPercent + secondPercent;
+                
+        /* Calculate the number of splits the reverse pyramid will
+        create and create the spits */
+        int numberOfSplits = (int) Math.ceil((blocks.size() / 2.0) + 2);
+        ArrayList<ArrayList<Cell>> splits = new ArrayList<>();
+        
+        for (int x = 0; x < numberOfSplits; x++) {
+            splits.add(new ArrayList<Cell>());
         }
+        
+        // Add the seats into the splits
+        ArrayList<Integer> rowNumbers = this.planeDimension.getNormalRowNumbers();
+        int splitHelper = 0;
+        boolean isEven = (blocks.size() % 2 == 0);
+        int middle = blocks.size() / 2;
 
-        int x = 0;
-
-        while (!blocks.isEmpty()) {
-            ArrayList<Cell> cells1 = blocks.remove(0);
-            ArrayList<Cell> cells2 = blocks.remove(blocks.size() - 1);
-
-            for (int t = 0; t < twentyPercent; t++) {
-                splitSeating.get(x + 2).add(cells1.remove(0));
-                splitSeating.get(x + 2).add(cells2.remove(0));
+        for (int i = 0; i < blocks.size(); i++) {
+            ArrayList<Cell> block = blocks.get(i);
+            
+            // Loop over all of the row numbers
+            for (int j = 0; j < rowNumbers.size(); j++) {
+                Integer rowNumber = rowNumbers.get(j);
+                Cell cell = block.get(0);
+                
+                if (cell.getCellRow() == rowNumber) {
+                    if (j < thirdEndingPoint) {          
+                        splits.get(splitHelper + 2).add(block.remove(0));
+                    } else if (j < secondEndingPoint) {            
+                        splits.get(splitHelper + 1).add(block.remove(0));
+                    } else {                         
+                        splits.get(splitHelper + 0).add(block.remove(0));
+                    }
+                }
+                
+                if (block.isEmpty()) {
+                    break;
+                }
             }
-
-            for (int f = 0; f < fortyPercent; f++) {
-                splitSeating.get(x + 1).add(cells1.remove(0));
-                splitSeating.get(x + 1).add(cells2.remove(0));
+            
+            if ((!isEven && (i < middle)) || (isEven && (i < middle - 1))) {
+                splitHelper++;
+            } else if (i >= middle) {
+                splitHelper--;
             }
-
-            for (int f = 0; f < fortyPercent; f++) {
-                splitSeating.get(x).add(cells1.remove(0));
-                splitSeating.get(x).add(cells2.remove(0));
-            }
-
-            x++;
         }
 
         ArrayList<Cell> seatingOrder = new ArrayList<>();
 
-        for (ArrayList<Cell> list : splitSeating) {
+        for (ArrayList<Cell> list : splits) {
             seatingOrder.addAll(this.createRandomSeatingOrderFromSeats(list));
         }
-
+        
         return this.createFinalOrder(seatingOrder);
     }
 
     private ArrayList<Cell> calculateCustomSeatingOrder() {
-        // Find the maximum number
+        // Find the maximum number from the given order
         int maximumNumber = 0;
         for (int[] array : this.customMethod) {
             for (int y = 0; y < array.length; y++) {
@@ -301,7 +329,7 @@ public class SeatingMethod {
             }
         }
 
-        // Create the container
+        // Create the containers for the ordered seats
         ArrayList<ArrayList<Cell>> container = new ArrayList<>();
         for (int x = 0; x <= maximumNumber; x++) {
             ArrayList<Cell> list = new ArrayList<>();
@@ -313,7 +341,9 @@ public class SeatingMethod {
         // Place all of the seats into the container
         for (int x = 0; x < this.customMethod.length; x++) {
             for (int y = 0; y < this.customMethod[x].length; y++) {
-                container.get(this.customMethod[x][y]).add(normalSeats[x][y]);
+                if (this.customMethod[x][y] != -1) {
+                    container.get(this.customMethod[x][y]).add(normalSeats[x][y]);
+                }
             }
         }
 
@@ -326,6 +356,9 @@ public class SeatingMethod {
         return this.createFinalOrder(finalOrder);
     }
 
+    /**
+     * Load the .dll/.dylib/.o library
+     */
     static {
         System.loadLibrary("SeatingMethodLibrary");
     }
@@ -380,8 +413,13 @@ public class SeatingMethod {
      */
     private ArrayList<ArrayList<Cell>> splitNormalSeatsIntoBlocks() {
         // Calculate how many blocks to split the plane into
-        int numberOfRowsPerBlock = 3;
         int numberOfRows = this.planeDimension.getNumberOfNormalRows();
+        // Check the number of rows per block is a valid number
+        if (numberOfRows < this.numberOfRowsPerBlock) {
+            this.numberOfRowsPerBlock = numberOfRows;
+        } else if (this.numberOfRowsPerBlock > numberOfRows) {
+            this.numberOfRowsPerBlock = numberOfRows;
+        }
         int numberOfBlocks = numberOfRows / numberOfRowsPerBlock;
         int remainder = numberOfRows % numberOfRowsPerBlock;
 
@@ -423,12 +461,12 @@ public class SeatingMethod {
     }
 
     /**
-     * Creates an outside in order for the given block of cells.
+     * Splits a given block into columns.
      *
      * @param block an arrayList containing the block of cells.
      * @return an arrayList containing the ordered block of cells.
      */
-    private ArrayList<ArrayList<Cell>> createOutsideInOrderForBlock(ArrayList<Cell> block) {
+    private ArrayList<ArrayList<Cell>> splitBlockIntoColumns(ArrayList<Cell> block) {
         // Get the number of columns the plane holds
         int numberOfColumns = this.planeDimension.getNumberOfColumns();
 
@@ -440,13 +478,14 @@ public class SeatingMethod {
             ArrayList<Cell> list = new ArrayList<>();
             columnNormalSeats.add(list);
         }
-
+        
         // Place each of the cells into the correct list
         for (Cell cell : block) {
             int cellColumn = cell.getCellColumn();
             columnNormalSeats.get(cellColumn).add(cell);
         }
 
+        // Remove the empty rows (the aisles)
         ArrayList<ArrayList<Cell>> finalNormalSeats = new ArrayList<>();
         for (ArrayList<Cell> list : columnNormalSeats) {
             if (!list.isEmpty()) {
@@ -513,41 +552,12 @@ public class SeatingMethod {
 
         return jointBlocks;
     }
-
-    @Override
-    public String toString() {
-        String seatingMethod;
-        switch (this.defaultMethod) {
-            case BACK_TO_FRONT:
-                seatingMethod = "back-to-front";
-                break;
-            case OUTSIDE_IN:
-                seatingMethod = "outside-in";
-                break;
-            case RANDOM:
-                seatingMethod = "random";
-                break;
-            case BLOCK_BOARDING:
-                seatingMethod = "block boarding";
-                break;
-            case BY_SEAT:
-                seatingMethod = "by seat";
-                break;
-            case REVERSE_PYRAMID:
-                seatingMethod = "reverse pyramid";
-                break;
-            case ROTATING_ZONE:
-                seatingMethod = "rotating zone";
-                break;
-            case CUSTOM:
-                seatingMethod = "custom";
-                break;
-            default:
-                seatingMethod = "unrecognised method";
-                break;
-        }
-
-        return seatingMethod;
+    
+    public int getNumberOfRowsPerBlock() {
+        return this.numberOfRowsPerBlock;
     }
-
+    
+    public void setNumberOfRowsPerBlock(int numberOfRowsPerBlock) {
+        this.numberOfRowsPerBlock = numberOfRowsPerBlock;
+    }
 }

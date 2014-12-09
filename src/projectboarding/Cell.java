@@ -61,4 +61,8 @@ public class Cell {
     public void setNumPassengers(int numPassengers) {
         this.numPassengers = numPassengers;
     }
+    
+    public Cell clone(){
+        return new Cell(this.cellRow, this.cellColumn, this.cellType);
+    }
 }

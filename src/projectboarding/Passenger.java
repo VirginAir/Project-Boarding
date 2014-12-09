@@ -131,9 +131,9 @@ public class Passenger {
         public void decreaseSeatInterferenceTime() {
             this.seatInterferenceTime--;
             
-            if (this.seatInterferenceTime < 0) {
-                this.seatInterferenceTime = 0;
-            }
+            //if (this.seatInterferenceTime < 0) {
+            //    this.seatInterferenceTime = 0;
+            //}
         }
 
         public void resetTimePerRow() {

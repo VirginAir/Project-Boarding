@@ -305,7 +305,7 @@ public class BoardingHandler implements Runnable, ActionListener {
     
     public int closestAisle(Cell seat) {
         ArrayList<Integer> aisleList = this.planeDimension.getAisleColumnNumbers();
-        int seatColumn = seat.getSeatColumn();
+        int seatColumn = seat.getCellColumn();
         
         // Find the two closes aisles on either side of seat (if possible)
         ArrayList<Integer> closestAisles = new ArrayList<>();

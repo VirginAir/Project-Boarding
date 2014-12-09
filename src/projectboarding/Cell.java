@@ -9,7 +9,6 @@ public class Cell {
     private final int cellColumn;
     private CellType cellType;
     private Boolean hasPassenger;
-    private int numPassengers;
     public enum CellType {
         SEAT, PRIORITY_SEAT, AISLE, NONE
     }
@@ -19,15 +18,6 @@ public class Cell {
         this.cellColumn = column;
         this.cellType = type;
         this.hasPassenger = false;
-        this.numPassengers = 0;
-    }
-    
-    public int getSeatRow() {
-        return this.cellRow;
-    }
-    
-    public int getSeatColumn() {
-        return this.cellColumn;
     }
 
     public CellType getCellType() {
@@ -50,18 +40,11 @@ public class Cell {
         return hasPassenger;
     }
 
-    public int getNumPassengers() {
-        return numPassengers;
-    }
-
     public void setHasPassenger(Boolean hasPassenger) {
         this.hasPassenger = hasPassenger;
     }
-
-    public void setNumPassengers(int numPassengers) {
-        this.numPassengers = numPassengers;
-    }
     
+    @Override
     public Cell clone(){
         return new Cell(this.cellRow, this.cellColumn, this.cellType);
     }

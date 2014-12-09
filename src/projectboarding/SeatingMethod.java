@@ -23,9 +23,10 @@ public class SeatingMethod {
         BY_SEAT("By Seat"), 
         OUTSIDE_IN("Outside In"), 
         RANDOM("Random"), 
-        REVERSE_PYRAMID("Reverse Pyramid"), 
+        REVERSE_PYRAMID("Rev. Pyramid"), 
         ROTATING_ZONE("Rotating Zone"), 
-        CUSTOM("Custom");
+        CUSTOM("Custom"),
+        NONE("NA");
         
         private final String text;
         

@@ -270,10 +270,24 @@ public class BoardingController {
 
     /**
      * Get the results of the plane boarding process
-     * @return A string containing the results
+     * @return A Results object containing the results
      */
-    public String getResults() {
-        return results;
+    public Results getResults() {
+        Results res = new Results();
+        res.addMethod(DefaultSeatingMethod.BACK_TO_FRONT.toString(), this.btfBoardingHandler.getTimeMin(), this.btfBoardingHandler.getTimeSec(), this.btfBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.BLOCK_BOARDING.toString(), this.bBoardingHandler.getTimeMin(), this.bBoardingHandler.getTimeSec(), this.bBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.BY_SEAT.toString(), this.bsBoardingHandler.getTimeMin(), this.bsBoardingHandler.getTimeSec(), this.bsBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.OUTSIDE_IN.toString(), this.oiBoardingHandler.getTimeMin(), this.oiBoardingHandler.getTimeSec(), this.oiBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.RANDOM.toString(), this.rBoardingHandler.getTimeMin(), this.rBoardingHandler.getTimeSec(), this.rBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.REVERSE_PYRAMID.toString(), this.rpBoardingHandler.getTimeMin(), this.rpBoardingHandler.getTimeSec(), this.rpBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.ROTATING_ZONE.toString(), this.rzBoardingHandler.getTimeMin(), this.rzBoardingHandler.getTimeSec(), this.rzBoardingHandler.getTotalTicks().intValue());
+        if(useCustom){
+            res.addMethod(DefaultSeatingMethod.CUSTOM.toString(), this.cBoardingHandler.getTimeMin(), this.cBoardingHandler.getTimeSec(), this.cBoardingHandler.getTotalTicks().intValue());
+        }
+        
+        res.sort();
+        
+        return res;
     }
 
     /**

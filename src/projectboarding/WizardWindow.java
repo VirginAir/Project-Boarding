@@ -29,6 +29,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import projectboarding.Cell.CellType;
 import projectboarding.SeatingMethod.DefaultSeatingMethod;
 
@@ -46,10 +47,12 @@ public class WizardWindow extends JFrame{
     private JButton run;
     private JButton save; 
     private JButton load; 
+    private JTextField iterCount;
     
     private boolean useCustom;
     private boolean toRun;
     private DefaultSeatingMethod toView;
+    private int iterCountVal;
     private SeatingWindow sw;
     private PlaneDimension pd;
     
@@ -58,6 +61,7 @@ public class WizardWindow extends JFrame{
         private JPanel bottomPanel;
         private JPanel mainPanel;
         private JButton okay;
+        
         private ArrayList<DimButton> buttonList;
         private int rows;
         private int columns;
@@ -105,6 +109,7 @@ public class WizardWindow extends JFrame{
               }
             });
             bottomPanel.add(cancel);
+            
             
             mainPanel = new JPanel(new GridLayout(columns,rows,0,0));
             buttonList = new ArrayList<DimButton>();
@@ -181,7 +186,7 @@ public class WizardWindow extends JFrame{
             }
         });
         
-        mainPanel = new JPanel(new GridLayout(4,1,10,10));
+        mainPanel = new JPanel(new GridLayout(5,1,10,10));
         
         
         sw = new SeatingWindow("Plane Dimensions", 1,1);
@@ -245,6 +250,8 @@ public class WizardWindow extends JFrame{
         mainPanel.add(customSplit);
         
         JPanel comboSplit = new JPanel(new GridLayout(1,2,10,10));
+        
+        
         JLabel boxLabel = new JLabel("View: ");
         boxLabel.setHorizontalAlignment(JLabel.RIGHT);
         selectionBox = new JComboBox();
@@ -256,11 +263,21 @@ public class WizardWindow extends JFrame{
         selectionBox.addItem("Reverse Pyramid");
         selectionBox.addItem("Rotating Zone");
         selectionBox.addItem("Custom");
+        selectionBox.addItem("No Visual");
+        
         comboSplit.add(boxLabel);
         comboSplit.add(selectionBox);
         mainPanel.add(comboSplit);
         
-        JPanel runSplit = new JPanel(new GridLayout(1,3,10,10));
+        JPanel iterSplit = new JPanel(new GridLayout(1,2,10,10));
+        JLabel runLabel = new JLabel("Iteration Count: ");
+        runLabel.setHorizontalAlignment(JLabel.RIGHT);
+        iterCount = new JTextField("1");
+        iterSplit.add(runLabel);
+        iterSplit.add(iterCount);
+        mainPanel.add(iterSplit);
+        
+        JPanel runSplit = new JPanel(new GridLayout(1,4,10,10));
         run = new JButton("Run");
         run.addActionListener(new ActionListener()
         {
@@ -268,7 +285,21 @@ public class WizardWindow extends JFrame{
           {
               if(!customCheck.isSelected() && selectionBox.getSelectedItem().equals("Custom")){
                   JOptionPane.showMessageDialog(null, "You can't view the Custom simulation if it isn't active!", "Error", 1);
+                  return;
               }
+              
+              try { 
+                    int count = Integer.parseInt(iterCount.getText()); 
+                    if(count < 1){
+                        JOptionPane.showMessageDialog(null, "Iteration Count must be above 0!", "Error", 1);
+                        return;
+                    }
+              } catch(NumberFormatException ne) { 
+                    JOptionPane.showMessageDialog(null, "Iteration Count is not a number!", "Error", 1);
+                    return; 
+              }
+              
+              iterCountVal = Integer.parseInt(iterCount.getText());
               
               toRun = true;
               if(selectionBox.getSelectedItem().equals("Random")){
@@ -287,6 +318,8 @@ public class WizardWindow extends JFrame{
                     toView = DefaultSeatingMethod.ROTATING_ZONE;
               } else if(selectionBox.getSelectedItem().equals("Custom")){
                     toView = DefaultSeatingMethod.CUSTOM;
+              } else if(selectionBox.getSelectedItem().equals("No Visual")){
+                    toView = DefaultSeatingMethod.NONE;
               }
               
               useCustom = customCheck.isSelected();
@@ -399,9 +432,20 @@ public class WizardWindow extends JFrame{
           }
         });
         
+        JButton help = new JButton("Help");
+            help.addActionListener(new ActionListener()
+            {
+              public void actionPerformed(ActionEvent e)
+              {
+                  new HelpFrame();
+              }
+            });
+        
+        
         runSplit.add(run);
         runSplit.add(save);
         runSplit.add(load);
+        runSplit.add(help);
         mainPanel.add(runSplit);
         
         this.getContentPane().add(mainPanel);
@@ -416,7 +460,15 @@ public class WizardWindow extends JFrame{
             sw.setVisibility(false);
         }
     }
-    
+
+    public int getIterCountVal() {
+        return iterCountVal;
+    }
+
+    public void setIterCountVal(int iterCountVal) {
+        this.iterCountVal = iterCountVal;
+    }
+        
     public void setVisibility(boolean isVisible){
         this.setVisible(isVisible);
     }

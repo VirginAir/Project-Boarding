@@ -262,6 +262,17 @@ public class BoardingHandler implements Runnable, ActionListener {
         }
     }
 
+    public AtomicInteger getTotalTicks() {
+        return totalTicks;
+    }
+
+    public void setTotalTicks(AtomicInteger totalTicks) {
+        this.totalTicks = totalTicks;
+    }
+
+    
+    
+    
     /**
      * End the boarding process.
      */

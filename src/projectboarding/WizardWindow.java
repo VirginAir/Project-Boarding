@@ -372,7 +372,7 @@ public class WizardWindow extends JFrame{
         {
           public void actionPerformed(ActionEvent e)
           {
-              cw = new CustomWindow("Custom Method" , pd.getNumberOfColumns(), pd.getNumberOfRows());
+              cw = new CustomWindow("Custom Method" , pd.getNumberOfColumns(), pd.totalNumberOfRows());
               cw.setVisibility(true);
           }
         });

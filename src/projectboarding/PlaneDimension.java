@@ -89,10 +89,6 @@ public class PlaneDimension {
         return rowNumbers;
     }
     
-    public int getNumberOfRows() {
-        return this.planeSeats.length;
-    }
-    
     public int getNumberOfColumns() {
         return this.planeSeats[0].length;
     }

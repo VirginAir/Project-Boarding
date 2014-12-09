@@ -15,6 +15,10 @@ public class DimField {
     private int seatType = 1;
     private JTextField field;
     
+    /**
+     * Create the dim field
+     * @param extField the field
+     */
     public DimField(JTextField extField){
         this.field = extField;
         this.field.setPreferredSize(new Dimension(30,30));
@@ -33,18 +37,34 @@ public class DimField {
         });
     }
 
+    /**
+     * Get the seat type
+     * @return 
+     */
     public int getSeatType() {
         return seatType;
     }
 
+    /**
+     * Set the seat type
+     * @param seatType 
+     */
     public void setSeatType(int seatType) {
         this.seatType = seatType;
     }
 
+    /**
+     * Get the field
+     * @return the field
+     */
     public JTextField getField() {
         return field;
     }
 
+    /**
+     * Set the field
+     * @param field the field
+     */
     public void setField(JTextField field) {
         this.field = field;
     }

@@ -42,18 +42,31 @@ public class BoardingHandler implements Runnable, ActionListener {
     private SeatingMethod.DefaultSeatingMethod defaultMethod;
     private int[][] customMethod;
 
+    /**
+     * Create a boarding handler with a default seating method
+     * @param planeDimension the plane dimension
+     * @param defaultMethod the default method
+     */
     public BoardingHandler(PlaneDimension planeDimension, SeatingMethod.DefaultSeatingMethod defaultMethod) {
         this.planeDimension = planeDimension;
         this.defaultMethod = defaultMethod;
         this.createClass();
     }
     
+    /**
+     * Create a boarding handler with a custom method
+     * @param planeDimension the plane dimension
+     * @param customSeatingMethod the custom seating method
+     */
     public BoardingHandler(PlaneDimension planeDimension, int[][] customSeatingMethod) {
         this.planeDimension = planeDimension;
         this.customMethod = customSeatingMethod;
         this.createClass();
     }
     
+    /**
+     * Setup the class variables
+     */
     private void createClass() {
         this.seatingMethod = new SeatingMethod(this.planeDimension);
         this.boardingPassengers = new ArrayList<>();
@@ -64,10 +77,12 @@ public class BoardingHandler implements Runnable, ActionListener {
         this.r = new Random();
         this.totalTicks = new AtomicInteger();
         this.timer = new Timer(50, this);
-        
-//        System.out.println(this.planeDimension);
     }
     
+    /**
+     * Set if this handler will use the timer to run the operations
+     * @param withTimer boolean, yes = on
+     */
     public void setWithTimer(boolean withTimer) {
         this.withTimer = withTimer;
     }
@@ -113,6 +128,9 @@ public class BoardingHandler implements Runnable, ActionListener {
         this.hasCompleted = true;
     }
     
+    /**
+     * Reset the boarding handler
+     */
     public void reset() {
         this.seatVisualisation = this.planeDimension.getAllSeats();
         boardingPassengers.clear();
@@ -261,17 +279,22 @@ public class BoardingHandler implements Runnable, ActionListener {
         }
     }
 
+    /**
+     * Get the total ticks
+     * @return the total ticks
+     */
     public AtomicInteger getTotalTicks() {
         return totalTicks;
     }
 
+    /**
+     * Set the total ticks
+     * @param totalTicks the integer to set the ticks to
+     */
     public void setTotalTicks(AtomicInteger totalTicks) {
         this.totalTicks = totalTicks;
     }
 
-    
-    
-    
     /**
      * End the boarding process.
      */
@@ -282,7 +305,6 @@ public class BoardingHandler implements Runnable, ActionListener {
 
     /**
      * Returns total time taken to board the plane in seconds.
-     *
      * @return time difference in seconds
      */
     public Seconds totalBoardingTime() {
@@ -303,6 +325,11 @@ public class BoardingHandler implements Runnable, ActionListener {
         }
     }
     
+    /**
+     * Get the closest aisle that the passenger can board on to their seat
+     * @param seat the seat to find the closest aisle for
+     * @return an integer of the closest aisle
+     */
     public int closestAisle(Cell seat) {
         ArrayList<Integer> aisleList = this.planeDimension.getAisleColumnNumbers();
         int seatColumn = seat.getCellColumn();
@@ -354,34 +381,66 @@ public class BoardingHandler implements Runnable, ActionListener {
         }
     }
 
+    /**
+     * Get the seat visualisation
+     * @return the seating visualisation
+     */
     public Cell[][] getSeatVisualisation() {
         return this.seatVisualisation;
     }
     
+    /**
+     * Get the list of passengers
+     * @return the list of passengers
+     */
     public ArrayList<Passenger> getPassengers() {
         return planePassengers;
     }
 
+    /**
+     * Get if the boarding has finished
+     * @return true finished, false not finished
+     */
     public boolean isHasCompleted() {
         return hasCompleted;
     }
 
+    /**
+     * Set if the boarding has finished
+     * @param hasCompleted true finished, false not finished
+     */
     public void setHasCompleted(boolean hasCompleted) {
         this.hasCompleted = hasCompleted;
     }
 
+    /**
+     * Get the final time in minutes
+     * @return the final time in minutes
+     */
     public int getTimeMin() {
         return timeMin;
     }
 
+    /**
+     * Set the final time in minutes
+     * @param timeMin the final time in minutes
+     */
     public void setTimeMin(int timeMin) {
         this.timeMin = timeMin;
     }
 
+    /**
+     * Get the time in seconds
+     * @return the final time in seconds
+     */
     public int getTimeSec() {
         return timeSec;
     }
 
+    /**
+     * Set the time in seconds
+     * @param timeSec final time in seconds
+     */
     public void setTimeSec(int timeSec) {
         this.timeSec = timeSec;
     }  

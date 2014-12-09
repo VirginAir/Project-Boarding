@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package glhandler;
 
 import java.io.BufferedReader;
@@ -13,6 +9,12 @@ import java.io.FileReader;
  * @author Ben Cook
  */
 public class ShaderLoader {
+    
+    /**
+     * Load the shader file
+     * @param path
+     * @return 
+     */
     public static String loadShaderFile(String path){
         File file = new File(path);
         BufferedReader reader;

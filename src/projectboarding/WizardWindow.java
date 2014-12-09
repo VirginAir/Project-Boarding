@@ -1,7 +1,6 @@
 package projectboarding;
 
 import java.awt.BorderLayout;
-//import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,15 +10,11 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
-//import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -58,6 +53,9 @@ public class WizardWindow extends JFrame{
     private CustomWindow cw;
     private PlaneDimension pd;
     
+    /**
+     * Private class that loads the seating window
+     */
     private class SeatingWindow extends JFrame{
         
         private JPanel bottomPanel;
@@ -68,17 +66,19 @@ public class WizardWindow extends JFrame{
         private ArrayList<AisleButton> aisleList;
         private int rows;
         private int columns;
-        
-        
+ 
         private boolean done;
-        
-        
-        
+
+        /**
+         * Create the seating window
+         * @param title the window title
+         * @param rows the number of rows
+         * @param columns the number of columns
+         */
         public SeatingWindow(String title, int rows, int columns){
             super(title);
             done = false;
             this.setLayout(new BorderLayout());
-//            float ratio = rows/columns;
             this.setSize(new Dimension(rows*45, columns*45));
             this.setLocationRelativeTo(null);
 
@@ -140,6 +140,9 @@ public class WizardWindow extends JFrame{
             this.pack();
         }
         
+        /**
+         * Create the plane layout
+         */
         public void getPlaneLayout(){
             Cell[][] dim = new Cell[rows][columns];
             for(int i = 0; i < rows; i++){
@@ -166,21 +169,34 @@ public class WizardWindow extends JFrame{
             pd = new PlaneDimension(dim);
         }
         
+        /**
+         * Set the visibility
+         * @param isVisible boolen true visible, false not
+         */
         public void setVisibility(boolean isVisible){
             this.setVisible(isVisible);
         }
 
+        /**
+         * Get if it is done
+         * @return true done, false not
+         */
         public boolean isDone() {
             return done;
         }
 
+        /**
+         * Set if it is done
+         * @param done true done, false not
+         */
         public void setDone(boolean done) {
             this.done = done;
         }
-        
-        
     }
     
+    /**
+     * Private class that creates a custom window
+     */
     private class CustomWindow extends JFrame{
         
         private JPanel bottomPanel;
@@ -191,16 +207,25 @@ public class WizardWindow extends JFrame{
         private int rows;
         private int columns;
         
-        
         private boolean done;
         
-        public CustomWindow(){};
+        /**
+         * Default initalizer
+         */
+        public CustomWindow(){
         
+        };
+        
+        /**
+         * Create a custom window
+         * @param title the window title
+         * @param rows the number of rows
+         * @param columns the number of columns
+         */
         public CustomWindow(String title, int rows, int columns){
             super(title);
             done = false;
             this.setLayout(new BorderLayout());
-//            float ratio = rows/columns;
             this.setSize(new Dimension(rows*30, 10));
             this.setLocationRelativeTo(null);
 
@@ -238,7 +263,6 @@ public class WizardWindow extends JFrame{
             mainPanel = new JPanel(new GridLayout(rows,columns,0,0));
             fieldList = new ArrayList<DimField>();
             
-//            int buttonCount = rows*columns;
             for(Cell[] row : pd.getAllSeats()){
                 for(Cell column : row)
                     if(column.getCellType() == CellType.SEAT){
@@ -246,11 +270,7 @@ public class WizardWindow extends JFrame{
                     } else {
                         fieldList.add(new DimField(new JTextField("-1")));
                     }
-                
-                
-                
             }
-            
             
             for(int i = 0; i < rows; i++){
                 for(int j = 0; j < columns; j++){
@@ -269,6 +289,9 @@ public class WizardWindow extends JFrame{
             this.pack();
         }
         
+        /**
+         * Get the method layout
+         */
         public void getMethodLayout(){
             int[][] dim = new int[columns][rows];
             int cur = 0;
@@ -284,21 +307,37 @@ public class WizardWindow extends JFrame{
             customMethodLayout = dim;
         }
         
+        /**
+         * Set the visibility
+         * @param isVisible true visible, false not
+         */
         public void setVisibility(boolean isVisible){
             this.setVisible(isVisible);
         }
 
+        /**
+         * Get if it is done
+         * @return true done, false not
+         */
         public boolean isDone() {
             return done;
         }
 
+        /**
+         * Set if it is done
+         * @return true done, false not
+         */
         public void setDone(boolean done) {
             this.done = done;
         }
-        
-        
     }
     
+    /**
+     * Create the wizard window
+     * @param title the title
+     * @param width the width
+     * @param height the height
+     */
     public WizardWindow(String title, int width, int height){
         super(title);
         this.setLayout(new BorderLayout());
@@ -316,7 +355,6 @@ public class WizardWindow extends JFrame{
         });
         
         mainPanel = new JPanel(new GridLayout(5,1,10,10));
-        
         
         sw = new SeatingWindow("Plane Dimensions", 1,1);
         cw = new CustomWindow();
@@ -381,7 +419,6 @@ public class WizardWindow extends JFrame{
         mainPanel.add(customSplit);
         
         JPanel comboSplit = new JPanel(new GridLayout(1,2,10,10));
-        
         
         JLabel boxLabel = new JLabel("View: ");
         boxLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -586,6 +623,9 @@ public class WizardWindow extends JFrame{
         
     }
     
+    /**
+     * Update the visibilities
+     */
     public void update(){
         if(sw.isDone()){
             sw.setVisibility(false);
@@ -596,58 +636,107 @@ public class WizardWindow extends JFrame{
         }
     }
 
+    /**
+     * Get the iteration count
+     * @return the iteration count
+     */
     public int getIterCountVal() {
         return iterCountVal;
     }
 
+    /**
+     * Set the iteration count
+     * @param iterCountVal the iteration count
+     */
     public void setIterCountVal(int iterCountVal) {
         this.iterCountVal = iterCountVal;
     }
         
+    /**
+     * Set the visibility
+     * @param isVisible true visible, false not
+     */
     public void setVisibility(boolean isVisible){
         this.setVisible(isVisible);
     }
 
+    /**
+     * Get if it is to run
+     * @return true is to run, false not
+     */
     public boolean isToRun() {
         return toRun;
     }
 
+    /**
+     * Get if it is to run
+     * @param toRun true is to run, false not
+     */
     public void setToRun(boolean toRun) {
         this.toRun = toRun;
     }
 
+    /**
+     * Get the method to view
+     * @return method to view
+     */
     public DefaultSeatingMethod getToView() {
         return toView;
     }
 
+    /**
+     * Set the method to view
+     * @param toView method to view
+     */
     public void setToView(DefaultSeatingMethod toView) {
         this.toView = toView;
     }
 
+    /**
+     * Set the plane dimension
+     * @return the plane dimension
+     */
     public PlaneDimension getPd() {
         return pd;
     }
 
+    /**
+     * Set the plane dimension
+     * @param pd the plane dimension
+     */
     public void setPd(PlaneDimension pd) {
         this.pd = pd;
     }
 
+    /**
+     * Get if to use the custom
+     * @return true use custom, false not
+     */
     public boolean isUseCustom() {
         return useCustom;
     }
 
+    /**
+     * Get if to use the custom
+     * @param useCustom true use custom, false not
+     */
     public void setUseCustom(boolean useCustom) {
         this.useCustom = useCustom;
     }
 
+    /**
+     * Get the custom method layout
+     * @return the custom method layout
+     */
     public int[][] getCustomMethodLayout() {
         return customMethodLayout;
     }
 
+    /**
+     * Get the custom method layout
+     * @param customMethodLayout the custom method layout
+     */
     public void setCustomMethodLayout(int[][] customMethodLayout) {
         this.customMethodLayout = customMethodLayout;
     }
-    
-    
-    
 }

@@ -88,24 +88,17 @@ public class BoardingController {
             this.cBoardingHandler.setWithTimer(true);
         }
         
-        // DELETE THIS 
-//        for (int i = 0; i < this.threads.length; i++) {
-//            if(!(i == 7 && !useCustom)){
-//                System.out.println(threads[i].getState().toString());
-//            }
-//        }
-        
         // Start all of the the threads simultaniously
         for (int i = 0; i < this.threads.length; i++) {
-            if(!(i == 7 && !useCustom)&&!threads[i].isAlive()){
-//                System.out.println(threads[i].isAlive());
-                //if(!threads[i].isAlive()){
-                    threads[i].start();
-                //}
+            if(!(i == 7 && !useCustom) && !threads[i].isAlive()){
+                threads[i].start();
             }
         }
     }
     
+    /**
+     * Reset all of the boarding handlers and threads
+     */
     private void resetBoardingHandlers() {
         // Reset all of the simulations
         this.btfBoardingHandler.reset();
@@ -243,26 +236,6 @@ public class BoardingController {
             return false;
         }
         
-        // Create a formatter to represent the 
-        //DecimalFormat formatter = new DecimalFormat("##");
-        
-        // String build the output results of the program
-        StringBuilder sb = new StringBuilder();
-        sb.append("Method\t\tmm:ss\n");
-        sb.append(DefaultSeatingMethod.BACK_TO_FRONT.toString()).append("\t\t").append(String.format("%02d", this.btfBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.btfBoardingHandler.getTimeSec())).append("\n");
-        sb.append(DefaultSeatingMethod.BLOCK_BOARDING.toString()).append("\t\t").append(String.format("%02d", this.bBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.bBoardingHandler.getTimeSec())).append("\n");
-        sb.append(DefaultSeatingMethod.BY_SEAT.toString()).append("\t\t").append(String.format("%02d", this.bsBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.bsBoardingHandler.getTimeSec())).append("\n");
-        sb.append(DefaultSeatingMethod.OUTSIDE_IN.toString()).append("\t\t").append(String.format("%02d", this.oiBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.oiBoardingHandler.getTimeSec())).append("\n");
-        sb.append(DefaultSeatingMethod.RANDOM.toString()).append("\t\t").append(String.format("%02d", this.rBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.rBoardingHandler.getTimeSec())).append("\n");
-        sb.append(DefaultSeatingMethod.REVERSE_PYRAMID.toString()).append("\t").append(String.format("%02d", this.rpBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.rpBoardingHandler.getTimeSec())).append("\n");
-        sb.append(DefaultSeatingMethod.ROTATING_ZONE.toString()).append("\t\t").append(String.format("%02d", this.rzBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.rzBoardingHandler.getTimeSec())).append("\n");
-        if(useCustom){
-            sb.append(DefaultSeatingMethod.CUSTOM.toString()).append("\t\t").append(String.format("%02d", this.cBoardingHandler.getTimeMin())).append(":").append(String.format("%02d", this.cBoardingHandler.getTimeSec())).append("\n");
-        }
-        
-        // Set the results variable to the string
-        //results = sb.toString();
-        
         return true;
     }
 
@@ -287,14 +260,6 @@ public class BoardingController {
         
         return res;
     }
-
-    /**
-     * Set the results of the plane boarding process
-     * @param results The results string to set as
-     */
-//    public void setResults(String results) {
-//        this.results = results;
-//    }
 
     /**
      * Get the plane dimension for this current boarding controller

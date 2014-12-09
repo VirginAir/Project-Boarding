@@ -39,12 +39,11 @@ public class BoardingController {
      * @param planeDimension The plane dimension created by the user
      * @param customMethod The custom method created by the user, can be null
      */
-    public BoardingController(PlaneDimension planeDimension, int[][] customMethod) {
+    public BoardingController(PlaneDimension planeDimension, boolean useCustom, int[][] customMethod) {
         this.planeDimension = planeDimension;
         
         // Set the boolean value
-        this.useCustom = (customMethod != null);
-        this.useCustom = false;                         /* REMOVE ME */ /***************************************/
+        this.useCustom = useCustom;
         
         // Create the boarding handlers
         this.btfBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.BACK_TO_FRONT);

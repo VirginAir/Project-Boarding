@@ -73,7 +73,7 @@ public class ProjectBoarding {
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 4, 1, 4, 1, 3, 2}};
         
-        BoardingController controller = new BoardingController(planeDimension, custom);
+        BoardingController controller = new BoardingController(planeDimension, true, custom);
         
         //Setup Window
         final GLProfile profile = GLProfile.get(GLProfile.GL3);
@@ -112,7 +112,8 @@ public class ProjectBoarding {
                 if(wzWindow.isToRun()){
                     wzWindow.setToRun(false);
                     state = LoopState.SIMULATION;
-                    controller = new BoardingController(wzWindow.getPd()/*, wzWindow.isUseCustom()*/, custom);
+                    custom = wzWindow.getCustomMethodLayout();
+                    controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
                     controller.stopBoarding();
                     controller.getPlaneDimension().resetHasPassengers();
                     
@@ -140,7 +141,7 @@ public class ProjectBoarding {
                         repeat--;
                         resultList.add(controller.getResults());
                         controller.stopBoarding();
-                        controller = new BoardingController(wzWindow.getPd()/*, wzWindow.isUseCustom()*/, custom);
+                        controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
                         controller.getPlaneDimension().resetHasPassengers();
                         controller.startBoarding(DefaultSeatingMethod.NONE);
                         
@@ -148,8 +149,7 @@ public class ProjectBoarding {
                         repeat--;
                         resultList.add(controller.getResults());
                         
-                        
-                        controller = new BoardingController(wzWindow.getPd()/*, wzWindow.isUseCustom()*/, custom);
+                        controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
                         controller.stopBoarding();
                         controller.getPlaneDimension().resetHasPassengers();
                         

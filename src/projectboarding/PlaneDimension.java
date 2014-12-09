@@ -23,12 +23,6 @@ public class PlaneDimension {
         this.normalSeats = this.getSeats(false);
     }
     
-<<<<<<< HEAD
-    public PlaneDimension(PlaneDimension pd){
-        this.planeSeats = pd.getAllSeats().clone();
-        this.normalSeats = pd.getNormalSeats().clone();
-        this.prioritySeats = pd.getPrioritySeats().clone();
-=======
     public PlaneDimension(PlaneDimension pd) {
         
         int row = pd.getAllSeats().length;
@@ -44,8 +38,6 @@ public class PlaneDimension {
         
         this.prioritySeats = this.getSeats(true);
         this.normalSeats = this.getSeats(false);
-        
->>>>>>> origin/master
     }
     
     public native Cell[][] getAllSeats();
@@ -95,6 +87,10 @@ public class PlaneDimension {
         }
         
         return rowNumbers;
+    }
+    
+    public int getNumberOfRows() {
+        return this.planeSeats.length;
     }
     
     public int getNumberOfColumns() {

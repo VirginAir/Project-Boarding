@@ -336,7 +336,7 @@ public class SeatingMethod {
             container.add(list);
         }
 
-        Cell[][] normalSeats = this.planeDimension.getNormalSeats();
+        Cell[][] normalSeats = this.planeDimension.getAllSeats();
 
         // Place all of the seats into the container
         for (int x = 0; x < this.customMethod.length; x++) {

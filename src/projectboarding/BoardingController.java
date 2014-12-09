@@ -44,7 +44,7 @@ public class BoardingController {
         
         // Set the boolean value
         this.useCustom = (customMethod != null);
-        this.useCustom = false;                         /* REMOVE ME */ /***************************************/
+        //this.useCustom = false;                         /* REMOVE ME */ /***************************************/
         
         // Create the boarding handlers
         this.btfBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.BACK_TO_FRONT);
@@ -246,7 +246,7 @@ public class BoardingController {
         }
         
         // Create a formatter to represent the 
-        DecimalFormat formatter = new DecimalFormat("##");
+        //DecimalFormat formatter = new DecimalFormat("##");
         
         // String build the output results of the program
         StringBuilder sb = new StringBuilder();

@@ -105,10 +105,9 @@ public class BoardingHandler implements Runnable, ActionListener {
      */
     public void stopBoarding() {
         // Record the initial time that the bording starts
-        if (this.withTimer) {
-            if (this.timer.isRunning()) {
+        if (this.withTimer && this.timer.isRunning()) {
                 this.timer.stop();
-            }
+            
         }
         this.withTimer = false;
         this.hasCompleted = true;
@@ -153,8 +152,6 @@ public class BoardingHandler implements Runnable, ActionListener {
             newPassenger = 5;
         } else if (this.newPassenger > 0 && !this.seatingOrder.isEmpty()) {
             newPassenger--;
-        } else {
-           
         }
 
         for (Passenger passenger : planePassengers) {

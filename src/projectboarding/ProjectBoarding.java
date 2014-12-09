@@ -2,6 +2,7 @@ package projectboarding;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
@@ -72,16 +73,13 @@ public class ProjectBoarding {
                     { 2, 3, 1, 4, 4, 4, 3, 2},
                     { 2, 3, 4, 1, 4, 1, 3, 2}};
         
-        BoardingController controller = new BoardingController(planeDimension, custom);
+        BoardingController controller = new BoardingController(planeDimension, true, custom);
         
         //Setup Window
         final GLProfile profile = GLProfile.get(GLProfile.GL3);
         GLCapabilities capabilities = new GLCapabilities(profile);
         capabilities.setDoubleBuffered(true);
         capabilities.setHardwareAccelerated(true);
-        
-        // delete this!
-        new HelpFrame();
         
         GLCanvas canvas = new GLCanvas(capabilities);
         FPSAnimator animator = new FPSAnimator(canvas, FPS);
@@ -98,11 +96,14 @@ public class ProjectBoarding {
         animator.start();
         //window.setVisibility(true);
         
-        WizardWindow wzWindow = new WizardWindow("Project-Boarding Wizard", 300, 200);
+        WizardWindow wzWindow = new WizardWindow("Project-Boarding Wizard", 300, 250);
         wzWindow.setVisibility(true);
         
         
         LoopState state = LoopState.WIZARD;
+        int repeat = 0;
+        DefaultSeatingMethod dsm = DefaultSeatingMethod.NONE;
+        ArrayList<Results> resultList = new ArrayList<>();
         
         while(true){
             Thread.sleep(1); //Java's being buggy. Srsly. The 'if' statement here goes ignored, if this 'sleep' isn't here.
@@ -111,23 +112,64 @@ public class ProjectBoarding {
                 if(wzWindow.isToRun()){
                     wzWindow.setToRun(false);
                     state = LoopState.SIMULATION;
-                    controller = new BoardingController(wzWindow.getPd()/*, wzWindow.isUseCustom()*/, custom);
-                    renderer = new GLRender(controller.getSeatVisualisationForMethod(DefaultSeatingMethod.RANDOM), controller.getPassengersForMethod(DefaultSeatingMethod.RANDOM));
-                    canvas.addGLEventListener(renderer);
-                    window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
-                    window.setGLCanvas(canvas, BorderLayout.CENTER);
+                    custom = wzWindow.getCustomMethodLayout();
+                    controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
                     controller.stopBoarding();
                     controller.getPlaneDimension().resetHasPassengers();
-                    renderer.setPassengers(controller.getPassengersForMethod(wzWindow.getToView()));
-                    window.updateRunning(wzWindow.getToView().toString());
-                    window.setVisibility(true);
-                    wzWindow.setVisibility(false);
-                    controller.startBoarding(wzWindow.getToView());
+                    
+                    resultList = new ArrayList<>();
+                    repeat = wzWindow.getIterCountVal()-1;
+                    
+                    if(repeat == 0 && (wzWindow.getToView() != DefaultSeatingMethod.NONE)){
+                        renderer = new GLRender(controller.getSeatVisualisationForMethod(DefaultSeatingMethod.RANDOM), controller.getPassengersForMethod(DefaultSeatingMethod.RANDOM));
+                        canvas.addGLEventListener(renderer);
+                        window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
+                        window.setGLCanvas(canvas, BorderLayout.CENTER);
+                        renderer.setPassengers(controller.getPassengersForMethod(wzWindow.getToView()));
+                        window.updateRunning(wzWindow.getToView().toString());
+                        window.setVisibility(true);
+                        wzWindow.setVisibility(false);
+                        controller.startBoarding(wzWindow.getToView());
+                    } else {
+                        controller.startBoarding(DefaultSeatingMethod.NONE);
+                    }
+                    
                 }
             } else if (state == LoopState.SIMULATION) {
                 if(controller.checkComplete()){
-                    state = LoopState.RESULTS;
-                    window.setVisibility(false);
+                    if(repeat > 1){
+                        repeat--;
+                        resultList.add(controller.getResults());
+                        controller.stopBoarding();
+                        controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
+                        controller.getPlaneDimension().resetHasPassengers();
+                        controller.startBoarding(DefaultSeatingMethod.NONE);
+                        
+                    } else if(repeat == 1) {
+                        repeat--;
+                        resultList.add(controller.getResults());
+                        
+                        controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
+                        controller.stopBoarding();
+                        controller.getPlaneDimension().resetHasPassengers();
+                        
+                        if(wzWindow.getToView() != DefaultSeatingMethod.NONE){
+                            renderer = new GLRender(controller.getSeatVisualisationForMethod(DefaultSeatingMethod.RANDOM), controller.getPassengersForMethod(DefaultSeatingMethod.RANDOM));
+                            canvas.addGLEventListener(renderer);
+                            window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);
+                            window.setGLCanvas(canvas, BorderLayout.CENTER);
+                            renderer.setPassengers(controller.getPassengersForMethod(wzWindow.getToView()));
+                            window.updateRunning(wzWindow.getToView().toString());
+                            window.setVisibility(true);
+                            wzWindow.setVisibility(false);
+                        }
+                        
+                        controller.startBoarding(wzWindow.getToView());
+                    } else {
+                        window.setVisibility(false);
+                        state = LoopState.RESULTS;
+                        
+                    }
                 } else if (window.isStopped()) {
                     window.setStopped(false);
                     controller.stopBoarding();
@@ -137,7 +179,10 @@ public class ProjectBoarding {
                     window.setVisibility(false);
                 }
             } else if (state == LoopState.RESULTS) {
-                JTextArea toDisplay = new JTextArea(controller.getResults());
+                resultList.add(controller.getResults());
+                Results finalResults = Results.averageResults(resultList);
+                finalResults.sort();
+                JTextArea toDisplay = new JTextArea(finalResults.toString());
                 toDisplay.setEditable(false);
                 JOptionPane.showMessageDialog(null, toDisplay, "Results", JOptionPane.PLAIN_MESSAGE);
                 state = LoopState.WIZARD;

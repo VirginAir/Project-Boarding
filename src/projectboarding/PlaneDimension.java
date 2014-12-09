@@ -38,7 +38,6 @@ public class PlaneDimension {
         
         this.prioritySeats = this.getSeats(true);
         this.normalSeats = this.getSeats(false);
-        
     }
     
     public native Cell[][] getAllSeats();
@@ -88,6 +87,10 @@ public class PlaneDimension {
         }
         
         return rowNumbers;
+    }
+    
+    public int getNumberOfRows() {
+        return this.planeSeats.length;
     }
     
     public int getNumberOfColumns() {

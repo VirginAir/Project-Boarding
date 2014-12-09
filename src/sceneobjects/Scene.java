@@ -1,7 +1,7 @@
 package sceneobjects;
 
 import glhandler.GLBufferHandler;
-import glshapes.Square;
+//import glshapes.Square;
 import java.util.ArrayList;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
@@ -32,23 +32,23 @@ public class Scene {
         rowCount = cells.length;
         columnCount = cells[0].length;
         
-        float screenRatio = (float)screenWidth/(float)screenHeight;
-        float seatRatio = (float)rowCount/(float)columnCount;
+//        float screenRatio = (float)screenWidth/(float)screenHeight;
+//        float seatRatio = (float)rowCount/(float)columnCount;
         
         
         float chairWidthBoundarySize = 2.f/(float)rowCount;
         float chairHeightBoundarySize = 1.2f/(float)columnCount;
         float paddingHeight = chairHeightBoundarySize*0.05f;
         float paddingWidth = chairWidthBoundarySize*0.05f;
-        float chairWidthSize = (chairWidthBoundarySize-(paddingWidth));
-        float chairHeightSize = (chairHeightBoundarySize-(paddingHeight));
+        float chairWidthSize = chairWidthBoundarySize-paddingWidth;
+        float chairHeightSize = chairHeightBoundarySize-paddingHeight;
         
-        float actualHeight = (chairHeightBoundarySize*screenHeight);
-        chairWidthBoundarySize = (actualHeight/screenWidth);
-        float actualPaddingHeight = (paddingHeight*screenHeight);
+        float actualHeight = chairHeightBoundarySize*screenHeight;
+        chairWidthBoundarySize = actualHeight/screenWidth;
+        float actualPaddingHeight = paddingHeight*screenHeight;
         paddingWidth = actualPaddingHeight/screenWidth;
             
-        chairWidthSize = (chairWidthBoundarySize-(paddingWidth));
+        chairWidthSize = chairWidthBoundarySize-paddingWidth;
         
         
         
@@ -56,20 +56,20 @@ public class Scene {
         if((chairWidthBoundarySize*rowCount) > 2.f){
             chairWidthBoundarySize = 2.f/(float)rowCount;
             paddingWidth = chairWidthBoundarySize*0.05f;
-            chairWidthSize = (chairWidthBoundarySize-(paddingWidth));
-            float actualWidth = (chairWidthBoundarySize*screenWidth);
-            chairHeightBoundarySize = (actualWidth/screenHeight);
-            float actualPaddingWidth = (paddingWidth*screenWidth);
+            chairWidthSize = chairWidthBoundarySize-paddingWidth;
+            float actualWidth = chairWidthBoundarySize*screenWidth;
+            chairHeightBoundarySize = actualWidth/screenHeight;
+            float actualPaddingWidth = paddingWidth*screenWidth;
             paddingHeight = actualPaddingWidth/screenHeight;
 
-            chairHeightSize = (chairHeightBoundarySize-(paddingHeight));
+            chairHeightSize = chairHeightBoundarySize-paddingHeight;
             
         }
         float hDistance = chairWidthBoundarySize*rowCount;
-        float hAdjust = (hDistance/2)-1;
+        float hAdjust = hDistance/2-1;
         
         float vDistance = chairHeightBoundarySize*columnCount;
-        float vAdjust = (vDistance/2)-1;
+        float vAdjust = vDistance/2-1;
         
         
         
@@ -119,17 +119,17 @@ public class Scene {
         passengerHandleID = handlePass[0];
         
         for(int i = 0; i < rowCount; i++){
-            float x = (i*chairWidthBoundarySize) - hAdjust;
+            float x = i*chairWidthBoundarySize - hAdjust;
             for(int j = 0; j < columnCount; j++){
                 
                 if(cells[i][j].getCellType() == Cell.CellType.PRIORITY_SEAT){
-                    float y = (j*chairHeightBoundarySize) - vAdjust;
+                    float y = j*chairHeightBoundarySize - vAdjust;
                     chairList.add(new Chair(new Vector(x, y), handlePrior[0], true));
                 } else if(cells[i][j].getCellType() == Cell.CellType.SEAT) {
-                    float y = (j*chairHeightBoundarySize) - vAdjust;
+                    float y = j*chairHeightBoundarySize - vAdjust;
                     chairList.add(new Chair(new Vector(x, y), handleNorm[0], true));
                 } else  {
-                    float y = (j*chairHeightBoundarySize) - vAdjust;
+                    float y = j*chairHeightBoundarySize - vAdjust;
                     chairList.add(new Chair(new Vector(x, y), handleNorm[0], false));
                 }
             }

@@ -174,10 +174,10 @@ public class BoardingHandler implements Runnable, ActionListener {
                     } else {
                         if (passenger.getSeatInterferenceTime() == 0 && !passenger.isHasTakenSeat()) {
                             for (Passenger p1 : planePassengers) {
-                                if (passenger.getCurrentCell().getCellRow() == p1.getCurrentCell().getCellRow()) {
-                                    if (((passenger.getSeat().getCellColumn() < p1.getSeat().getCellColumn()) && (p1.getSeat().getCellColumn()< passenger.getAisle())) || ((passenger.getSeat().getCellColumn() > p1.getSeat().getCellColumn()) && (p1.getSeat().getCellColumn() > passenger.getAisle()))) {
+                                if (passenger.getCurrentCell().getCellRow() == p1.getCurrentCell().getCellRow() && (passenger.getSeat().getCellColumn() < p1.getSeat().getCellColumn() && p1.getSeat().getCellColumn()< passenger.getAisle() || passenger.getSeat().getCellColumn() > p1.getSeat().getCellColumn() && p1.getSeat().getCellColumn() > passenger.getAisle())) {
+                                    //if (((passenger.getSeat().getCellColumn() < p1.getSeat().getCellColumn()) && (p1.getSeat().getCellColumn()< passenger.getAisle())) || ((passenger.getSeat().getCellColumn() > p1.getSeat().getCellColumn()) && (p1.getSeat().getCellColumn() > passenger.getAisle()))) {
                                         passenger.addInteferingPassengers();
-                                    }
+                                    //}
                                 }
                             }
                             if (passenger.getInterferingPassengers() == 0) {
@@ -201,20 +201,22 @@ public class BoardingHandler implements Runnable, ActionListener {
                                     }
                                 }
                             } else if (passenger.getInterferingPassengers() == 2) {
-                                try{
+                                
+                                //try{
                                     passenger.setSeatInterferenceTime(r.nextInt(15) + 5);
-                                } catch (Exception ex) {
-//                                    System.out.println("Exception ");
-                                }
+                                //} catch (Exception ex) {
+                                 // System.out.println("ERROR");  
+                                  //System.out.println("Exception ");
+                              //  }
                             }
                             seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(false);
                             passenger.setCurrentCell(passenger.getSeat());
                             seatVisualisation[passenger.getCurrentCell().getCellRow()][passenger.getCurrentCell().getCellColumn()].setHasPassenger(true);
                         }
                         passenger.decreaseSeatInterferenceTime();
-                        if (passenger.getSeatInterferenceTime() < 0){
-//                            System.out.println("less than zero");
-                        }
+//                        if (passenger.getSeatInterferenceTime() < 0){
+////                            System.out.println("less than zero");
+//                        }
                         if (passenger.getSeatInterferenceTime() <= 0) {
                             passenger.setHasTakenSeat(true);
                         }
@@ -316,10 +318,10 @@ public class BoardingHandler implements Runnable, ActionListener {
                      if (aisle > seatColumn && (aisleNumber == null || aisle < aisleNumber)) {
                          aisleNumber = aisle;
                      }
-                } else if (x == 1) { // Down
-                    if (aisle < seatColumn && (aisleNumber == null || aisle > aisleNumber)) {
+                } else if (x == 1 && aisle < seatColumn && (aisleNumber == null || aisle > aisleNumber)) { // Down
+                    //if (aisle < seatColumn && (aisleNumber == null || aisle > aisleNumber)) {
                         aisleNumber = aisle;
-                    }
+                    //}
                 }
             }
             

@@ -2,15 +2,15 @@
 package projectboarding;
 
 import glhandler.ShaderHandler;
-import glshapes.Triangle;
+//import glshapes.Triangle;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
-import glhandler.GLBufferHandler;
-import glshapes.Square;
+//import glhandler.GLBufferHandler;
+//import glshapes.Square;
 import java.util.ArrayList;
-import javax.media.opengl.GL;
+//import javax.media.opengl.GL;
 import jml.mat3;
 import sceneobjects.Scene;
 
@@ -20,16 +20,16 @@ import sceneobjects.Scene;
  */
 public class GLRender implements GLEventListener{
     
-    private int[] triangleVaoHandle = new int[1];
-    private int[][] squareVaoHandle = new int[50][1];
-    private int[][] squareTakenVaoHandle = new int[49][1];
+    //private int[] triangleVaoHandle = new int[1];
+    //private int[][] squareVaoHandle = new int[50][1];
+    //private int[][] squareTakenVaoHandle = new int[49][1];
     private Cell[][] cells;
-    private int numRows;
-    private int cellsInRow;
+    //private int numRows;
+    //private int cellsInRow;
     private ArrayList<Passenger> passengers;
-    private int pCount;
+    //private int pCount;
     private int programHandle;
-    private boolean test = false;
+    //private boolean test = false;
     
     private Scene scene;
 
@@ -52,10 +52,10 @@ public class GLRender implements GLEventListener{
     
     public GLRender(Cell[][] cells, ArrayList<Passenger> passengers){
         this.cells = cells;
-        this.numRows = this.cells.length;
-        this.cellsInRow = this.cells[0].length;
+        //this.numRows = this.cells.length;
+        //this.cellsInRow = this.cells[0].length;
         this.passengers = passengers;
-        this.pCount = passengers.size();
+        //this.pCount = passengers.size();
         this.scene = new Scene();
     }
 

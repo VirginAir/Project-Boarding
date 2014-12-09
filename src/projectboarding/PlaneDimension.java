@@ -53,8 +53,8 @@ public class PlaneDimension {
             ArrayList<Cell> rowSeats = new ArrayList<>();
             
             for (Cell cell : row) {
-                if ((priority && cell.getCellType() == CellType.PRIORITY_SEAT) 
-                        || (!priority && cell.getCellType() == CellType.SEAT)) {
+                if (priority && cell.getCellType() == CellType.PRIORITY_SEAT 
+                        || !priority && cell.getCellType() == CellType.SEAT) {
                     rowSeats.add(cell);
                 }
             }
@@ -139,7 +139,7 @@ public class PlaneDimension {
     }
     
     public int totalNumberOfSeats() {
-        return (this.getNumberOfNormalSeats() + this.getNumberOfPrioritySeats());
+        return this.getNumberOfNormalSeats() + this.getNumberOfPrioritySeats();
     }
     
     public void resetHasPassengers(){

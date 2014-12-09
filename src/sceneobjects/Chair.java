@@ -1,6 +1,6 @@
 package sceneobjects;
 
-import glshapes.Square;
+//import glshapes.Square;
 
 /**
  *

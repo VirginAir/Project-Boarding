@@ -266,7 +266,7 @@ public class SeatingMethod {
                 
         /* Calculate the number of splits the reverse pyramid will
         create and create the spits */
-        int numberOfSplits = (int) Math.ceil((blocks.size() / 2.0) + 2);
+        int numberOfSplits = (int) Math.ceil(blocks.size() / 2.0 + 2);
         ArrayList<ArrayList<Cell>> splits = new ArrayList<>();
         
         for (int x = 0; x < numberOfSplits; x++) {
@@ -276,7 +276,7 @@ public class SeatingMethod {
         // Add the seats into the splits
         ArrayList<Integer> rowNumbers = this.planeDimension.getNormalRowNumbers();
         int splitHelper = 0;
-        boolean isEven = (blocks.size() % 2 == 0);
+        boolean isEven = blocks.size() % 2 == 0;
         int middle = blocks.size() / 2;
 
         for (int i = 0; i < blocks.size(); i++) {
@@ -302,7 +302,7 @@ public class SeatingMethod {
                 }
             }
             
-            if ((!isEven && (i < middle)) || (isEven && (i < middle - 1))) {
+            if (!isEven && i < middle || isEven && i < middle - 1) {
                 splitHelper++;
             } else if (i >= middle) {
                 splitHelper--;

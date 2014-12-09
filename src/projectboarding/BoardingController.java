@@ -1,6 +1,5 @@
 package projectboarding;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import projectboarding.SeatingMethod.DefaultSeatingMethod;
 
@@ -27,7 +26,7 @@ public class BoardingController {
     private final Thread[] threads = new Thread[8];
     
     /* The final results string */
-    private String results;
+    //private String results;
     
     /* Boolean values to determin certain continuation rules */
     private boolean threadsCreated = false;
@@ -39,13 +38,12 @@ public class BoardingController {
      * @param planeDimension The plane dimension created by the user
      * @param customMethod The custom method created by the user, can be null
      */
-    public BoardingController(PlaneDimension planeDimension, int[][] customMethod) {
+    public BoardingController(PlaneDimension planeDimension, boolean useCustom, int[][] customMethod) {
         this.planeDimension = planeDimension;
         
         // Set the boolean value
-        this.useCustom = (customMethod != null);
-        //this.useCustom = false;                         /* REMOVE ME */ /***************************************/
-        
+        this.useCustom = useCustom;
+
         // Create the boarding handlers
         this.btfBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.BACK_TO_FRONT);
         this.bBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.BLOCK_BOARDING);
@@ -99,11 +97,11 @@ public class BoardingController {
         
         // Start all of the the threads simultaniously
         for (int i = 0; i < this.threads.length; i++) {
-            if(!(i == 7 && !useCustom)){
+            if(!(i == 7 && !useCustom)&&!threads[i].isAlive()){
 //                System.out.println(threads[i].isAlive());
-                if(!threads[i].isAlive()){
+                //if(!threads[i].isAlive()){
                     threads[i].start();
-                }
+                //}
             }
         }
     }
@@ -241,7 +239,7 @@ public class BoardingController {
                 || !this.rBoardingHandler.isHasCompleted()
                 || !this.rpBoardingHandler.isHasCompleted()
                 || !this.rzBoardingHandler.isHasCompleted()
-                || (useCustom && !this.cBoardingHandler.isHasCompleted())){
+                || useCustom && !this.cBoardingHandler.isHasCompleted()){
             return false;
         }
         
@@ -263,26 +261,40 @@ public class BoardingController {
         }
         
         // Set the results variable to the string
-        results = sb.toString();
+        //results = sb.toString();
         
         return true;
     }
 
     /**
      * Get the results of the plane boarding process
-     * @return A string containing the results
+     * @return A Results object containing the results
      */
-    public String getResults() {
-        return results;
+    public Results getResults() {
+        Results res = new Results();
+        res.addMethod(DefaultSeatingMethod.BACK_TO_FRONT.toString(), this.btfBoardingHandler.getTimeMin(), this.btfBoardingHandler.getTimeSec(), this.btfBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.BLOCK_BOARDING.toString(), this.bBoardingHandler.getTimeMin(), this.bBoardingHandler.getTimeSec(), this.bBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.BY_SEAT.toString(), this.bsBoardingHandler.getTimeMin(), this.bsBoardingHandler.getTimeSec(), this.bsBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.OUTSIDE_IN.toString(), this.oiBoardingHandler.getTimeMin(), this.oiBoardingHandler.getTimeSec(), this.oiBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.RANDOM.toString(), this.rBoardingHandler.getTimeMin(), this.rBoardingHandler.getTimeSec(), this.rBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.REVERSE_PYRAMID.toString(), this.rpBoardingHandler.getTimeMin(), this.rpBoardingHandler.getTimeSec(), this.rpBoardingHandler.getTotalTicks().intValue());
+        res.addMethod(DefaultSeatingMethod.ROTATING_ZONE.toString(), this.rzBoardingHandler.getTimeMin(), this.rzBoardingHandler.getTimeSec(), this.rzBoardingHandler.getTotalTicks().intValue());
+        if(useCustom){
+            res.addMethod(DefaultSeatingMethod.CUSTOM.toString(), this.cBoardingHandler.getTimeMin(), this.cBoardingHandler.getTimeSec(), this.cBoardingHandler.getTotalTicks().intValue());
+        }
+        
+        res.sort();
+        
+        return res;
     }
 
     /**
      * Set the results of the plane boarding process
      * @param results The results string to set as
      */
-    public void setResults(String results) {
-        this.results = results;
-    }
+//    public void setResults(String results) {
+//        this.results = results;
+//    }
 
     /**
      * Get the plane dimension for this current boarding controller

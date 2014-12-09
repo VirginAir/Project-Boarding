@@ -1,7 +1,7 @@
 package projectboarding;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+//import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,15 +11,15 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.Box;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
+//import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -78,7 +78,7 @@ public class WizardWindow extends JFrame{
             super(title);
             done = false;
             this.setLayout(new BorderLayout());
-            float ratio = rows/columns;
+//            float ratio = rows/columns;
             this.setSize(new Dimension(rows*45, columns*45));
             this.setLocationRelativeTo(null);
 
@@ -200,7 +200,7 @@ public class WizardWindow extends JFrame{
             super(title);
             done = false;
             this.setLayout(new BorderLayout());
-            float ratio = rows/columns;
+//            float ratio = rows/columns;
             this.setSize(new Dimension(rows*30, 10));
             this.setLocationRelativeTo(null);
 
@@ -238,7 +238,7 @@ public class WizardWindow extends JFrame{
             mainPanel = new JPanel(new GridLayout(rows,columns,0,0));
             fieldList = new ArrayList<DimField>();
             
-            int buttonCount = rows*columns;
+//            int buttonCount = rows*columns;
             for(Cell[] row : pd.getAllSeats()){
                 for(Cell column : row)
                     if(column.getCellType() == CellType.SEAT){

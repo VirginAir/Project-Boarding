@@ -102,7 +102,7 @@ public class ProjectBoarding {
         
         LoopState state = LoopState.WIZARD;
         int repeat = 0;
-        DefaultSeatingMethod dsm = DefaultSeatingMethod.NONE;
+        //DefaultSeatingMethod dsm = DefaultSeatingMethod.NONE;
         ArrayList<Results> resultList = new ArrayList<>();
         
         while(true){
@@ -120,7 +120,7 @@ public class ProjectBoarding {
                     resultList = new ArrayList<>();
                     repeat = wzWindow.getIterCountVal()-1;
                     
-                    if(repeat == 0 && (wzWindow.getToView() != DefaultSeatingMethod.NONE)){
+                    if(repeat == 0 && wzWindow.getToView() != DefaultSeatingMethod.NONE){
                         renderer = new GLRender(controller.getSeatVisualisationForMethod(DefaultSeatingMethod.RANDOM), controller.getPassengersForMethod(DefaultSeatingMethod.RANDOM));
                         canvas.addGLEventListener(renderer);
                         window = new GLWindow("Project-Boarding", animator, WINDOW_HEIGHT, WINDOW_WIDTH);

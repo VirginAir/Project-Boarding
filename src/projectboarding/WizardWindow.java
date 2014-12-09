@@ -47,6 +47,8 @@ public class WizardWindow extends JFrame{
     private JButton run;
     private JButton save; 
     private JButton load; 
+    private JButton savec; 
+    private JButton loadc; 
     private JTextField iterCount;
     
     private boolean useCustom;
@@ -321,6 +323,8 @@ public class WizardWindow extends JFrame{
         sw = new SeatingWindow("Plane Dimensions", 1,1);
         cw = new CustomWindow();
         
+        JPanel topDiv = new JPanel(new GridLayout(1,3,0,0));
+        
         pDim = new JButton("Plane Dimensions");
         pDim.addActionListener(new ActionListener()
         {
@@ -362,9 +366,47 @@ public class WizardWindow extends JFrame{
               sw.setVisibility(true);
           }
         });
-        mainPanel.add(pDim);
         
-        JPanel customSplit = new JPanel(new GridLayout(1,2,10,10));
+        save = new JButton("Save");
+        save.addActionListener(new ActionListener()
+        {
+          public void actionPerformed(ActionEvent e)
+          {            
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+            File file = new File("Untitled.pd");
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+              file = fileChooser.getSelectedFile();
+              String file_name = file.getPath();
+              if (!file_name.endsWith(".pd")){
+                  file_name += ".pd";
+                  file = new File(file_name);
+              }
+            }
+            
+            DimensionLoader.saveDimension(file, pd);
+            
+          }
+        });
+        
+        load = new JButton("Load");
+        load.addActionListener(new ActionListener()
+        {
+          public void actionPerformed(ActionEvent e)
+          {
+              JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+              if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                  pd = DimensionLoader.loadDimension(fileChooser.getSelectedFile());
+              }
+          }
+        });
+        
+        topDiv.add(pDim);
+        topDiv.add(load);
+        topDiv.add(save);
+        
+        mainPanel.add(topDiv);
+        
+        JPanel customSplit = new JPanel(new GridLayout(1,4,0,0));
         customCheck = new JCheckBox("Use Custom? ");
         customCheck.setHorizontalAlignment(JCheckBox.RIGHT);
         customMethod = new JButton("Custom Method");
@@ -376,8 +418,45 @@ public class WizardWindow extends JFrame{
               cw.setVisibility(true);
           }
         });
+        
+        savec = new JButton("Save");
+        savec.addActionListener(new ActionListener()
+        {
+          public void actionPerformed(ActionEvent e)
+          {            
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+            File file = new File("Untitled.cm");
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+              file = fileChooser.getSelectedFile();
+              String file_name = file.getPath();
+              if (!file_name.endsWith(".cm")){
+                  file_name += ".cm";
+                  file = new File(file_name);
+              }
+            }
+            
+            DimensionLoader.saveMethod(file, customMethodLayout);
+            
+          }
+        });
+        
+        loadc = new JButton("Load");
+        loadc.addActionListener(new ActionListener()
+        {
+          public void actionPerformed(ActionEvent e)
+          {
+              JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+              if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                  customMethodLayout = DimensionLoader.loadMethod(fileChooser.getSelectedFile());
+              }
+          }
+        });
+        
+        
         customSplit.add(customCheck);
         customSplit.add(customMethod);
+        customSplit.add(loadc);
+        customSplit.add(savec);
         mainPanel.add(customSplit);
         
         JPanel comboSplit = new JPanel(new GridLayout(1,2,10,10));
@@ -456,112 +535,7 @@ public class WizardWindow extends JFrame{
               useCustom = customCheck.isSelected();
             }
         });
-        save = new JButton("Save");
-        save.addActionListener(new ActionListener()
-        {
-          public void actionPerformed(ActionEvent e)
-          {            
-              Cell[][] dim = pd.getAllSeats();
-              StringBuilder sb = new StringBuilder();
-              for(int i = 0; i < dim[0].length; i++){
-                  for(int j = 0; j < dim.length; j++){
-                      int outputVal = 0;
-                      CellType ct = dim[j][i].getCellType();
-                      if(ct == CellType.SEAT){
-                          outputVal = 1;
-                      } else if(ct == CellType.PRIORITY_SEAT) {
-                          outputVal = 2;
-                      } else if(ct == CellType.AISLE) {
-                          outputVal = 3;
-                      }
-                      
-                      
-                      sb.append(outputVal).append(" ");
-                  }
-                  sb.append("\n");
-              }
-              String toOut = sb.toString();
-              
-              
-              try {
-                  JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
-                  File file = new File("Untitled.txt");
-                  if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    file = fileChooser.getSelectedFile();
-                    String file_name = file.getPath();
-                    if (!file_name.endsWith(".pd")){
-                        file_name += ".pd";
-                        file = new File(file_name);
-                    }
-                  }
-                  FileOutputStream fos;
-                  fos = new FileOutputStream(file);
-              
-
-                  BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-                  
-                  bw.write(toOut);
-
-                  bw.close();
-                  fos.close();
-              } catch (Exception ex) {
-              }
-          }
-        });
         
-        load = new JButton("Load");
-        load.addActionListener(new ActionListener()
-        {
-          public void actionPerformed(ActionEvent e)
-          {
-              JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
-              if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                try {
-                    FileReader reader = new FileReader(file);
-                    BufferedReader br = new BufferedReader(new FileReader(file));
-                    String line;
-                    ArrayList<ArrayList<Integer>> seatList = new ArrayList<ArrayList<Integer>>();
-                    while ((line = br.readLine()) != null) {
-                        String[] vals = line.split("\\s+");
-                        seatList.add(new ArrayList<Integer>());
-                        for(String a : vals){
-                            seatList.get(seatList.size()-1).add(Integer.parseInt(a));
-                        }
-                    }
-                    reader.close();
-                    br.close();
-                    int columns = seatList.size();
-                    int rows = seatList.get(0).size();
-                    Cell[][] dim = new Cell[rows][columns];
-                    for(int i = 0; i < rows; i++){
-                        Cell[] row = new Cell[columns];
-                        for(int j = 0; j < columns; j++){
-                            CellType ct = CellType.SEAT;
-                            switch(seatList.get(j).get(i)){
-                                case 0:
-                                    ct = CellType.NONE;
-                                    break;
-                                case 1:
-                                    ct = CellType.SEAT;
-                                    break;
-                                case 2:
-                                    ct = CellType.PRIORITY_SEAT;
-                                    break;
-                                case 3:
-                                    ct = CellType.AISLE;
-                            }
-                            row[j] = new Cell(i,j, ct);
-                        }
-                        dim[i] = row;
-                    }
-                    pd = new PlaneDimension(dim);   
-                } catch (IOException ex) {
-            
-                }
-              }
-          }
-        });
         
         JButton help = new JButton("Help");
             help.addActionListener(new ActionListener()
@@ -574,8 +548,6 @@ public class WizardWindow extends JFrame{
         
         
         runSplit.add(run);
-        runSplit.add(save);
-        runSplit.add(load);
         runSplit.add(help);
         mainPanel.add(runSplit);
         

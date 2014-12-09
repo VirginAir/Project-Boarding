@@ -2,6 +2,7 @@
 package projectboarding;
 
 import glhandler.ShaderHandler;
+import java.io.IOException;
 //import glshapes.Triangle;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
@@ -10,6 +11,8 @@ import javax.media.opengl.GLEventListener;
 //import glhandler.GLBufferHandler;
 //import glshapes.Square;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import javax.media.opengl.GL;
 import jml.mat3;
 import sceneobjects.Scene;
@@ -29,22 +32,39 @@ public class GLRender implements GLEventListener{
     private ArrayList<Passenger> passengers;
     //private int pCount;
     private int programHandle;
+    private GLTexture tex;
     //private boolean test = false;
     
     private Scene scene;
 
+    /**
+     * Get array of cells
+     * @return the cells
+     */
     public Cell[][] getCells() {
         return cells;
     }
 
+    /**
+     * Set array of cells
+     * @param cells the new cells to replace with
+     */
     public void setCells(Cell[][] cells) {
         this.cells = cells;
     }
 
+    /**
+     * Get list of passengers
+     * @return the list of passengers
+     */
     public ArrayList<Passenger> getPassengers() {
         return passengers;
     }
 
+     /**
+     * Set list of passengers
+     * @param passengers the new passenger list to replace with
+     */
     public void setPassengers(ArrayList<Passenger> passengers) {
         this.passengers = passengers;
         scene.resetPassengerList();
@@ -63,7 +83,16 @@ public class GLRender implements GLEventListener{
     public void init(GLAutoDrawable drawable) {
         final GL3 gl = drawable.getGL().getGL3();
         
-        this.scene.createScene(600, 800, drawable, this.cells, this.passengers);
+        gl.glEnable(GL3.GL_BLEND);
+        gl.glBlendFunc(GL3.GL_SRC_ALPHA, GL3.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glEnable(GL3.GL_TEXTURE_2D);
+        
+        try {
+            this.scene.createScene(600, 800, drawable, this.cells, this.passengers);
+        } catch (IOException ex) {
+            Logger.getLogger(GLRender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         gl.glClearColor(0.5f, 0.8f, 0.5f, 0.0f);
         
         int vertexShader = ShaderHandler.createShader("shaders/vertex_shader.glsl", GL3.GL_VERTEX_SHADER, gl);
@@ -91,7 +120,12 @@ public class GLRender implements GLEventListener{
         mat3 modelMatrix = new mat3();
         int modelviewMatrixLocation = gl.glGetUniformLocation(programHandle, "modelViewMatrix");
         gl.glUniformMatrix4fv(modelviewMatrixLocation, 1, false, modelMatrix.getMatrixGLForm(), 0);
+        
+        int textureLocation = gl.glGetUniformLocation(programHandle, "textureSampler");
+        gl.glUniform1i(textureLocation, 0);
             
+        scene.getHullTexture().getTx().enable(gl);
+        scene.getHullTexture().getTx().bind(gl);
         gl.glBindVertexArray(scene.getHullID());
         gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
         
@@ -103,6 +137,8 @@ public class GLRender implements GLEventListener{
 
                 gl.glUniformMatrix4fv(modelviewMatrixLocation, 1, false, modelMatrix.getMatrixGLForm(), 0);
 
+                scene.getChairList().get(i).getTex().getTx().enable(gl);
+                scene.getChairList().get(i).getTex().getTx().bind(gl);
                 gl.glBindVertexArray(scene.getChairList().get(i).getObject());
                 gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
             }
@@ -115,6 +151,9 @@ public class GLRender implements GLEventListener{
             
             gl.glUniformMatrix4fv(modelviewMatrixLocation, 1, false, modelMatrix.getMatrixGLForm(), 0);
             
+            
+            scene.getPassengerList().get(i).getTex().getTx().enable(gl);
+            scene.getPassengerList().get(i).getTex().getTx().bind(gl);
             gl.glBindVertexArray(scene.getPassengerList().get(i).getHandle());
             gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 4);
         }

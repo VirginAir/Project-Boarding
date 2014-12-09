@@ -2,6 +2,9 @@ package sceneobjects;
 
 //import glshapes.Square;
 
+import projectboarding.GLTexture;
+
+
 /**
  *
  * @author Ben Cook
@@ -9,12 +12,14 @@ package sceneobjects;
 public class Chair {
     private Vector position;
     private int handle;
+    private GLTexture tex;
     private boolean visible;
 
-    public Chair(Vector position, int handle, boolean visible) {
+    public Chair(Vector position, int handle, GLTexture tex, boolean visible) {
         this.position = position;
         this.handle = handle;
         this.visible = visible;
+        this.tex = tex;
     }
 
     public Vector getPosition() {
@@ -48,7 +53,14 @@ public class Chair {
     public void setObject(int handle) {
         this.handle = handle;
     }
-    
+
+    public GLTexture getTex() {
+        return tex;
+    }
+
+    public void setTex(GLTexture tex) {
+        this.tex = tex;
+    }
     
     
 }

@@ -1,11 +1,13 @@
 package sceneobjects;
 
 import glhandler.GLBufferHandler;
+import java.io.IOException;
 //import glshapes.Square;
 import java.util.ArrayList;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import projectboarding.Cell;
+import projectboarding.GLTexture;
 import projectboarding.Passenger;
 
 /**
@@ -15,9 +17,11 @@ import projectboarding.Passenger;
 public class Scene {
     
     private int hullID;
+    private GLTexture hullTexture;
     private int passengerHandleID;
     private ArrayList<Chair> chairList;
     private ArrayList<PassengerObject> passengerList;
+    private ArrayList<GLTexture> textureList;
     
     private int rowCount;
     private int columnCount;
@@ -26,7 +30,7 @@ public class Scene {
         chairList = new ArrayList<Chair>();
         passengerList = new ArrayList<PassengerObject>();
     }
-    public void createScene(int screenHeight, int screenWidth, GLAutoDrawable drawable, Cell[][] cells, ArrayList<Passenger> passengers){
+    public void createScene(int screenHeight, int screenWidth, GLAutoDrawable drawable, Cell[][] cells, ArrayList<Passenger> passengers) throws IOException{
         
         
         rowCount = cells.length;
@@ -76,45 +80,37 @@ public class Scene {
         float[] posData = 
         {
              paddingWidth-1,             paddingHeight-1, 0.0f,
-             chairWidthSize-paddingWidth-1,   paddingHeight-1, 0.0f,
+             paddingWidth-1,            chairHeightSize-paddingHeight-1, 0.0f,
              chairWidthSize-paddingWidth-1,   chairHeightSize-paddingHeight-1, 0.0f,
-             paddingWidth-1,            chairHeightSize-paddingHeight-1, 0.0f
+             chairWidthSize-paddingWidth-1,   paddingHeight-1, 0.0f
         };
         
-        float[] colDataNormSeat = 
+        float[] uvData =
         {
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f
-        };
-        
-        float[] colDataPrioritySeat = 
-        {
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f
-        };
-        
-        float[] colDataPassenger = 
-        {
-           0.0f, 1.0f, 0.0f,
-           0.0f, 1.0f, 0.0f,
-           0.0f, 1.0f, 0.0f,
-           0.0f, 1.0f, 0.0f
+          0.0f, 1.0f,
+          0.0f, 0.0f,
+          1.0f, 0.0f,
+          1.0f, 1.0f
         };
         
         final GL3 gl = drawable.getGL().getGL3();
-        createHull(vDistance, vAdjust, paddingHeight, gl);
+        
+        textureList = new ArrayList<>();
+        textureList.add(new GLTexture("Chair", "images/chair.png", gl));
+        textureList.add(new GLTexture("Priority", "images/priority.png", gl));
+        textureList.add(new GLTexture("Passenger", "images/passenger.png", gl));
+        textureList.add(new GLTexture("Passenger", "images/hull.png", gl));
+        
+        
+        createHull(vDistance, vAdjust, paddingHeight+0.02f, gl);
         final int VERTEX_POSITION_INDEX = 0;
-        final int VERTEX_COLOUR_INDEX = 1;
+        final int VERTEX_UV_INDEX = 1;
         int[] handleNorm = {0};
         int[] handlePrior = {0};
         int[] handlePass = {0};
-        GLBufferHandler.setupBuffers(handleNorm, posData, colDataNormSeat, VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
-        GLBufferHandler.setupBuffers(handlePrior, posData, colDataPrioritySeat, VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
-        GLBufferHandler.setupBuffers(handlePass, posData, colDataPassenger, VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
+        GLBufferHandler.setupBuffers(handleNorm, posData, uvData, VERTEX_POSITION_INDEX, VERTEX_UV_INDEX, gl);
+        GLBufferHandler.setupBuffers(handlePrior, posData, uvData, VERTEX_POSITION_INDEX, VERTEX_UV_INDEX, gl);
+        GLBufferHandler.setupBuffers(handlePass, posData, uvData, VERTEX_POSITION_INDEX, VERTEX_UV_INDEX, gl);
         
         passengerHandleID = handlePass[0];
         
@@ -124,13 +120,13 @@ public class Scene {
                 
                 if(cells[i][j].getCellType() == Cell.CellType.PRIORITY_SEAT){
                     float y = j*chairHeightBoundarySize - vAdjust;
-                    chairList.add(new Chair(new Vector(x, y), handlePrior[0], true));
+                    chairList.add(new Chair(new Vector(x, y), handlePrior[0], textureList.get(1), true));
                 } else if(cells[i][j].getCellType() == Cell.CellType.SEAT) {
                     float y = j*chairHeightBoundarySize - vAdjust;
-                    chairList.add(new Chair(new Vector(x, y), handleNorm[0], true));
+                    chairList.add(new Chair(new Vector(x, y), handleNorm[0], textureList.get(0), true));
                 } else  {
                     float y = j*chairHeightBoundarySize - vAdjust;
-                    chairList.add(new Chair(new Vector(x, y), handleNorm[0], false));
+                    chairList.add(new Chair(new Vector(x, y), handleNorm[0], textureList.get(1), false));
                 }
             }
         }
@@ -154,21 +150,23 @@ public class Scene {
              1.f,            Math.abs(vAdjust)-padding-1, 0.0f
         };
         
-        float[] colData = 
+        float[] uvData =
         {
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f
+          0.0f, 1.0f,
+          0.0f, 0.0f,
+          1.0f, 0.0f,
+          1.0f, 1.0f
         };
         
         final int VERTEX_POSITION_INDEX = 0;
-        final int VERTEX_COLOUR_INDEX = 1;
+        final int VERTEX_UV_INDEX = 1;
         
         int[] handle = {0};
-        GLBufferHandler.setupBuffers(handle, posData, colData, VERTEX_POSITION_INDEX, VERTEX_COLOUR_INDEX, gl);
+        GLBufferHandler.setupBuffers(handle, posData,  uvData, VERTEX_POSITION_INDEX, VERTEX_UV_INDEX, gl);
         
         hullID = handle[0];
+        
+        hullTexture = textureList.get(3);
     }
     
     public void updatePassengers(ArrayList<Passenger> passengers){
@@ -176,7 +174,7 @@ public class Scene {
             if(i >= this.passengerList.size()){
                 int row = passengers.get(i).getCurrentCell().getCellRow();
                 int column = passengers.get(i).getCurrentCell().getCellColumn();
-                passengerList.add(new PassengerObject(i, chairList.get(row*columnCount + column).getPosition(), passengerHandleID));
+                passengerList.add(new PassengerObject(i, chairList.get(row*columnCount + column).getPosition(), passengerHandleID, textureList.get(2)));
             } else {
                 int row = passengers.get(i).getCurrentCell().getCellRow();
                 int column = passengers.get(i).getCurrentCell().getCellColumn();
@@ -203,6 +201,14 @@ public class Scene {
 
     public void setChairList(ArrayList<Chair> chairList) {
         this.chairList = chairList;
+    }
+
+    public GLTexture getHullTexture() {
+        return hullTexture;
+    }
+
+    public void setHullTexture(GLTexture hullTexture) {
+        this.hullTexture = hullTexture;
     }
     
     

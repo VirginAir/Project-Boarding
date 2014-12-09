@@ -1,5 +1,7 @@
 package sceneobjects;
 
+import projectboarding.GLTexture;
+
 /**
  *
  * @author Ben Cook
@@ -8,11 +10,13 @@ public class PassengerObject {
     private int ID;
     private Vector position;
     private int handle;
+    private GLTexture tex;
 
-    public PassengerObject(int ID, Vector position, int handle) {
+    public PassengerObject(int ID, Vector position, int handle, GLTexture tex) {
         this.ID = ID;
         this.position = position;
         this.handle = handle;
+        this.tex = tex;
     }
 
     public Vector getPosition() {
@@ -38,4 +42,14 @@ public class PassengerObject {
     public void setHandle(int handle) {
         this.handle = handle;
     }
+
+    public GLTexture getTex() {
+        return tex;
+    }
+
+    public void setTex(GLTexture tex) {
+        this.tex = tex;
+    }
+    
+    
 }

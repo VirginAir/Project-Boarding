@@ -16,6 +16,7 @@ public class PlaneDimension {
     private final Cell[][] prioritySeats;
     private final Cell[][] normalSeats;
     
+    
     public PlaneDimension(Cell[][] planeSeats) {
         this.planeSeats = planeSeats;
         

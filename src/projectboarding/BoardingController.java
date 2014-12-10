@@ -36,6 +36,7 @@ public class BoardingController {
      * Create the boarding controller for the given run of results
      * 
      * @param planeDimension The plane dimension created by the user
+     * @param useCustom Boolean if the program should run with the custom method
      * @param customMethod The custom method created by the user, can be null
      */
     public BoardingController(PlaneDimension planeDimension, boolean useCustom, int[][] customMethod) {

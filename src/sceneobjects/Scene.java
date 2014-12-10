@@ -80,10 +80,10 @@ public class Scene {
         
         float[] posData = 
         {
-             paddingWidth-1,             paddingHeight-1, 0.0f,
-             paddingWidth-1,            chairHeightSize-paddingHeight-1, 0.0f,
-             chairWidthSize-paddingWidth-1,   chairHeightSize-paddingHeight-1, 0.0f,
-             chairWidthSize-paddingWidth-1,   paddingHeight-1, 0.0f
+             paddingWidth-1,             -(paddingHeight-1), 0.0f,
+             paddingWidth-1,            -(chairHeightSize-paddingHeight-1), 0.0f,
+             chairWidthSize-paddingWidth-1,   -(chairHeightSize-paddingHeight-1), 0.0f,
+             chairWidthSize-paddingWidth-1,   -(paddingHeight-1), 0.0f
         };
         
         float[] uvData =
@@ -120,13 +120,13 @@ public class Scene {
             for(int j = 0; j < columnCount; j++){
                 
                 if(cells[i][j].getCellType() == Cell.CellType.PRIORITY_SEAT){
-                    float y = j*chairHeightBoundarySize - vAdjust;
+                    float y = -(j*chairHeightBoundarySize - vAdjust);
                     chairList.add(new Chair(new Vector(x, y), handlePrior[0], textureList.get(1), true));
                 } else if(cells[i][j].getCellType() == Cell.CellType.SEAT) {
-                    float y = j*chairHeightBoundarySize - vAdjust;
+                    float y = -(j*chairHeightBoundarySize - vAdjust);
                     chairList.add(new Chair(new Vector(x, y), handleNorm[0], textureList.get(0), true));
                 } else  {
-                    float y = j*chairHeightBoundarySize - vAdjust;
+                    float y = -(j*chairHeightBoundarySize - vAdjust);
                     chairList.add(new Chair(new Vector(x, y), handleNorm[0], textureList.get(1), false));
                 }
             }

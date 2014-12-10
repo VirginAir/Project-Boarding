@@ -90,7 +90,7 @@ public class WizardWindow extends JFrame{
             this.addWindowListener(new WindowAdapter(){
                 @Override
                 public void windowClosing(WindowEvent e){
-                    
+                    WizardWindow.this.setEnabled(true);
                 }
             });
             
@@ -113,10 +113,13 @@ public class WizardWindow extends JFrame{
                   
                   if(hasAisle && hasSeat){
                     getPlaneLayout();
+                    customMethodLayout = createDefaultCustomMethod(pd);
+                    JOptionPane.showMessageDialog(null, "Custom Method Replaced", "Notice", 1);
                     save.setEnabled(true);
                     customMethod.setEnabled(true);
                     loadc.setEnabled(true);
                     run.setEnabled(true);
+                    WizardWindow.this.setEnabled(true);
                     done = true;
                   } else if(!hasAisle){
                       JOptionPane.showMessageDialog(null, "No aisle present!", "Error", 2);
@@ -132,6 +135,7 @@ public class WizardWindow extends JFrame{
             {
               public void actionPerformed(ActionEvent e)
               {
+                  WizardWindow.this.setEnabled(true);
                   done = true;
               }
             });
@@ -263,6 +267,7 @@ public class WizardWindow extends JFrame{
             this.addWindowListener(new WindowAdapter(){
                 @Override
                 public void windowClosing(WindowEvent e){
+                    WizardWindow.this.setEnabled(true);
                 }
             });
             JPanel superPanel = new JPanel(new GridLayout(2,1,0,0));
@@ -275,6 +280,7 @@ public class WizardWindow extends JFrame{
                   if(getMethodLayout()){
                     savec.setEnabled(true);
                     customCheck.setEnabled(true);
+                    WizardWindow.this.setEnabled(true);
                     done = true;
                   }
               }
@@ -285,6 +291,7 @@ public class WizardWindow extends JFrame{
             {
               public void actionPerformed(ActionEvent e)
               {
+                  WizardWindow.this.setEnabled(true);
                   done = true;
               }
             });
@@ -421,7 +428,7 @@ public class WizardWindow extends JFrame{
                       "Column Count",
                       "Dimension Selection",
                       JOptionPane.PLAIN_MESSAGE);
-                try { 
+                try {                     
                     Integer.parseInt(row); 
                     NaN = false;
                     
@@ -433,6 +440,9 @@ public class WizardWindow extends JFrame{
                         NaN = true;
                     }
                 } catch(NumberFormatException ex) { 
+                    if(row == null){
+                        return;
+                    }
                     JOptionPane.showMessageDialog(null, "Not a number!", "Error", 2);
                 }
               }
@@ -448,10 +458,7 @@ public class WizardWindow extends JFrame{
                     Integer.parseInt(column); 
                     NaN = false;
                     
-                    if(Integer.parseInt(column) <= 0){
-                        JOptionPane.showMessageDialog(null, "Must be above 0!", "Error", 2);
-                        NaN = true;
-                    } else if(Integer.parseInt(column) < 2){
+                    if(Integer.parseInt(column) < 2){
                         JOptionPane.showMessageDialog(null, "A plane can't have less than two rows!", "Error", 2);
                         NaN = true;
                     } else if(Integer.parseInt(column) > 20){
@@ -459,6 +466,9 @@ public class WizardWindow extends JFrame{
                         NaN = true;
                     }
                 } catch(NumberFormatException ex) { 
+                    if(column == null){
+                        return;
+                    }
                     JOptionPane.showMessageDialog(null, "Not a number!", "Error", 2);
                 }
               }
@@ -466,6 +476,7 @@ public class WizardWindow extends JFrame{
               int colInt = Integer.parseInt(column);
               sw = new SeatingWindow("Plane Dimensions", rowInt, colInt);
               sw.setVisibility(true);
+              WizardWindow.this.setEnabled(false);
           }
         });
         
@@ -497,14 +508,19 @@ public class WizardWindow extends JFrame{
           {
               JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//dim");
               if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                  pd = DimensionLoader.loadDimension(fileChooser.getSelectedFile());
-                  
-                  customMethodLayout = createDefaultCustomMethod(pd);
-                  
-                  save.setEnabled(true);
-                  customMethod.setEnabled(true);
-                  loadc.setEnabled(true);
-                  run.setEnabled(true);
+                  if(fileChooser.getSelectedFile().getName().endsWith(".pd")){
+                    pd = DimensionLoader.loadDimension(fileChooser.getSelectedFile());
+
+                    customMethodLayout = createDefaultCustomMethod(pd);
+                    JOptionPane.showMessageDialog(null, "Custom Method Replaced", "Notice", 1);
+
+                    save.setEnabled(true);
+                    customMethod.setEnabled(true);
+                    loadc.setEnabled(true);
+                    run.setEnabled(true);
+                  } else {
+                      JOptionPane.showMessageDialog(null, "Must be a .pd file!", "Error", 1);
+                  }
               }
           }
         });
@@ -525,6 +541,7 @@ public class WizardWindow extends JFrame{
           {
               cw = new CustomWindow("Custom Method" , pd.getNumberOfColumns(), pd.totalNumberOfRows());
               cw.setVisibility(true);
+              WizardWindow.this.setEnabled(false);
           }
         });
         
@@ -556,26 +573,29 @@ public class WizardWindow extends JFrame{
           {
               JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//met");
               if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                  int[][] tempLayout = DimensionLoader.loadMethod(fileChooser.getSelectedFile());
+                  if(fileChooser.getSelectedFile().getName().endsWith(".cm")){
                   
-                  
-                  
-                  if((tempLayout.length != pd.getNumberOfColumns()) || (tempLayout[0].length != pd.totalNumberOfRows())){
-                        JOptionPane.showMessageDialog(null, "Incompatible method!", "Error", 2);
+                    int[][] tempLayout = DimensionLoader.loadMethod(fileChooser.getSelectedFile());
+
+                    if((tempLayout.length != pd.getNumberOfColumns()) || (tempLayout[0].length != pd.totalNumberOfRows())){
+                          JOptionPane.showMessageDialog(null, "Incompatible method!", "Error", 2);
+                    } else {
+                          Cell[][] pdCells = pd.getAllSeats();
+                          for(int i = 0; i < pdCells.length; i++){
+                              for(int j = 0; j < pdCells[0].length; j++){
+                                  if((pdCells[i][j].getCellType() == CellType.SEAT) && (tempLayout[i][j] == -1)
+                                          || (pdCells[i][j].getCellType() != CellType.SEAT) && (tempLayout[i][j] != -1)){
+                                      JOptionPane.showMessageDialog(null, "Incompatible method!", "Error", 2);
+                                      return;
+                                  }
+                              }
+                          }
+                          customMethodLayout = tempLayout;
+                          savec.setEnabled(true);
+                          customCheck.setEnabled(true);
+                    }
                   } else {
-                        Cell[][] pdCells = pd.getAllSeats();
-                        for(int i = 0; i < pdCells.length; i++){
-                            for(int j = 0; j < pdCells[0].length; j++){
-                                if((pdCells[i][j].getCellType() == CellType.SEAT) && (tempLayout[i][j] == -1)
-                                        || (pdCells[i][j].getCellType() != CellType.SEAT) && (tempLayout[i][j] != -1)){
-                                    JOptionPane.showMessageDialog(null, "Incompatible method!", "Error", 2);
-                                    return;
-                                }
-                            }
-                        }
-                        customMethodLayout = tempLayout;
-                        savec.setEnabled(true);
-                        customCheck.setEnabled(true);
+                      JOptionPane.showMessageDialog(null, "Must be a .cm file!", "Error", 1);
                   }
               }
           }

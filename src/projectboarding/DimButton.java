@@ -24,6 +24,7 @@ public class DimButton {
         this.isAisle = false;
         this.button = extButton;
         this.button.setText("S");
+        this.button.setForeground(Color.white);
         this.button.setBackground(Color.red);
         //this.button.setFont(new Font("Arial", Font.PLAIN, 10));
         this.button.setMargin(new Insets(1,1,1,1));  
@@ -37,14 +38,17 @@ public class DimButton {
                         seatType = 2;
                         button.setText("P");
                         button.setBackground(Color.yellow);
+                        button.setForeground(Color.black);
                     } else if (seatType == 2){
                         seatType = 0;
                         button.setText("N");
                         button.setBackground(Color.BLUE);
+                        button.setForeground(Color.white);
                     } else if (seatType == 0){
                         seatType = 1;
                         button.setText("S");
                         button.setBackground(Color.RED);
+                        button.setForeground(Color.white);
                     }
                 }
             }
@@ -60,11 +64,13 @@ public class DimButton {
             seatType = 1;
             button.setText("S");
             button.setBackground(Color.RED);
+            button.setForeground(Color.white);
         } else {
             isAisle = true;
             seatType = 3;
             button.setText("A");
             button.setBackground(Color.BLACK);
+            button.setForeground(Color.white);
         }
     }
     

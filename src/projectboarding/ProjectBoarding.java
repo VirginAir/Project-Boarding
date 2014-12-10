@@ -126,6 +126,7 @@ public class ProjectBoarding {
                         repeat--;
                         resultList.add(controller.getResults());
                         
+                        rw.setVisibility(false);
                         controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
                         controller.stopBoarding();
                         controller.getPlaneDimension().resetHasPassengers();

@@ -166,12 +166,7 @@ public class GLWindow extends JFrame{
         this.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
-                if(animator.isStarted()){
-                    System.out.println("Stopping FPSAnimator...");
-                    animator.stop();
-                    System.out.println("FPSAnimator stopped...");
-                }
-                System.exit(0);
+                stopped = true;
             }
         }); 
     }

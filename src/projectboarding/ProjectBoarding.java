@@ -37,8 +37,8 @@ public class ProjectBoarding {
     public static void main(String[] args) throws InterruptedException, IOException {
         
         
-        PlaneDimension planeDimension = DimensionLoader.loadDimension(new File("saves/dim/main.pd"));
-        int[][] custom = DimensionLoader.loadMethod(new File("saves/met/main.cm"));     
+        PlaneDimension planeDimension = DimensionLoader.loadDimension(new File("saves/dim/Project Main.pd"));
+        int[][] custom = DimensionLoader.loadMethod(new File("saves/met/Project Main.cm"));     
         
         BoardingController controller = new BoardingController(planeDimension, true, custom);
         

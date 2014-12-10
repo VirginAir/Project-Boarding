@@ -15,6 +15,8 @@ import javax.swing.JTextPane;
 /**
  * The help screen for the application
  * 
+ * Code from Matthew Kempson's year 3 project.
+ * 
  * @author Matthew
  * @version 1.0
  */
@@ -81,7 +83,7 @@ public class HelpFrame extends JFrame {
          
         // Add the tabs to the pane
         this.tabbedPane.addTab("Index", indexPanel);
-        this.tabbedPane.addTab("Use Example", this.useExample);
+        this.tabbedPane.addTab("Running a simulation", this.useExample);
         this.tabbedPane.addTab("Plane Creation", this.planeCreation);
         this.tabbedPane.addTab("Default Method", this.defaultSeatingMethod);
         this.tabbedPane.addTab("Custom Method", this.customSeatingMethod);

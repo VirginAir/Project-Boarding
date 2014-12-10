@@ -15,6 +15,12 @@ import javax.swing.JPanel;
 public class RunningWindow extends JFrame{
     private JLabel status;
     private int totalRuns;
+    
+    /**
+     * Create the running window
+     * @param title the window title
+     * @param totalRuns the total number of runs
+     */
     public RunningWindow(String title, int totalRuns){
         super(title);
         this.setSize(new Dimension(175, 75));

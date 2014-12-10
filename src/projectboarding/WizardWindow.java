@@ -616,8 +616,8 @@ public class WizardWindow extends JFrame{
                   if(fileChooser.getSelectedFile().getName().endsWith(".cm")){
                   
                     int[][] tempLayout = DimensionLoader.loadMethod(fileChooser.getSelectedFile());
-
-                    if((tempLayout.length != pd.getNumberOfColumns()) || (tempLayout[0].length != pd.totalNumberOfRows())){
+                    
+                    if((tempLayout[0].length != pd.getNumberOfColumns()) || (tempLayout.length != pd.totalNumberOfRows())){
                           JOptionPane.showMessageDialog(null, "Incompatible method!", "Error", 2);
                     } else {
                           Cell[][] pdCells = pd.getAllSeats();
@@ -786,7 +786,11 @@ public class WizardWindow extends JFrame{
         }
     }
     
-    
+    /**
+     * Create a default custom method
+     * @param pd the plane dimension
+     * @return the custom method
+     */
     public int[][] createDefaultCustomMethod(PlaneDimension pd){
         int[][] customArray = new int[pd.totalNumberOfRows()][pd.getNumberOfColumns()];
         Cell[][] pdCells = pd.getAllSeats();

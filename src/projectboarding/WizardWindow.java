@@ -496,6 +496,8 @@ public class WizardWindow extends JFrame{
               JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//dim");
               if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                   pd = DimensionLoader.loadDimension(fileChooser.getSelectedFile());
+                  
+                  
                   save.setEnabled(true);
                   customMethod.setEnabled(true);
                   loadc.setEnabled(true);
@@ -687,6 +689,8 @@ public class WizardWindow extends JFrame{
             cw.setVisibility(false);
         }
     }
+    
+    
 
     /**
      * Get the iteration count

@@ -15,6 +15,8 @@ import javax.swing.JTextPane;
 /**
  * The help screen for the application
  * 
+ * Code from Matthew Kempson's year 3 project.
+ * 
  * @author Matthew
  * @version 1.0
  */

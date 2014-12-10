@@ -346,6 +346,8 @@ public class WizardWindow extends JFrame{
                 }
                 dim[i] = row;
             }
+            
+            
             customMethodLayout = dim;
             return true;
         }
@@ -497,6 +499,7 @@ public class WizardWindow extends JFrame{
               if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                   pd = DimensionLoader.loadDimension(fileChooser.getSelectedFile());
                   
+                  customMethodLayout = createDefaultCustomMethod(pd);
                   
                   save.setEnabled(true);
                   customMethod.setEnabled(true);
@@ -553,9 +556,27 @@ public class WizardWindow extends JFrame{
           {
               JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//met");
               if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                  customMethodLayout = DimensionLoader.loadMethod(fileChooser.getSelectedFile());
-                  savec.setEnabled(true);
-                  customCheck.setEnabled(true);
+                  int[][] tempLayout = DimensionLoader.loadMethod(fileChooser.getSelectedFile());
+                  
+                  
+                  
+                  if((tempLayout.length != pd.getNumberOfColumns()) || (tempLayout[0].length != pd.totalNumberOfRows())){
+                        JOptionPane.showMessageDialog(null, "Incompatible method!", "Error", 2);
+                  } else {
+                        Cell[][] pdCells = pd.getAllSeats();
+                        for(int i = 0; i < pdCells.length; i++){
+                            for(int j = 0; j < pdCells[0].length; j++){
+                                if((pdCells[i][j].getCellType() == CellType.SEAT) && (tempLayout[i][j] == -1)
+                                        || (pdCells[i][j].getCellType() != CellType.SEAT) && (tempLayout[i][j] != -1)){
+                                    JOptionPane.showMessageDialog(null, "Incompatible method!", "Error", 2);
+                                    return;
+                                }
+                            }
+                        }
+                        customMethodLayout = tempLayout;
+                        savec.setEnabled(true);
+                        customCheck.setEnabled(true);
+                  }
               }
           }
         });
@@ -691,6 +712,20 @@ public class WizardWindow extends JFrame{
     }
     
     
+    public int[][] createDefaultCustomMethod(PlaneDimension pd){
+        int[][] customArray = new int[pd.totalNumberOfRows()][pd.getNumberOfColumns()];
+        Cell[][] pdCells = pd.getAllSeats();
+        for(int i = 0; i < pdCells.length; i++){
+            for(int j = 0; j < pdCells[0].length; j++){
+                if(pdCells[i][j].getCellType() == CellType.SEAT){
+                    customArray[i][j] = 1;
+                } else {
+                    customArray[i][j] = -1;
+                }
+            }
+        }
+        return customArray;
+    }
 
     /**
      * Get the iteration count

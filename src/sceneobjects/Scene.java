@@ -249,7 +249,4 @@ public class Scene {
     public void setHullTexture(GLTexture hullTexture) {
         this.hullTexture = hullTexture;
     }
-    
-    
-    
 }

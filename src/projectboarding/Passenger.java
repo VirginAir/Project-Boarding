@@ -20,6 +20,7 @@ public class Passenger {
 
     /**
      * Create a new passenger
+     *
      * @param seat the seat the passenger going to
      * @param hasBaggageWeight the weighting to give the baggage
      */
@@ -41,6 +42,7 @@ public class Passenger {
 
     /**
      * get the time per row
+     *
      * @return the time per row
      */
     public int getTimePerRow() {
@@ -49,6 +51,7 @@ public class Passenger {
 
     /**
      * get the seat
+     *
      * @return the seat the passenger is on
      */
     public Cell getSeat() {
@@ -57,6 +60,7 @@ public class Passenger {
 
     /**
      * Get the baggage time
+     *
      * @return get the time it take to put away baggage
      */
     public int getBaggageTime() {
@@ -65,6 +69,7 @@ public class Passenger {
 
     /**
      * Get the seat interference time
+     *
      * @return the seat interference time
      */
     public int getSeatInterferenceTime() {
@@ -73,6 +78,7 @@ public class Passenger {
 
     /**
      * Get the current cell
+     *
      * @return the current cell of the passenger
      */
     public Cell getCurrentCell() {
@@ -81,6 +87,7 @@ public class Passenger {
 
     /**
      * Get if the passenger has taken their seat
+     *
      * @return true taken false not taken
      */
     public boolean isHasTakenSeat() {
@@ -89,6 +96,7 @@ public class Passenger {
 
     /**
      * Set the current cell of the passenger
+     *
      * @param currentCell the current cell the passenger is on
      */
     public void setCurrentCell(Cell currentCell) {
@@ -97,14 +105,16 @@ public class Passenger {
 
     /**
      * Set the aisle the passenger is on
+     *
      * @param aisle the aisle the passenger is on
      */
     public void setAisle(int aisle) {
         this.aisle = aisle;
     }
-    
+
     /**
      * Get the aisle the passenger is on
+     *
      * @return the aisle the passenger is on
      */
     public int getAisle() {
@@ -113,6 +123,7 @@ public class Passenger {
 
     /**
      * Set if the passenger has taken their seat
+     *
      * @param hasTakenSeat true taken false not taken
      */
     public void setHasTakenSeat(boolean hasTakenSeat) {
@@ -121,6 +132,7 @@ public class Passenger {
 
     /**
      * Set the seat interference time
+     *
      * @param seatInterferenceTime set the seat interference time
      */
     public void setSeatInterferenceTime(int seatInterferenceTime) {
@@ -157,6 +169,7 @@ public class Passenger {
 
     /**
      * Get the number of interfering passengers
+     *
      * @return the number of interfering passengers
      */
     public int getInterferingPassengers() {
@@ -168,5 +181,5 @@ public class Passenger {
      */
     public void addInteferingPassengers() {
         this.interferingPassengers++;
-    }    
+    }
 }

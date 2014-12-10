@@ -7,6 +7,7 @@ import projectboarding.GLTexture;
  * @author Ben Cook
  */
 public class PassengerObject {
+
     private int ID;
     private Vector position;
     private int handle;
@@ -14,6 +15,7 @@ public class PassengerObject {
 
     /**
      * Create the passenger object
+     *
      * @param ID the passenger id
      * @param position the position
      * @param handle the handle
@@ -27,6 +29,7 @@ public class PassengerObject {
 
     /**
      * Get the position
+     *
      * @return the position
      */
     public Vector getPosition() {
@@ -35,6 +38,7 @@ public class PassengerObject {
 
     /**
      * Get the id
+     *
      * @return the id
      */
     public int getID() {
@@ -43,6 +47,7 @@ public class PassengerObject {
 
     /**
      * set the id
+     *
      * @param ID the id
      */
     public void setID(int ID) {
@@ -51,6 +56,7 @@ public class PassengerObject {
 
     /**
      * Set the position
+     *
      * @param position the position
      */
     public void setPosition(Vector position) {
@@ -59,6 +65,7 @@ public class PassengerObject {
 
     /**
      * Get the handle
+     *
      * @return the handle
      */
     public int getHandle() {
@@ -67,6 +74,7 @@ public class PassengerObject {
 
     /**
      * Set the handle
+     *
      * @param handle the handle
      */
     public void setHandle(int handle) {
@@ -80,6 +88,4 @@ public class PassengerObject {
     public void setTex(GLTexture tex) {
         this.tex = tex;
     }
-    
-    
 }

@@ -11,7 +11,6 @@ public class BoardingController {
 
     /* The plane dimension */
     private final PlaneDimension planeDimension;
-    
     /* The boarding handlers for each of the different methods */
     private final BoardingHandler btfBoardingHandler;
     private final BoardingHandler bBoardingHandler;
@@ -21,27 +20,22 @@ public class BoardingController {
     private final BoardingHandler rpBoardingHandler;
     private final BoardingHandler rzBoardingHandler;
     private BoardingHandler cBoardingHandler;
-    
     /* Container for all of the threads */
     private final Thread[] threads = new Thread[8];
-    
-    /* The final results string */
-    //private String results;
-    
     /* Boolean values to determin certain continuation rules */
     private boolean threadsCreated = false;
     private boolean useCustom = false;
 
     /**
      * Create the boarding controller for the given run of results
-     * 
+     *
      * @param planeDimension The plane dimension created by the user
      * @param useCustom Boolean if the program should run with the custom method
      * @param customMethod The custom method created by the user, can be null
      */
     public BoardingController(PlaneDimension planeDimension, boolean useCustom, int[][] customMethod) {
         this.planeDimension = planeDimension;
-        
+
         // Set the boolean value
         this.useCustom = useCustom;
 
@@ -53,50 +47,51 @@ public class BoardingController {
         this.rBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.RANDOM);
         this.rpBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.REVERSE_PYRAMID);
         this.rzBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), DefaultSeatingMethod.ROTATING_ZONE);
-        if(useCustom){
+        if (useCustom) {
             this.cBoardingHandler = new BoardingHandler(new PlaneDimension(planeDimension), customMethod);
         }
-        
+
         this.resetBoardingHandlers();
-        
+
         // Let the program know the threads have been created
         threadsCreated = true;
     }
-    
+
     /**
      * Start the boarding process for all of the handlers
+     *
      * @param toTime The method the user has selected to view on screen
      */
     public void startBoarding(DefaultSeatingMethod toTime) {
         this.resetBoardingHandlers();
-        
+
         // Set the handler which is on a timer
-        if(toTime.equals(DefaultSeatingMethod.BACK_TO_FRONT)){
+        if (toTime.equals(DefaultSeatingMethod.BACK_TO_FRONT)) {
             this.btfBoardingHandler.setWithTimer(true);
-        } else if(toTime.equals(DefaultSeatingMethod.BLOCK_BOARDING)){
+        } else if (toTime.equals(DefaultSeatingMethod.BLOCK_BOARDING)) {
             this.bBoardingHandler.setWithTimer(true);
-        } else if(toTime.equals(DefaultSeatingMethod.BY_SEAT)){
+        } else if (toTime.equals(DefaultSeatingMethod.BY_SEAT)) {
             this.bsBoardingHandler.setWithTimer(true);
-        } else if(toTime.equals(DefaultSeatingMethod.OUTSIDE_IN)){
+        } else if (toTime.equals(DefaultSeatingMethod.OUTSIDE_IN)) {
             this.oiBoardingHandler.setWithTimer(true);
-        } else if(toTime.equals(DefaultSeatingMethod.RANDOM)){
+        } else if (toTime.equals(DefaultSeatingMethod.RANDOM)) {
             this.rBoardingHandler.setWithTimer(true);
-        } else if(toTime.equals(DefaultSeatingMethod.REVERSE_PYRAMID)){
+        } else if (toTime.equals(DefaultSeatingMethod.REVERSE_PYRAMID)) {
             this.rpBoardingHandler.setWithTimer(true);
-        } else if(toTime.equals(DefaultSeatingMethod.ROTATING_ZONE)){
+        } else if (toTime.equals(DefaultSeatingMethod.ROTATING_ZONE)) {
             this.rzBoardingHandler.setWithTimer(true);
-        } else if(toTime.equals(DefaultSeatingMethod.CUSTOM)){
+        } else if (toTime.equals(DefaultSeatingMethod.CUSTOM)) {
             this.cBoardingHandler.setWithTimer(true);
         }
-        
+
         // Start all of the the threads simultaniously
         for (int i = 0; i < this.threads.length; i++) {
-            if(!(i == 7 && !useCustom) && !threads[i].isAlive()){
+            if (!(i == 7 && !useCustom) && !threads[i].isAlive()) {
                 threads[i].start();
             }
         }
     }
-    
+
     /**
      * Reset all of the boarding handlers and threads
      */
@@ -109,12 +104,12 @@ public class BoardingController {
         this.rBoardingHandler.reset();
         this.rpBoardingHandler.reset();
         this.rzBoardingHandler.reset();
-        if(useCustom){
-             this.cBoardingHandler.reset();
+        if (useCustom) {
+            this.cBoardingHandler.reset();
         }
-        
+
         /* Recreate the threads. Has to be done because when 
-           a thread teminated in Java you are unable to restart it */
+         a thread teminated in Java you are unable to restart it */
         this.threads[0] = new Thread(this.btfBoardingHandler);
         this.threads[0].setName("Back to Front");
         this.threads[1] = new Thread(this.bBoardingHandler);
@@ -129,11 +124,11 @@ public class BoardingController {
         this.threads[5].setName("Reverse Pyramid");
         this.threads[6] = new Thread(this.rzBoardingHandler);
         this.threads[6].setName("Rotating Zone");
-        if(useCustom){
+        if (useCustom) {
             this.threads[7] = new Thread(this.cBoardingHandler);
             this.threads[7].setName("Custom");
         }
-        
+
         // Reset the timer boolean
         this.btfBoardingHandler.setWithTimer(false);
         this.bBoardingHandler.setWithTimer(false);
@@ -142,11 +137,11 @@ public class BoardingController {
         this.rBoardingHandler.setWithTimer(false);
         this.rpBoardingHandler.setWithTimer(false);
         this.rzBoardingHandler.setWithTimer(false);
-        if(useCustom){
-             this.cBoardingHandler.setWithTimer(false);
+        if (useCustom) {
+            this.cBoardingHandler.setWithTimer(false);
         }
     }
-    
+
     /**
      * Stop the boarding process for all of the handlers
      */
@@ -158,13 +153,14 @@ public class BoardingController {
         this.rBoardingHandler.stopBoarding();
         this.rpBoardingHandler.stopBoarding();
         this.rzBoardingHandler.stopBoarding();
-        if(useCustom){
+        if (useCustom) {
             this.cBoardingHandler.stopBoarding();
-        }        
+        }
     }
-    
+
     /**
      * Get the seat visualisation for use in the UI
+     *
      * @param method The method for the visualisation
      * @return A 2D Cell array containing the seating visualisation
      */
@@ -190,9 +186,10 @@ public class BoardingController {
                 return null;
         }
     }
-    
+
     /**
      * Get the passengers for the given seating method
+     *
      * @param method The seating method
      * @return The passengers list for the given seating method
      */
@@ -218,30 +215,32 @@ public class BoardingController {
                 return null;
         }
     }
-    
+
     /**
      * Check if the boarding handlers have completed the boarding process
+     *
      * @return A boolean, true = complete
      */
-    public boolean checkComplete(){
+    public boolean checkComplete() {
         // Check that the threads have completed
-        if(!threadsCreated
-                ||!this.btfBoardingHandler.isHasCompleted() 
-                || !this.bBoardingHandler.isHasCompleted() 
+        if (!threadsCreated
+                || !this.btfBoardingHandler.isHasCompleted()
+                || !this.bBoardingHandler.isHasCompleted()
                 || !this.bsBoardingHandler.isHasCompleted()
                 || !this.oiBoardingHandler.isHasCompleted()
                 || !this.rBoardingHandler.isHasCompleted()
                 || !this.rpBoardingHandler.isHasCompleted()
                 || !this.rzBoardingHandler.isHasCompleted()
-                || useCustom && !this.cBoardingHandler.isHasCompleted()){
+                || useCustom && !this.cBoardingHandler.isHasCompleted()) {
             return false;
         }
-        
+
         return true;
     }
 
     /**
      * Get the results of the plane boarding process
+     *
      * @return A Results object containing the results
      */
     public Results getResults() {
@@ -253,17 +252,18 @@ public class BoardingController {
         res.addMethod(DefaultSeatingMethod.RANDOM.toString(), this.rBoardingHandler.getTimeMin(), this.rBoardingHandler.getTimeSec(), this.rBoardingHandler.getTotalTicks().intValue());
         res.addMethod(DefaultSeatingMethod.REVERSE_PYRAMID.toString(), this.rpBoardingHandler.getTimeMin(), this.rpBoardingHandler.getTimeSec(), this.rpBoardingHandler.getTotalTicks().intValue());
         res.addMethod(DefaultSeatingMethod.ROTATING_ZONE.toString(), this.rzBoardingHandler.getTimeMin(), this.rzBoardingHandler.getTimeSec(), this.rzBoardingHandler.getTotalTicks().intValue());
-        if(useCustom){
+        if (useCustom) {
             res.addMethod(DefaultSeatingMethod.CUSTOM.toString(), this.cBoardingHandler.getTimeMin(), this.cBoardingHandler.getTimeSec(), this.cBoardingHandler.getTotalTicks().intValue());
         }
-        
+
         res.sort();
-        
+
         return res;
     }
 
     /**
      * Get the plane dimension for this current boarding controller
+     *
      * @return The plane dimension
      */
     public PlaneDimension getPlaneDimension() {

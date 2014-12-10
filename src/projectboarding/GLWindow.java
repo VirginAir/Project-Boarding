@@ -12,7 +12,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.media.opengl.awt.GLCanvas;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,8 +23,8 @@ import javax.swing.JPanel;
  *
  * @author Ben Cook
  */
-public class GLWindow extends JFrame{
-    
+public class GLWindow extends JFrame {
+
     private final JPanel mainPanel;
     private final JPanel controlPanel;
     private final JLabel running;
@@ -36,6 +35,7 @@ public class GLWindow extends JFrame{
 
     /**
      * Get the last selected
+     *
      * @return the last selected
      */
     public int getLastSelected() {
@@ -44,6 +44,7 @@ public class GLWindow extends JFrame{
 
     /**
      * Set the last selected
+     *
      * @param lastSelected the last selected
      */
     public void setLastSelected(int lastSelected) {
@@ -52,7 +53,8 @@ public class GLWindow extends JFrame{
 
     /**
      * Get if it is stopped
-     * @return boolean true stopped, false not 
+     *
+     * @return boolean true stopped, false not
      */
     public boolean isStopped() {
         return stopped;
@@ -60,7 +62,8 @@ public class GLWindow extends JFrame{
 
     /**
      * Set if stopped
-     * @param stopped boolean true stopped, false not 
+     *
+     * @param stopped boolean true stopped, false not
      */
     public void setStopped(boolean stopped) {
         this.stopped = stopped;
@@ -68,6 +71,7 @@ public class GLWindow extends JFrame{
 
     /**
      * Get is window response
+     *
      * @return boolean true response, false not
      */
     public boolean isWindowResponse() {
@@ -76,6 +80,7 @@ public class GLWindow extends JFrame{
 
     /**
      * Set the window response
+     *
      * @param windowResponse boolean true response, false not
      */
     public void setWindowResponse(boolean windowResponse) {
@@ -84,6 +89,7 @@ public class GLWindow extends JFrame{
 
     /**
      * Get the response
+     *
      * @return the response
      */
     public int getResponse() {
@@ -92,22 +98,25 @@ public class GLWindow extends JFrame{
 
     /**
      * Set the response
+     *
      * @param response the response
      */
     public void setResponse(int response) {
         this.response = response;
     }
-    
+
     /**
      * Update the running text
+     *
      * @param running the text
      */
     public void updateRunning(String running) {
         this.running.setText("Viewing " + running);
     }
-    
+
     /**
      * Create the window
+     *
      * @param title the window title
      * @param animator the window animator
      * @param width the window width
@@ -115,42 +124,42 @@ public class GLWindow extends JFrame{
      */
     public GLWindow(String title, FPSAnimator animator, int width, int height) {
         super(title);
-        setupWindow(animator, width, height+40);
-        
+        setupWindow(animator, width, height + 40);
+
         Container pane = this.getContentPane();
-        
+
         lastSelected = 0;
         stopped = false;
-        
+
         controlPanel = new JPanel();
         running = new JLabel("Random");
         controlPanel.add(running);
         JButton stop = new JButton("Stop");
         stop.setAlignmentY(Component.CENTER_ALIGNMENT);
-        stop.addActionListener(new ActionListener()
-        {
-          public void actionPerformed(ActionEvent e)
-          {
-              stopped = true;
-          }
+        stop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stopped = true;
+            }
         });
-        
+
         controlPanel.add(stop);
-        controlPanel.setPreferredSize(new Dimension(800,40));
+        controlPanel.setPreferredSize(new Dimension(800, 40));
         pane.add(controlPanel, BorderLayout.NORTH);
 
         mainPanel = new JPanel(new BorderLayout());
         pane.add(mainPanel, BorderLayout.CENTER);
-        
+
         this.getContentPane().add(mainPanel, BorderLayout.CENTER);
         windowResponse = false;
         response = 0;
-        
+
         this.setResizable(false);
     }
-    
+
     /**
      * Setup the window
+     *
      * @param animator the animator
      * @param width the window width
      * @param height the window height
@@ -162,54 +171,31 @@ public class GLWindow extends JFrame{
 
         ImageIcon img = new ImageIcon("airplane.jpg");
         this.setIconImage(img.getImage());
-        
-        this.addWindowListener(new WindowAdapter(){
+
+        this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e){
+            public void windowClosing(WindowEvent e) {
                 stopped = true;
             }
-        }); 
+        });
     }
-    
+
     /**
      * Set the visability
+     *
      * @param isVisible boolean true visible, false not
      */
-    public void setVisibility(boolean isVisible){
+    public void setVisibility(boolean isVisible) {
         this.setVisible(isVisible);
     }
-    
+
     /**
      * Set the canvas
+     *
      * @param canvas the canvas
      * @param position the positon
      */
-    public void setGLCanvas(GLCanvas canvas, String position){
-        canvas.addKeyListener(new CustomKeyListener());
+    public void setGLCanvas(GLCanvas canvas, String position) {
         mainPanel.add(canvas, position);
     }
-    
-    /**
-     * Custom key listener class
-     */
-    class CustomKeyListener implements KeyListener{
-        public void keyTyped(KeyEvent e) {           
-        
-        }
-      
-        /**
-         * Action even if a key is pressed
-         * @param e 
-         */
-        @Override
-        public void keyPressed(KeyEvent e) {
-            int key = e.getKeyCode();
-            if(key == KeyEvent.VK_P){
-                JOptionPane.showMessageDialog(null, stopped, "Haha", 1);
-            }   
-        }
-
-        public void keyReleased(KeyEvent e) {            
-        }    
-    } 
 }

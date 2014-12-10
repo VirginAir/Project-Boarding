@@ -1,15 +1,17 @@
 package sceneobjects;
 
 /**
- * 
+ *
  * @author Ben Cook
  */
 public class Vector {
+
     private float x;
     private float y;
 
     /**
      * Create the vector
+     *
      * @param x x value
      * @param y y value
      */
@@ -20,6 +22,7 @@ public class Vector {
 
     /**
      * Get the x value
+     *
      * @return the x value
      */
     public float getX() {
@@ -28,6 +31,7 @@ public class Vector {
 
     /**
      * Set the x value
+     *
      * @param x the x value
      */
     public void setX(float x) {
@@ -36,6 +40,7 @@ public class Vector {
 
     /**
      * Get the y value
+     *
      * @return the y value
      */
     public float getY() {
@@ -44,6 +49,7 @@ public class Vector {
 
     /**
      * Set the y value
+     *
      * @param y the y value
      */
     public void setY(float y) {

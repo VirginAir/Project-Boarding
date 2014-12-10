@@ -8,19 +8,21 @@ public class Square extends Shape {
 
     private final float[] positionData;
     private final float[] colourData;
-    
+
     /**
      * Create the square
+     *
      * @param pd the position data
      * @param cd the colour data
      */
-    public Square(float[] pd, float [] cd){
+    public Square(float[] pd, float[] cd) {
         positionData = pd;
         colourData = cd;
     }
-    
+
     /**
      * Get the position data
+     *
      * @return the position data
      */
     @Override
@@ -30,6 +32,7 @@ public class Square extends Shape {
 
     /**
      * Get the colour data
+     *
      * @return the colour data
      */
     @Override

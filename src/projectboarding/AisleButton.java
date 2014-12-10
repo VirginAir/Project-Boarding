@@ -70,5 +70,13 @@ public class AisleButton {
         return aislePresent;
     }
     
+    /**
+     * Change the aisle's presence
+     * @param ap the new presence
+     */
+    public void setAislePresent(boolean ap) {
+        aislePresent = ap;
+    }
+    
     
 }

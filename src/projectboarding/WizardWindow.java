@@ -42,8 +42,10 @@ public class WizardWindow extends JFrame{
     private JButton run;
     private JButton save; 
     private JButton load; 
+    private JButton edit;
     private JButton savec; 
     private JButton loadc; 
+    private JButton editc;
     private JTextField iterCount;
     
     private boolean useCustom;
@@ -77,7 +79,7 @@ public class WizardWindow extends JFrame{
          * @param rows the number of rows
          * @param columns the number of columns
          */
-        public SeatingWindow(String title, int rows, int columns){
+        public SeatingWindow(String title, int rows, int columns, boolean editMode){
             super(title);
             done = false;
             this.setLayout(new BorderLayout());
@@ -118,6 +120,7 @@ public class WizardWindow extends JFrame{
                     save.setEnabled(true);
                     customMethod.setEnabled(true);
                     loadc.setEnabled(true);
+                    edit.setEnabled(true);
                     run.setEnabled(true);
                     WizardWindow.this.setEnabled(true);
                     done = true;
@@ -155,6 +158,21 @@ public class WizardWindow extends JFrame{
                 buttonList.add(new DimButton(new JButton("S")));
                 aisleList.get(aisleList.size()-1).addButton(buttonList.get(buttonList.size()-1));
                 mainPanel.add(buttonList.get(buttonList.size()-1).getButton());
+                
+                if(editMode){
+                    Cell[][] cells = pd.getAllSeats();
+                    CellType ct = cells[i%rows][(int)Math.floor(i/rows)].getCellType();
+                    if(ct == CellType.NONE){
+                        buttonList.get(buttonList.size()-1).makeNone();
+                    } else if(ct == CellType.PRIORITY_SEAT){
+                        buttonList.get(buttonList.size()-1).makePriority();
+                    } else if(ct == CellType.SEAT){
+                        buttonList.get(buttonList.size()-1).makeSeat();
+                    } else if(ct == CellType.AISLE){
+                        buttonList.get(buttonList.size()-1).makeAisle();
+                        aisleList.get(aisleList.size()-1).setAislePresent(true);
+                    }
+                }
             }
             
             superPanel.add(mainPanel);
@@ -254,7 +272,7 @@ public class WizardWindow extends JFrame{
          * @param rows the number of rows
          * @param columns the number of columns
          */
-        public CustomWindow(String title, int rows, int columns){
+        public CustomWindow(String title, int rows, int columns, boolean editMode){
             super(title);
             done = false;
             this.setLayout(new BorderLayout());
@@ -278,6 +296,7 @@ public class WizardWindow extends JFrame{
               public void actionPerformed(ActionEvent e)
               {
                   if(getMethodLayout()){
+                    editc.setEnabled(true);
                     savec.setEnabled(true);
                     customCheck.setEnabled(true);
                     WizardWindow.this.setEnabled(true);
@@ -300,13 +319,21 @@ public class WizardWindow extends JFrame{
             mainPanel = new JPanel(new GridLayout(rows,columns,0,0));
             fieldList = new ArrayList<DimField>();
             
+            int curPos = 0;
             for(Cell[] row : pd.getAllSeats()){
-                for(Cell column : row)
-                    if(column.getCellType() == CellType.SEAT){
-                        fieldList.add(new DimField(new JTextField("1")));
+                for(Cell column : row){
+                    if(editMode){
+                        int nextVal = customMethodLayout[curPos/rows][(int)Math.floor(curPos%rows)];
+                        fieldList.add(new DimField(new JTextField(Integer.toString(nextVal))));
                     } else {
-                        fieldList.add(new DimField(new JTextField("-1")));
+                        if(column.getCellType() == CellType.SEAT){
+                            fieldList.add(new DimField(new JTextField("1")));
+                        } else {
+                            fieldList.add(new DimField(new JTextField("-1")));
+                        }
                     }
+                    curPos++;
+                }
             }
             
             for(int i = 0; i < rows; i++){
@@ -408,12 +435,12 @@ public class WizardWindow extends JFrame{
         
         mainPanel = new JPanel(new GridLayout(5,1,10,10));
         
-        sw = new SeatingWindow("Plane Dimensions", 1,1);
+        sw = new SeatingWindow("Plane Dimensions", 1,1, false);
         cw = new CustomWindow();
         
-        JPanel topDiv = new JPanel(new GridLayout(1,3,0,0));
+        JPanel topDiv = new JPanel(new GridLayout(1,4,0,0));
         
-        pDim = new JButton("Plane Dimensions");
+        pDim = new JButton("New Dimension");
         pDim.addActionListener(new ActionListener()
         {
           public void actionPerformed(ActionEvent e)
@@ -474,7 +501,18 @@ public class WizardWindow extends JFrame{
               }
               int rowInt = Integer.parseInt(row);
               int colInt = Integer.parseInt(column);
-              sw = new SeatingWindow("Plane Dimensions", rowInt, colInt);
+              sw = new SeatingWindow("Plane Dimensions", rowInt, colInt, false);
+              sw.setVisibility(true);
+              WizardWindow.this.setEnabled(false);
+          }
+        });
+        
+        edit = new JButton("Edit");
+        edit.addActionListener(new ActionListener()
+        {
+          public void actionPerformed(ActionEvent e)
+          {
+              sw = new SeatingWindow("Plane Dimensions", pd.totalNumberOfRows(), pd.getNumberOfColumns(), true);
               sw.setVisibility(true);
               WizardWindow.this.setEnabled(false);
           }
@@ -518,6 +556,7 @@ public class WizardWindow extends JFrame{
                     customMethod.setEnabled(true);
                     loadc.setEnabled(true);
                     run.setEnabled(true);
+                    edit.setEnabled(true);
                   } else {
                       JOptionPane.showMessageDialog(null, "Must be a .pd file!", "Error", 1);
                   }
@@ -528,6 +567,7 @@ public class WizardWindow extends JFrame{
         topDiv.add(pDim);
         topDiv.add(load);
         topDiv.add(save);
+        topDiv.add(edit);
         
         mainPanel.add(topDiv);
         
@@ -539,7 +579,7 @@ public class WizardWindow extends JFrame{
         {
           public void actionPerformed(ActionEvent e)
           {
-              cw = new CustomWindow("Custom Method" , pd.getNumberOfColumns(), pd.totalNumberOfRows());
+              cw = new CustomWindow("Custom Method" , pd.getNumberOfColumns(), pd.totalNumberOfRows(), false);
               cw.setVisibility(true);
               WizardWindow.this.setEnabled(false);
           }
@@ -593,6 +633,7 @@ public class WizardWindow extends JFrame{
                           customMethodLayout = tempLayout;
                           savec.setEnabled(true);
                           customCheck.setEnabled(true);
+                          editc.setEnabled(true);
                     }
                   } else {
                       JOptionPane.showMessageDialog(null, "Must be a .cm file!", "Error", 1);
@@ -601,11 +642,23 @@ public class WizardWindow extends JFrame{
           }
         });
         
+        editc = new JButton("Edit");
+        editc.addActionListener(new ActionListener()
+        {
+          public void actionPerformed(ActionEvent e)
+          {
+              cw = new CustomWindow("Custom Method" , pd.getNumberOfColumns(), pd.totalNumberOfRows(), true);
+              cw.setVisibility(true);
+              WizardWindow.this.setEnabled(false);
+          }
+        });
+        
         
         customSplit.add(customCheck);
         customSplit.add(customMethod);
         customSplit.add(loadc);
         customSplit.add(savec);
+        customSplit.add(editc);
         mainPanel.add(customSplit);
         
         JPanel comboSplit = new JPanel(new GridLayout(1,2,10,10));
@@ -709,6 +762,8 @@ public class WizardWindow extends JFrame{
         loadc.setEnabled(false);
         savec.setEnabled(false);
         run.setEnabled(false);
+        edit.setEnabled(false);
+        editc.setEnabled(false);
         customCheck.setEnabled(false);
         
         toRun = false;

@@ -54,6 +54,27 @@ public class DimButton {
             }
         });
     }
+    
+    public void makePriority(){
+        seatType = 2;
+        button.setText("P");
+        button.setBackground(Color.yellow);
+        button.setForeground(Color.black);
+    }
+    
+    public void makeNone(){
+        seatType = 0;
+        button.setText("N");
+        button.setBackground(Color.BLUE);
+        button.setForeground(Color.white);
+    }
+    
+    public void makeSeat(){
+        seatType = 1;
+        button.setText("S");
+        button.setBackground(Color.RED);
+        button.setForeground(Color.white);
+    }
 
     /**
      * Set the dim button to an aisle or unset from aisle

@@ -37,8 +37,8 @@ public class ProjectBoarding {
     public static void main(String[] args) throws InterruptedException, IOException {
         
         
-        PlaneDimension planeDimension = DimensionLoader.loadDimension(new File("saves/main.pd"));
-        int[][] custom = DimensionLoader.loadMethod(new File("saves/main.cm"));     
+        PlaneDimension planeDimension = DimensionLoader.loadDimension(new File("saves/dim/main.pd"));
+        int[][] custom = DimensionLoader.loadMethod(new File("saves/met/main.cm"));     
         
         BoardingController controller = new BoardingController(planeDimension, true, custom);
         
@@ -62,7 +62,7 @@ public class ProjectBoarding {
         window.setGLCanvas(canvas, BorderLayout.CENTER);
         animator.start();
         
-        WizardWindow wzWindow = new WizardWindow("Project-Boarding Wizard", 450, 250);
+        WizardWindow wzWindow = new WizardWindow("Project-Boarding Wizard", 550, 250);
         wzWindow.setPd(planeDimension);
         wzWindow.setCustomMethodLayout(custom);
         wzWindow.setVisibility(true);
@@ -71,6 +71,9 @@ public class ProjectBoarding {
         LoopState state = LoopState.WIZARD;
         int repeat = 0;
         ArrayList<Results> resultList = new ArrayList<>();
+        
+        RunningWindow rw = new RunningWindow("Running...", 0);
+        int currentIter = 0;
         
         
         while(true){
@@ -99,6 +102,10 @@ public class ProjectBoarding {
                         wzWindow.setVisibility(false);
                         controller.startBoarding(wzWindow.getToView());
                     } else {
+                        rw = new RunningWindow("Running", repeat+1);
+                        rw.setVisibility(true);
+                        wzWindow.setVisibility(false);
+                        currentIter = 0;
                         controller.startBoarding(DefaultSeatingMethod.NONE);
                     }
                     
@@ -107,6 +114,8 @@ public class ProjectBoarding {
                 if(controller.checkComplete()){
                     if(repeat > 1){
                         repeat--;
+                        currentIter++;
+                        rw.setIterationCount(currentIter);
                         resultList.add(controller.getResults());
                         controller.stopBoarding();
                         controller = new BoardingController(wzWindow.getPd(), wzWindow.isUseCustom(), custom);
@@ -147,6 +156,7 @@ public class ProjectBoarding {
                     window.setVisibility(false);
                 }
             } else if (state == LoopState.RESULTS) {
+                rw.setVisibility(false);
                 resultList.add(controller.getResults());
                 Results finalResults = Results.averageResults(resultList);
                 finalResults.sort();

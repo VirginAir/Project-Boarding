@@ -146,6 +146,7 @@ public class GLWindow extends JFrame{
         windowResponse = false;
         response = 0;
         
+        this.setResizable(false);
     }
     
     /**

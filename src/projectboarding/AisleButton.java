@@ -11,7 +11,7 @@ import javax.swing.JButton;
  * @author Ben Cook
  */
 public class AisleButton {
-    private int seatType = 1;
+    private boolean aislePresent;
     private JButton button;
     private ArrayList<DimButton> column;
     
@@ -24,6 +24,7 @@ public class AisleButton {
         this.button = extButton;
         this.button.setText("Aisle");
         this.button.setBackground(Color.white);
+        this.aislePresent = false;
         
         this.button.addActionListener(new ActionListener()
         {
@@ -32,24 +33,9 @@ public class AisleButton {
                 for(DimButton db : column){
                     db.makeAisle();
                 }
+                aislePresent = !aislePresent;
             }
         });
-    }
-
-    /**
-     * Get the seat type
-     * @return the seat type
-     */
-    public int getSeatType() {
-        return seatType;
-    }
-
-    /**
-     * Set the seat type
-     * @param seatType the seat type
-     */
-    public void setSeatType(int seatType) {
-        this.seatType = seatType;
     }
 
     /**
@@ -75,4 +61,14 @@ public class AisleButton {
     public void addButton(DimButton db){
         column.add(db);
     }
+
+    /**
+     * Get the aisle presence
+     * @return whether there is an aisle present
+     */
+    public boolean isAislePresent() {
+        return aislePresent;
+    }
+    
+    
 }

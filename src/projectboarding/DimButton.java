@@ -1,6 +1,8 @@
 package projectboarding;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -23,6 +25,8 @@ public class DimButton {
         this.button = extButton;
         this.button.setText("S");
         this.button.setBackground(Color.red);
+        //this.button.setFont(new Font("Arial", Font.PLAIN, 10));
+        this.button.setMargin(new Insets(1,1,1,1));  
         
         this.button.addActionListener(new ActionListener()
         {

@@ -90,18 +90,40 @@ public class WizardWindow extends JFrame{
             this.addWindowListener(new WindowAdapter(){
                 @Override
                 public void windowClosing(WindowEvent e){
-                    System.exit(0);
+                    
                 }
             });
-            JPanel superPanel = new JPanel();
+            
+            JPanel superPanel = new JPanel(new GridLayout(2,1,0,0));
             bottomPanel = new JPanel();
             okay = new JButton("OK");
             okay.addActionListener(new ActionListener()
             {
               public void actionPerformed(ActionEvent e)
               {
-                  getPlaneLayout();
-                  done = true;
+                  boolean hasAisle = false;
+                  boolean hasSeat = false;
+                  for(AisleButton ab : aisleList){
+                      if(ab.isAislePresent()){
+                          hasAisle = true;
+                      } else {
+                          hasSeat = true;
+                      }
+                  }
+                  
+                  if(hasAisle && hasSeat){
+                    getPlaneLayout();
+                    save.setEnabled(true);
+                    customMethod.setEnabled(true);
+                    loadc.setEnabled(true);
+                    run.setEnabled(true);
+                    done = true;
+                  } else if(!hasAisle){
+                      JOptionPane.showMessageDialog(null, "No aisle present!", "Error", 2);
+                  } else{
+                      JOptionPane.showMessageDialog(null, "No seats present!", "Error", 2);
+                  }
+                  
               }
             });
             bottomPanel.add(okay);
@@ -140,12 +162,14 @@ public class WizardWindow extends JFrame{
             this.columns = columns;
             
             this.pack();
+            this.setResizable(false);
         }
         
         /**
          * Create the plane layout
          */
-        public void getPlaneLayout(){
+        public boolean getPlaneLayout(){
+            boolean hasAisle = false;
             Cell[][] dim = new Cell[rows][columns];
             for(int i = 0; i < rows; i++){
                 Cell[] row = new Cell[columns];
@@ -162,6 +186,7 @@ public class WizardWindow extends JFrame{
                             ct = CellType.PRIORITY_SEAT;
                             break;
                         case 3:
+                            hasAisle = true;
                             ct = CellType.AISLE;
                     }
                     row[j] = new Cell(i,j, ct);
@@ -169,6 +194,7 @@ public class WizardWindow extends JFrame{
                 dim[i] = row;
             }
             pd = new PlaneDimension(dim);
+            return hasAisle;
         }
         
         /**
@@ -237,7 +263,6 @@ public class WizardWindow extends JFrame{
             this.addWindowListener(new WindowAdapter(){
                 @Override
                 public void windowClosing(WindowEvent e){
-                    System.exit(0);
                 }
             });
             JPanel superPanel = new JPanel(new GridLayout(2,1,0,0));
@@ -247,8 +272,11 @@ public class WizardWindow extends JFrame{
             {
               public void actionPerformed(ActionEvent e)
               {
-                  getMethodLayout();
-                  done = true;
+                  if(getMethodLayout()){
+                    savec.setEnabled(true);
+                    customCheck.setEnabled(true);
+                    done = true;
+                  }
               }
             });
             bottomPanel.add(okay);
@@ -289,17 +317,29 @@ public class WizardWindow extends JFrame{
             this.columns = columns;
             
             this.pack();
+            this.setResizable(false);
         }
         
         /**
          * Get the method layout
          */
-        public void getMethodLayout(){
+        public boolean getMethodLayout(){
             int[][] dim = new int[columns][rows];
             int cur = 0;
             for(int i = 0; i < columns; i++){
                 int[] row = new int[rows];
                 for(int j = 0; j < rows; j++){
+                    
+                    try{
+                        row[j] = Integer.parseInt(fieldList.get(cur).getField().getText());
+                        if(fieldList.get(cur).getField().isVisible() && (row[j] <= 0)){
+                            JOptionPane.showMessageDialog(null, fieldList.get(cur).getField().getText()+" is below 1!", "Error", 2);
+                            return false;
+                        }
+                    }catch(Exception e){
+                        JOptionPane.showMessageDialog(null, fieldList.get(cur).getField().getText()+" is not a number!", "Error", 2);
+                        return false;
+                    }
                     
                     row[j] = Integer.parseInt(fieldList.get(cur).getField().getText());
                     cur++;
@@ -307,6 +347,7 @@ public class WizardWindow extends JFrame{
                 dim[i] = row;
             }
             customMethodLayout = dim;
+            return true;
         }
         
         /**
@@ -370,30 +411,51 @@ public class WizardWindow extends JFrame{
           {
               String row = "";
               String column = "";
+              
               boolean NaN = true;
               while(NaN){
                 row = (String)JOptionPane.showInputDialog(
-                      null,
-                      "Row Count",
-                      "Dimension Selection",
-                      JOptionPane.PLAIN_MESSAGE);
-                try { 
-                    Integer.parseInt(row); 
-                    NaN = false;
-                } catch(NumberFormatException ex) { 
-                    JOptionPane.showMessageDialog(null, "Not a number!", "Error", 2);
-                }
-              }
-              NaN = true;
-              while(NaN){
-                column = (String)JOptionPane.showInputDialog(
                       null,
                       "Column Count",
                       "Dimension Selection",
                       JOptionPane.PLAIN_MESSAGE);
                 try { 
+                    Integer.parseInt(row); 
+                    NaN = false;
+                    
+                    if(Integer.parseInt(row) <= 0){
+                        JOptionPane.showMessageDialog(null, "Must be above 0!", "Error", 2);
+                        NaN = true;
+                    } else if(Integer.parseInt(row) > 50){
+                        JOptionPane.showMessageDialog(null, "Can't be more than 50!", "Error", 2);
+                        NaN = true;
+                    }
+                } catch(NumberFormatException ex) { 
+                    JOptionPane.showMessageDialog(null, "Not a number!", "Error", 2);
+                }
+              }
+              
+              NaN = true;
+              while(NaN){
+                column = (String)JOptionPane.showInputDialog(
+                      null,
+                      "Row Count",
+                      "Dimension Selection",
+                      JOptionPane.PLAIN_MESSAGE);
+                try { 
                     Integer.parseInt(column); 
                     NaN = false;
+                    
+                    if(Integer.parseInt(column) <= 0){
+                        JOptionPane.showMessageDialog(null, "Must be above 0!", "Error", 2);
+                        NaN = true;
+                    } else if(Integer.parseInt(column) < 2){
+                        JOptionPane.showMessageDialog(null, "A plane can't have less than two rows!", "Error", 2);
+                        NaN = true;
+                    } else if(Integer.parseInt(column) > 20){
+                        JOptionPane.showMessageDialog(null, "Can't be more than 20!", "Error", 2);
+                        NaN = true;
+                    }
                 } catch(NumberFormatException ex) { 
                     JOptionPane.showMessageDialog(null, "Not a number!", "Error", 2);
                 }
@@ -410,7 +472,7 @@ public class WizardWindow extends JFrame{
         {
           public void actionPerformed(ActionEvent e)
           {            
-            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//dim");
             File file = new File("Untitled.pd");
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
               file = fileChooser.getSelectedFile();
@@ -431,9 +493,13 @@ public class WizardWindow extends JFrame{
         {
           public void actionPerformed(ActionEvent e)
           {
-              JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+              JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//dim");
               if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                   pd = DimensionLoader.loadDimension(fileChooser.getSelectedFile());
+                  save.setEnabled(true);
+                  customMethod.setEnabled(true);
+                  loadc.setEnabled(true);
+                  run.setEnabled(true);
               }
           }
         });
@@ -462,7 +528,7 @@ public class WizardWindow extends JFrame{
         {
           public void actionPerformed(ActionEvent e)
           {            
-            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//met");
             File file = new File("Untitled.cm");
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
               file = fileChooser.getSelectedFile();
@@ -483,9 +549,11 @@ public class WizardWindow extends JFrame{
         {
           public void actionPerformed(ActionEvent e)
           {
-              JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves");
+              JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir")+"//saves//met");
               if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                   customMethodLayout = DimensionLoader.loadMethod(fileChooser.getSelectedFile());
+                  savec.setEnabled(true);
+                  customCheck.setEnabled(true);
               }
           }
         });
@@ -517,7 +585,7 @@ public class WizardWindow extends JFrame{
         mainPanel.add(comboSplit);
         
         JPanel iterSplit = new JPanel(new GridLayout(1,2,10,10));
-        JLabel runLabel = new JLabel("Iteration Count: ");
+        JLabel runLabel = new JLabel("Iteration Count (1-100): ");
         runLabel.setHorizontalAlignment(JLabel.RIGHT);
         iterCount = new JTextField("1");
         iterSplit.add(runLabel);
@@ -539,6 +607,9 @@ public class WizardWindow extends JFrame{
                     int count = Integer.parseInt(iterCount.getText()); 
                     if(count < 1){
                         JOptionPane.showMessageDialog(null, "Iteration Count must be above 0!", "Error", 1);
+                        return;
+                    } else if (count > 100){
+                        JOptionPane.showMessageDialog(null, "Iteration Count must be below 100!", "Error", 1);
                         return;
                     }
               } catch(NumberFormatException ne) { 
@@ -590,9 +661,18 @@ public class WizardWindow extends JFrame{
         
         this.getContentPane().add(mainPanel);
         
+        save.setEnabled(false);
+        customMethod.setEnabled(false);
+        loadc.setEnabled(false);
+        savec.setEnabled(false);
+        run.setEnabled(false);
+        customCheck.setEnabled(false);
+        
         toRun = false;
         toView = DefaultSeatingMethod.RANDOM;
         
+        this.pack();
+        this.setResizable(false);
     }
     
     /**
